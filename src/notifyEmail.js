@@ -75,6 +75,34 @@ function notifyNewMessage(toUserId, toEmail, fromNickname, preview) {
     });
 }
 
+function notifyPasswordReset(toEmail, resetUrl) {
+    if (!toEmail || !resetUrl) return Promise.resolve(false);
+    const name = appPublicName();
+    const u = String(resetUrl);
+    return sendMail({
+        to: toEmail,
+        subject: name + ' — redefinição de senha',
+        text:
+            'Você pediu para redefinir sua senha no ' +
+            name +
+            '.\n\n' +
+            'Abra o link abaixo (válido por 1 hora). Se não foi você, ignore este e-mail.\n\n' +
+            u +
+            '\n',
+        html:
+            '<p>Você pediu para redefinir sua senha no <strong>' +
+            escHtml(name) +
+            '</strong>.</p>' +
+            '<p>O link abaixo expira em <strong>1 hora</strong>. Se não foi você, ignore este e-mail.</p>' +
+            '<p><a href="' +
+            escAttr(u) +
+            '">Redefinir senha</a></p>' +
+            '<p style="color:#666;font-size:12px;word-break:break-all;">' +
+            escHtml(u) +
+            '</p>'
+    });
+}
+
 function notifyNewFavorite(toUserId, toEmail, fromNickname) {
     if (!toEmail) return;
     const name = appPublicName();
@@ -95,6 +123,13 @@ function notifyNewFavorite(toUserId, toEmail, fromNickname) {
     });
 }
 
+function escAttr(s) {
+    return String(s || '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;');
+}
+
 function escHtml(s) {
     return String(s || '')
         .replace(/&/g, '&amp;')
@@ -103,4 +138,4 @@ function escHtml(s) {
         .replace(/"/g, '&quot;');
 }
 
-module.exports = { notifyNewMessage, notifyNewFavorite };
+module.exports = { notifyNewMessage, notifyNewFavorite, notifyPasswordReset };

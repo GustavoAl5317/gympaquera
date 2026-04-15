@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('fs');
 const path = require('path');
 const http = require('http');
 const express = require('express');
@@ -15,11 +16,21 @@ const paymentsRoutes = require('./src/routes/payments');
 const { setIo } = require('./src/chatDispatch');
 const { attachSocketChat } = require('./src/socketChat');
 
+const root = __dirname;
+const uploadsDir = path.join(root, 'uploads');
+try {
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+} catch (err) {
+    console.error('[uploads] Crie a pasta uploads com permissão de escrita:', err.message);
+    process.exit(1);
+}
+
 getDb();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const root = __dirname;
 const isProduction = process.env.NODE_ENV === 'production';
 
 /** Atrás de Nginx/Caddy (HTTPS): necessário para cookie seguro e IP real. */

@@ -7,8 +7,18 @@ const path = require('path');
 const { getDb, root } = require('../db');
 const { requireAuth } = require('../middleware/requireAuth');
 const { assertAdult } = require('../userValidation');
+const { notifyPasswordReset } = require('../notifyEmail');
 
 const router = express.Router();
+
+function publicOrigin(req) {
+    var base = process.env.APP_PUBLIC_URL;
+    if (base && String(base).trim()) return String(base).trim().replace(/\/$/, '');
+    var proto = (req.get('x-forwarded-proto') || req.protocol || 'http').split(',')[0].trim();
+    var host = req.get('host');
+    if (!host) return 'http://localhost:' + (process.env.PORT || 3000);
+    return proto + '://' + host;
+}
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 5 * 1024 * 1024 },
@@ -167,9 +177,84 @@ router.get('/me', requireAuth, function me(req, res) {
     return res.json({ user: user });
 });
 
-/** Recuperação de senha: placeholder (integrar e-mail/SMTP depois). */
-router.post('/forgot', function forgot(_req, res) {
-    return res.json({ ok: true, message: 'Se existir cadastro com este e-mail, enviaremos instruções em breve.' });
+/** Esqueci a senha: gera token e envia e-mail (SMTP obrigatório para o link chegar). */
+router.post('/forgot', function forgot(req, res) {
+    const email = String(req.body.email || '').trim().toLowerCase();
+    const generic = {
+        ok: true,
+        message:
+            'Se existir cadastro com este e-mail, você receberá um link para redefinir a senha em alguns minutos. Verifique também a pasta de spam.'
+    };
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.json(generic);
+    }
+    const db = getDb();
+    const row = db.prepare('SELECT id, email FROM users WHERE email = ?').get(email);
+    if (!row) {
+        return res.json(generic);
+    }
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawToken, 'utf8').digest('hex');
+    const now = new Date();
+    const expires = new Date(now.getTime() + 60 * 60 * 1000);
+    try {
+        db.prepare('DELETE FROM password_reset_tokens WHERE user_id = ?').run(row.id);
+        db.prepare(
+            'INSERT INTO password_reset_tokens (user_id, token_hash, expires_at, created_at) VALUES (?, ?, ?, ?)'
+        ).run(row.id, tokenHash, expires.toISOString(), now.toISOString());
+    } catch (e) {
+        console.error('[auth/forgot]', e);
+        return res.json(generic);
+    }
+    const resetUrl = publicOrigin(req) + '/redefinir-senha.html?token=' + encodeURIComponent(rawToken);
+    notifyPasswordReset(row.email, resetUrl)
+        .then(function (sent) {
+            if (!sent) {
+                try {
+                    db.prepare('DELETE FROM password_reset_tokens WHERE user_id = ?').run(row.id);
+                } catch (e) {}
+                console.warn('[auth/forgot] E-mail não enviado (configure SMTP_HOST e credenciais no .env).');
+            }
+            res.json(generic);
+        })
+        .catch(function (err) {
+            console.warn('[auth/forgot]', err && err.message ? err.message : err);
+            try {
+                db.prepare('DELETE FROM password_reset_tokens WHERE user_id = ?').run(row.id);
+            } catch (e) {}
+            res.json(generic);
+        });
+});
+
+router.post('/reset-password', function resetPassword(req, res) {
+    const rawToken = String(req.body.token || '').trim();
+    const password = String(req.body.password || '');
+    if (!rawToken || password.length < 6) {
+        return res.status(400).json({ error: 'Link inválido ou expirado, ou senha com menos de 6 caracteres.' });
+    }
+    const tokenHash = crypto.createHash('sha256').update(rawToken, 'utf8').digest('hex');
+    const nowIso = new Date().toISOString();
+    const db = getDb();
+    const tok = db
+        .prepare(
+            'SELECT user_id FROM password_reset_tokens WHERE token_hash = ? AND expires_at > ?'
+        )
+        .get(tokenHash, nowIso);
+    if (!tok) {
+        return res.status(400).json({ error: 'Link inválido ou expirado. Solicite um novo e-mail em Esqueceu a senha.' });
+    }
+    const passwordHash = bcrypt.hashSync(password, 10);
+    const run = db.transaction(function () {
+        db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(passwordHash, tok.user_id);
+        db.prepare('DELETE FROM password_reset_tokens WHERE user_id = ?').run(tok.user_id);
+    });
+    try {
+        run();
+    } catch (e) {
+        console.error('[auth/reset-password]', e);
+        return res.status(500).json({ error: 'Não foi possível atualizar a senha.' });
+    }
+    return res.json({ ok: true, message: 'Senha atualizada. Você já pode entrar com a nova senha.' });
 });
 
 module.exports = router;

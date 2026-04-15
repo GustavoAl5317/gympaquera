@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Paquera — Redefinir senha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/site-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { width: 100%; min-height: 100%; }
+        body {
+            line-height: 1.6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .page-body { flex: 1; display: flex; flex-direction: column; overflow-x: hidden; min-width: 0; width: 100%; }
+        main {
+            flex: 1;
+            max-width: 450px;
+            margin: 16px auto 24px;
+            padding: 0 clamp(16px, 4vw, 28px);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .card {
+            background: var(--gp-surface);
+            padding: 22px;
+            border-radius: var(--gp-radius-lg);
+            box-shadow: var(--gp-shadow-card);
+            border: 1px solid var(--gp-border);
+        }
+        h2 { color: var(--gp-brand-rose); margin-bottom: 8px; text-align: center; }
+        .subtitle { color: var(--gp-text-muted); margin-bottom: 18px; font-size: 0.9rem; text-align: center; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 0.85rem; font-weight: 600; color: var(--gp-text-muted); }
+        input {
+            padding: 12px; border: 2px solid var(--gp-border);
+            border-radius: var(--gp-radius); font-size: 1rem; outline: none; width: 100%;
+            transition: border-color 0.3s;
+        }
+        input:focus { border-color: var(--gp-accent); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15); }
+        .btn-submit {
+            background: var(--gp-brand-rose); color: white; border: none;
+            padding: 14px; width: 100%; border-radius: var(--gp-radius);
+            font-weight: 700; cursor: pointer; margin-top: 10px;
+            transition: 0.3s;
+        }
+        .btn-submit:hover { background: var(--gp-brand-rose-dark); }
+        .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+        .form-link { text-align: center; margin-top: 15px; font-size: 0.85rem; }
+        .form-link a { color: var(--gp-brand-rose); text-decoration: none; font-weight: 600; }
+        footer { text-align: center; padding: 10px 12px; color: var(--gp-text-muted); font-size: 0.72rem; margin-top: auto; }
+    </style>
+</head>
+<body class="gp-has-marketing-nav">
+
+<div id="gp-nav-backdrop" class="gp-nav-backdrop gp-marketing-backdrop" aria-hidden="true"></div>
+<nav class="gp-marketing-nav" aria-label="Principal">
+    <div class="gp-marketing-nav__bar">
+        <a href="index.html" class="gp-logo">Gym Paquera</a>
+        <ul class="gp-marketing-nav__links">
+            <li><a href="index.html" data-gp-nav="home">Home</a></li>
+            <li><a href="login.html" data-gp-nav="login">Login</a></li>
+        </ul>
+        <div class="gp-marketing-nav__cta">
+            <a href="login.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
+            <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+        </div>
+        <button type="button" class="gp-marketing-burger" data-nav-toggle aria-expanded="false" aria-controls="gp-marketing-panel" aria-label="Abrir menu">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+    </div>
+    <div id="gp-marketing-panel" class="gp-marketing-panel" data-nav-panel data-nav-animate-height>
+        <div class="gp-marketing-panel__inner">
+            <a href="index.html" data-gp-nav="home">Home</a>
+            <a href="login.html" data-gp-nav="login">Login</a>
+            <div class="gp-marketing-panel__cta">
+                <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="page-body">
+<main>
+    <div class="card">
+        <h2>Nova senha</h2>
+        <p class="subtitle">Defina uma senha nova para sua conta. O link do e-mail expira em 1 hora.</p>
+        <form id="resetForm">
+            <input type="hidden" id="tokenField" name="token" value="">
+            <div class="form-group">
+                <label for="senha1">Nova senha</label>
+                <input id="senha1" name="password" type="password" autocomplete="new-password" required minlength="6" placeholder="Mínimo 6 caracteres">
+            </div>
+            <div class="form-group">
+                <label for="senha2">Confirmar senha</label>
+                <input id="senha2" type="password" autocomplete="new-password" required minlength="6" placeholder="Repita a senha">
+            </div>
+            <button type="submit" class="btn-submit" id="btnSubmit">Salvar nova senha</button>
+        </form>
+        <p id="msgErro" class="subtitle" style="display:none;color:var(--gp-danger);margin-top:12px;"></p>
+        <div class="form-link">
+            <a href="login.html">Voltar ao login</a>
+        </div>
+    </div>
+</main>
+<footer>
+    <p>&copy; 2026 Gym Paquera</p>
+</footer>
+</div>
+
+<script src="js/toast.js"></script>
+<script src="js/site-nav.js" defer></script>
+<script src="js/api.js"></script>
+<script>
+(function () {
+    var params = new URLSearchParams(window.location.search);
+    var token = params.get('token');
+    var tokenField = document.getElementById('tokenField');
+    var form = document.getElementById('resetForm');
+    var errEl = document.getElementById('msgErro');
+    var btn = document.getElementById('btnSubmit');
+
+    function showErr(msg) {
+        errEl.textContent = msg;
+        errEl.style.display = msg ? 'block' : 'none';
+    }
+
+    if (!token || !token.trim()) {
+        showErr('Link inválido. Abra o endereço completo enviado por e-mail ou peça um novo em Esqueceu a senha no login.');
+        form.style.display = 'none';
+        return;
+    }
+    tokenField.value = token.trim();
+
+    form.onsubmit = async function (e) {
+        e.preventDefault();
+        showErr('');
+        var p1 = document.getElementById('senha1').value;
+        var p2 = document.getElementById('senha2').value;
+        if (p1 !== p2) {
+            showErr('As senhas não coincidem.');
+            return;
+        }
+        if (p1.length < 6) {
+            showErr('A senha deve ter pelo menos 6 caracteres.');
+            return;
+        }
+        btn.disabled = true;
+        try {
+            var data = await api('POST', '/auth/reset-password', { token: tokenField.value, password: p1 });
+            if (window.showToast) {
+                showToast(data.message || 'Senha atualizada.', { type: 'success' });
+            }
+            setTimeout(function () { window.location.href = 'login.html'; }, 800);
+        } catch (err) {
+            showErr(err.message || 'Não foi possível salvar.');
+            btn.disabled = false;
+        }
+    };
+})();
+</script>
+</body>
+</html>

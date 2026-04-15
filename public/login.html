@@ -164,7 +164,7 @@
 
         <div id="recuperacao" class="tab-content">
             <h3>Recuperar Senha</h3>
-            <p class="subtitle">Registro da solicitação (envio de e-mail ainda não configurado).</p>
+            <p class="subtitle">Enviaremos um link por e-mail para redefinir a senha (válido por 1 hora).</p>
             <form id="recuperarForm">
                 <div class="form-group">
                     <label for="forgotEmail">Email cadastrado</label>
@@ -244,7 +244,7 @@
         var em = document.getElementById('forgotEmail').value.trim();
         try {
             await api('POST', '/auth/forgot', { email: em });
-            showAlert('Se existir cadastro com este e-mail, enviaremos instruções quando o envio estiver configurado.', 'success');
+            showAlert('Se existir cadastro com este e-mail, você receberá o link em instantes. Verifique o spam.', 'success');
             setTimeout(function () { switchTab('login'); }, 2500);
         } catch (err) {
             showAlert(err.message, 'danger');

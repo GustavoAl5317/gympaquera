@@ -90,6 +90,15 @@ function runMigrations(database) {
     CREATE INDEX IF NOT EXISTS idx_users_estado_cidade ON users (estado, cidade);
     CREATE INDEX IF NOT EXISTS idx_messages_pair ON messages (from_user_id, to_user_id);
     CREATE INDEX IF NOT EXISTS idx_pix_charges_user ON pix_charges (user_id);
+
+    CREATE TABLE IF NOT EXISTS password_reset_tokens (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        token_hash TEXT NOT NULL UNIQUE,
+        expires_at TEXT NOT NULL,
+        created_at TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_password_reset_user ON password_reset_tokens (user_id);
     `);
 
     const needUid = database.prepare("SELECT id FROM users WHERE public_uid IS NULL OR public_uid = ''").all();
