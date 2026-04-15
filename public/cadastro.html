@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Paquera | Conexões Fitness</title>
+    <meta name="description" content="Conecte-se com pessoas da mesma academia. Encontre treino e paquera no mesmo lugar."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/site-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; width: 100%; min-height: 100%; }
+
+        body {
+            line-height: 1.6;
+            width: 100%;
+            min-height: 100dvh;
+        }
+
+        .page-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            min-width: 0;
+            width: 100%;
+        }
+
+        /* Main Content */
+        .main-container {
+            flex: 1;
+            width: 100%;
+            max-width: min(1200px, 100% - 32px);
+            margin: 20px auto 28px;
+            padding: 0 clamp(16px, 4vw, 28px);
+        }
+
+        .card {
+            background: var(--white);
+            padding: 22px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        h2 { 
+            color: var(--primary); 
+            margin-bottom: 25px; 
+            font-size: 1.6rem; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Grid System */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .full-width { grid-column: span 2; }
+
+        label { 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            color: var(--gray); 
+            margin-left: 4px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: var(--white);
+        }
+
+        input:focus, select:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1);
+        }
+
+        /* Alert Area */
+        .alert {
+            background: #fff0f3;
+            border-left: 5px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+        .alert strong { color: var(--primary-dark); display: block; margin-bottom: 5px; }
+        .alert p { font-size: 0.9rem; color: #a04255; }
+
+        /* Photo Upload UI */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .photo-box {
+            aspect-ratio: 1/1;
+            border: 2px dashed #ccd1d1;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-box:hover { border-color: var(--primary); background: #fff5f7; }
+        .photo-box span { font-size: 2rem; color: #abb2b9; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+
+        /* Buttons & Footer */
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 18px;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+        }
+
+        .btn-submit:hover { 
+            background: var(--primary-dark); 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+        }
+
+        .info-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .error-msg {
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .exclusivity-badge {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 14px;
+            color: var(--gray);
+            font-size: 0.72rem;
+            line-height: 1.35;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+        }
+        footer p { margin: 0; }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .main-container { margin: 24px auto; padding: 0 16px; }
+            .card { padding: 22px 18px; border-radius: 16px; }
+            h2 { font-size: 1.35rem; flex-wrap: wrap; }
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .photo-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .photo-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="gp-has-marketing-nav">
+
+<div id="gp-nav-backdrop" class="gp-nav-backdrop gp-marketing-backdrop" aria-hidden="true"></div>
+<nav class="gp-marketing-nav" aria-label="Principal">
+    <div class="gp-marketing-nav__bar">
+        <a href="index.html" class="gp-logo">Gym Paquera</a>
+        <ul class="gp-marketing-nav__links">
+            <li><a href="index.html" data-gp-nav="home">Home</a></li>
+            <li><a href="index.html#sobre" data-gp-nav="home">Sobre</a></li>
+            <li><a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a></li>
+            <li><a href="index.html#contato" data-gp-nav="home">Contato</a></li>
+        </ul>
+        <div class="gp-marketing-nav__cta">
+            <a href="login.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
+            <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+            <a href="mypay.html" class="gp-marketing-nav__subscribe" data-gp-nav="pay">Assine R$9,90/mês</a>
+        </div>
+        <button type="button" class="gp-marketing-burger" data-nav-toggle aria-expanded="false" aria-controls="gp-marketing-panel" aria-label="Abrir menu">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+    </div>
+    <div id="gp-marketing-panel" class="gp-marketing-panel" data-nav-panel data-nav-animate-height>
+        <div class="gp-marketing-panel__inner">
+            <a href="index.html" data-gp-nav="home">Home</a>
+            <a href="index.html#sobre" data-gp-nav="home">Sobre</a>
+            <a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a>
+            <a href="index.html#contato" data-gp-nav="home">Contato</a>
+            <a href="mypay.html" class="gp-subscribe-link" data-gp-nav="pay">Assine R$9,90/mês</a>
+            <div class="gp-marketing-panel__cta">
+                <a href="login.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
+                <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <div class="page-body">
+    <main class="main-container">
+        <form id="profileForm">
+            <section class="card">
+                <h2>Crie o seu perfil</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sou">Eu Sou</label>
+                        <select id="sou" required>
+                            <option value="">Selecione...</option>
+                            <option value="Homem">Homem</option>
+                            <option value="Mulher">Mulher</option>
+                            <option value="Casal">Casal</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="procuro">Procuro Por</label>
+                        <select id="procuro" required>
+                            <option value="">Selecione...</option>
+                            <option value="Mulheres">Mulheres</option>
+                            <option value="Homens">Homens</option>
+                            <option value="Casais">Casais</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gym">Sua Academia</label>
+                        <input list="gyms" id="gym" placeholder="Digite ou Selecione..." required>
+                        <datalist id="gyms">
+                            <option value="Smart Fit Academia">
+                            <option value="OH!FIT Academia">
+                            <option value="Xprime Academia">
+                            <option value="Skyfit Academia">
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="matricula">ID Matrícula</label>
+                        <input type="text" id="matricula" placeholder="Wellhub, Particular, TotalPass">
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <select id="estado" required>
+                            <option value="" disabled selected>Selecione...</option>
+                            <option>Acre</option><option>Alagoas</option><option>Amapá</option><option>Amazonas</option>
+                        <option>Bahia</option><option>Ceará</option><option>Distrito Federal</option><option>Espírito Santo</option>
+                        <option>Goiás</option><option>Maranhão</option><option>Mato Grosso</option><option>Mato Grosso do Sul</option>
+                        <option>Minas Gerais</option><option>Pará</option><option>Paraíba</option><option>Paraná</option>
+                        <option>Pernambuco</option><option>Piauí</option><option>Rio de Janeiro</option><option>Rio Grande do Norte</option>
+                        <option>Rio Grande do Sul</option><option>Rondônia</option><option>Roraima</option><option>Santa Catarina</option>
+                        <option>São Paulo</option><option>Sergipe</option><option>Tocantins</option>
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cidade">Cidade</label>
+                        <input type="text" id="cidade" placeholder="Digite sua cidade" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nickname">Nickname (Apelido)</label>
+                        <input type="text" id="nickname" placeholder="Crie seu apelido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nascimento">Data de Nascimento</label>
+                        <input type="date" id="nascimento" required>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Acesso e Segurança</h2>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" placeholder="Digite seu e-mail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="senha" minlength="6" placeholder="Crie sua senha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmar_senha">Confirmar Senha</label>
+                        <input type="password" id="confirmar_senha" placeholder="Confirme sua senha" required>
+                        <span id="msgErro" class="error-msg">As senhas não coincidem!</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Fotos do Shape</h2>
+                <div class="alert">
+                    <strong>⚠️ Respeite as Regras de Privacidade:</strong>
+                    <p>Fotos de rosto ou conteúdo explícito serão removidos automaticamente.</p><p>
+Apenas fotos de treino/shape. Rostos ou conteúdo explícito são proibidos.</p>
+                </div>
+
+                <div class="photo-grid">
+                    <div class="photo-box" onclick="triggerInput(1)">
+                        <span id="plus-1">+</span>
+                        <img id="preview-1" alt="Preview" style="display:none;">
+                        <input type="file" id="input-1" hidden accept="image/*" onchange="previewImage(this, 1)">
+                    </div>
+                    <div class="photo-box" onclick="triggerInput(2)">
+                        <span id="plus-2">+</span>
+                        <img id="preview-2" alt="Preview" style="display:none;">
+                        <input type="file" id="input-2" hidden accept="image/*" onchange="previewImage(this, 2)">
+                    </div>
+                    <div class="photo-box" onclick="triggerInput(3)">
+                        <span id="plus-3">+</span>
+                        <img id="preview-3" alt="Preview" style="display:none;">
+                        <input type="file" id="input-3" hidden accept="image/*" onchange="previewImage(this, 3)">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">Finalizar Cadastro</button>
+                
+                <div class="info-text">
+                    <p>Ao prosseguir, você declara estar ciente e de acordo com os nossos <a href="#" onclick="return false;">Termos de Uso</a> (substitua pelo link real).
+                <p>O cadastro e uso da plataforma são <b>permitidos apenas para pessoas maiores de 18 (dezoito) anos.</b></p> 
+                <p>Para garantir o comprimento dessa regra, poderemos realizar a verificação de idade dos usuários cadastrados.</p>
+                É proibido o uso para fins ilicitos, inclusive prostituição, bem como atividades comerciais de qualquer natureza.
+                </p>
+                </div>
+            </section>
+        </form>
+
+        <section class="exclusivity-badge">
+            <strong>🔒 Acesso Exclusivo | xxxxxxxxxxxxxxxxxx</strong>
+            <p>Este portal é reservado xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gym Paquera · Todos os direitos reservados.</p>
+    </footer>
+    </div>
+
+    <script src="js/toast.js"></script>
+    <script src="js/site-nav.js" defer></script>
+    <script src="js/nav-active.js" defer></script>
+    <script src="js/api.js"></script>
+    <script>
+        function triggerInput(id) {
+            document.getElementById('input-' + id).click();
+        }
+
+        function previewImage(input, id) {
+            var preview = document.getElementById('preview-' + id);
+            var plus = document.getElementById('plus-' + id);
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    plus.style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        var senha = document.getElementById('senha');
+        var confirma = document.getElementById('confirmar_senha');
+        var erro = document.getElementById('msgErro');
+
+        function validarSenha() {
+            if (confirma.value !== '' && senha.value !== confirma.value) {
+                erro.style.display = 'block';
+                confirma.style.borderColor = 'var(--primary)';
+            } else {
+                erro.style.display = 'none';
+                confirma.style.borderColor = 'var(--border)';
+            }
+        }
+
+        senha.addEventListener('input', validarSenha);
+        confirma.addEventListener('input', validarSenha);
+
+        document.getElementById('profileForm').onsubmit = async function (e) {
+            e.preventDefault();
+            if (senha.value !== confirma.value) {
+                if (window.showToast) showToast('As senhas precisam ser iguais!', { type: 'warning' });
+                else alert('As senhas precisam ser iguais!');
+                return;
+            }
+            var fd = new FormData();
+            fd.append('sou', document.getElementById('sou').value);
+            fd.append('procuro', document.getElementById('procuro').value);
+            fd.append('gym', document.getElementById('gym').value.trim());
+            fd.append('matricula', document.getElementById('matricula').value.trim());
+            fd.append('estado', document.getElementById('estado').value);
+            fd.append('cidade', document.getElementById('cidade').value.trim());
+            fd.append('nickname', document.getElementById('nickname').value.trim());
+            fd.append('nascimento', document.getElementById('nascimento').value);
+            fd.append('email', document.getElementById('email').value.trim());
+            fd.append('password', document.getElementById('senha').value);
+            for (var i = 1; i <= 3; i++) {
+                var inp = document.getElementById('input-' + i);
+                if (inp && inp.files && inp.files[0]) {
+                    fd.append('photos', inp.files[0]);
+                }
+            }
+            try {
+                await api('POST', '/auth/register', fd);
+                if (window.showToast) showToast('Cadastro criado. Redirecionando para o login…', { type: 'success' });
+                setTimeout(function () { window.location.href = 'login.html'; }, 600);
+            } catch (err) {
+                if (window.showToast) showToast(err.message, { type: 'error' });
+                else alert(err.message);
+            }
+        };
+    </script>
+</body>
+</html>

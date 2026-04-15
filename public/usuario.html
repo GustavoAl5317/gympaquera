@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil · Gym Paquera</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/perfil-profile.css">
+    <style>
+        :root { --top-nav-h: var(--gp-header-h); }
+        body { font-family: var(--gp-font); padding-top: var(--top-nav-h); display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+        #site-top-nav-usuario {
+            position: fixed !important;
+            top: 0; left: 0; right: 0;
+            z-index: 99999;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen antialiased">
+
+    <header id="site-top-nav-usuario" class="h-16 flex items-center justify-between px-4 sm:px-6 max-w-[1600px] mx-auto w-full">
+        <a href="Perfil.html" class="inline-flex items-center gap-2 text-slate-600 hover:text-orange-600 transition text-sm font-semibold no-underline">
+            <i class="bi bi-arrow-left text-lg" aria-hidden="true"></i> Voltar ao painel
+        </a>
+        <span id="headerTitle" class="text-sm font-bold text-slate-800 truncate max-w-[45vw] text-center">Perfil</span>
+        <span class="w-[7rem] sm:w-28 shrink-0" aria-hidden="true"></span>
+    </header>
+
+    <main class="max-w-xl mx-auto px-4 pb-16 pt-2 sm:pt-4 flex-1 w-full">
+        <section class="relative" aria-label="Fotos em destaque">
+            <div id="heroWrap" class="usuario-hero-wrap mx-auto">
+                <img id="heroImg" src="" alt="" class="usuario-hero-img opacity-0 transition-opacity duration-300">
+                <div id="heroPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 gap-2 bg-slate-200/80">
+                    <i class="bi bi-person-bounding-box text-6xl opacity-50" aria-hidden="true"></i>
+                    <p class="text-sm font-medium">Sem foto no perfil</p>
+                </div>
+                <div class="usuario-hero-shade"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-[1]">
+                    <h1 id="heroName" class="text-2xl sm:text-3xl font-bold tracking-tight text-white drop-shadow-md m-0">—</h1>
+                    <p id="heroMeta" class="text-white/90 text-sm mt-1.5 m-0 flex items-center gap-2 flex-wrap">
+                        <i class="bi bi-geo-alt text-orange-300 shrink-0" aria-hidden="true"></i>
+                        <span id="heroLoc">—</span>
+                    </p>
+                </div>
+                <button type="button" id="heroPrev" class="absolute left-2 top-1/2 -translate-y-1/2 z-[2] w-11 h-11 rounded-full bg-black/40 hover:bg-black/55 text-white flex items-center justify-center border border-white/25 opacity-90 transition hidden" aria-label="Foto anterior">
+                    <i class="bi bi-chevron-left text-xl" aria-hidden="true"></i>
+                </button>
+                <button type="button" id="heroNext" class="absolute right-2 top-1/2 -translate-y-1/2 z-[2] w-11 h-11 rounded-full bg-black/40 hover:bg-black/55 text-white flex items-center justify-center border border-white/25 opacity-90 transition hidden" aria-label="Próxima foto">
+                    <i class="bi bi-chevron-right text-xl" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div id="thumbStrip" class="usuario-thumb-strip max-w-xl mx-auto"></div>
+        </section>
+
+        <section class="mt-6 space-y-4" aria-label="Dados do perfil">
+            <div class="usuario-info-card">
+                <div class="usuario-info-row">
+                    <i class="bi bi-heart-pulse" aria-hidden="true"></i>
+                    <div class="min-w-0">
+                        <p class="usuario-info-label">Sobre</p>
+                        <p id="txtSouProcuro" class="usuario-info-value">—</p>
+                    </div>
+                </div>
+                <div class="usuario-info-row">
+                    <i class="bi bi-building" aria-hidden="true"></i>
+                    <div class="min-w-0">
+                        <p class="usuario-info-label">Academia</p>
+                        <p id="txtGym" class="usuario-info-value">—</p>
+                    </div>
+                </div>
+                <div class="usuario-info-row">
+                    <i class="bi bi-shield-check" aria-hidden="true"></i>
+                    <div class="min-w-0">
+                        <p class="usuario-info-label">Código público</p>
+                        <p id="txtUid" class="usuario-info-value usuario-info-value--mono">—</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button type="button" id="btnMensagem" class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/25 transition border-0 cursor-pointer text-[15px]">
+                    <i class="bi bi-chat-heart-fill" aria-hidden="true"></i> Mensagem
+                </button>
+                <a href="Perfil.html" class="flex-1 flex items-center justify-center gap-2 bg-white text-slate-700 font-semibold py-3.5 rounded-xl border border-slate-200 shadow-sm hover:bg-slate-50 no-underline transition text-[15px]">
+                    <i class="bi bi-search-heart" aria-hidden="true"></i> Buscar mais
+                </a>
+            </div>
+        </section>
+
+        <section class="perfil-gallery-section mt-8" aria-label="Todas as fotos">
+            <div class="perfil-gallery-head">
+                <h2>Galeria</h2>
+                <span id="pubGaleriaCount" class="perfil-gallery-count" hidden></span>
+            </div>
+            <div id="photoGrid" class="perfil-gallery"></div>
+        </section>
+    </main>
+
+    <div id="pubLightbox" class="perfil-lightbox" hidden role="dialog" aria-modal="true" aria-label="Ampliar foto">
+        <div class="perfil-lightbox__bar">
+            <button type="button" id="lbClose" class="perfil-lightbox__close" aria-label="Fechar">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+            <span id="lbCounter" class="perfil-lightbox__count"></span>
+            <span style="width:2.75rem" aria-hidden="true"></span>
+        </div>
+        <div class="perfil-lightbox__stage">
+            <button type="button" id="lbPrev" class="perfil-lightbox__nav perfil-lightbox__nav--prev" aria-label="Anterior">
+                <i class="bi bi-chevron-left" aria-hidden="true"></i>
+            </button>
+            <img id="lbImg" src="" alt="" class="perfil-lightbox__img">
+            <button type="button" id="lbNext" class="perfil-lightbox__nav perfil-lightbox__nav--next" aria-label="Próxima">
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        (function () {
+            var params = new URLSearchParams(window.location.search);
+            var userId = parseInt(params.get('id') || '', 10);
+            if (!userId) {
+                window.location.href = 'Perfil.html';
+                return;
+            }
+
+            var photos = [];
+            var idx = 0;
+            var profile = null;
+
+            var heroImg = document.getElementById('heroImg');
+            var heroPlaceholder = document.getElementById('heroPlaceholder');
+            var heroName = document.getElementById('heroName');
+            var heroLoc = document.getElementById('heroLoc');
+            var headerTitle = document.getElementById('headerTitle');
+            var thumbStrip = document.getElementById('thumbStrip');
+            var photoGrid = document.getElementById('photoGrid');
+            var heroPrev = document.getElementById('heroPrev');
+            var heroNext = document.getElementById('heroNext');
+            var pubCount = document.getElementById('pubGaleriaCount');
+
+            function joinMeta(parts) {
+                return parts.filter(function (p) {
+                    return p != null && String(p).trim() !== '';
+                }).join(' · ') || '—';
+            }
+
+            function showHero(i) {
+                if (!photos.length) {
+                    heroImg.classList.add('opacity-0');
+                    heroPlaceholder.classList.remove('hidden');
+                    heroPrev.classList.add('hidden');
+                    heroNext.classList.add('hidden');
+                    return;
+                }
+                idx = ((i % photos.length) + photos.length) % photos.length;
+                heroPlaceholder.classList.add('hidden');
+                heroImg.onerror = function () {
+                    heroImg.classList.add('opacity-0');
+                    heroPlaceholder.classList.remove('hidden');
+                };
+                heroImg.onload = function () {
+                    heroImg.classList.remove('opacity-0');
+                };
+                heroImg.src = photos[idx];
+                heroImg.alt = profile ? 'Foto de ' + profile.nickname : '';
+                if (heroImg.complete) heroImg.classList.remove('opacity-0');
+                heroPrev.classList.toggle('hidden', photos.length < 2);
+                heroNext.classList.toggle('hidden', photos.length < 2);
+                thumbStrip.querySelectorAll('[data-ti]').forEach(function (b, k) {
+                    b.classList.toggle('is-active', k === idx);
+                });
+            }
+
+            function openLightbox(i) {
+                if (!photos.length) return;
+                idx = i;
+                var lb = document.getElementById('pubLightbox');
+                var lbImg = document.getElementById('lbImg');
+                var lbCounter = document.getElementById('lbCounter');
+                var lbPrev = document.getElementById('lbPrev');
+                var lbNext = document.getElementById('lbNext');
+                var lbClose = document.getElementById('lbClose');
+
+                function syncLb() {
+                    lbImg.src = photos[idx];
+                    lbImg.alt = profile ? 'Foto de ' + profile.nickname : '';
+                    lbCounter.textContent = photos.length === 1 ? '1 foto' : (idx + 1) + ' / ' + photos.length;
+                    var one = photos.length < 2;
+                    lbPrev.style.visibility = one ? 'hidden' : '';
+                    lbNext.style.visibility = one ? 'hidden' : '';
+                }
+                syncLb();
+                lb.hidden = false;
+                document.body.style.overflow = 'hidden';
+
+                function close() {
+                    lb.hidden = true;
+                    document.body.style.overflow = '';
+                    document.removeEventListener('keydown', onKey, false);
+                }
+                function onKey(ev) {
+                    if (ev.key === 'Escape') close();
+                    if (ev.key === 'ArrowLeft') {
+                        idx = (idx - 1 + photos.length) % photos.length;
+                        syncLb();
+                        showHero(idx);
+                    }
+                    if (ev.key === 'ArrowRight') {
+                        idx = (idx + 1) % photos.length;
+                        syncLb();
+                        showHero(idx);
+                    }
+                }
+                lbClose.onclick = close;
+                lbPrev.onclick = function () {
+                    idx = (idx - 1 + photos.length) % photos.length;
+                    syncLb();
+                    showHero(idx);
+                };
+                lbNext.onclick = function () {
+                    idx = (idx + 1) % photos.length;
+                    syncLb();
+                    showHero(idx);
+                };
+                lb.onclick = function (e) {
+                    if (e.target === lb) close();
+                };
+                document.addEventListener('keydown', onKey, false);
+            }
+
+            heroPrev.onclick = function () { showHero(idx - 1); };
+            heroNext.onclick = function () { showHero(idx + 1); };
+
+            document.getElementById('btnMensagem').onclick = function () {
+                if (!profile) return;
+                try {
+                    sessionStorage.setItem('openChatWith', String(profile.id));
+                    sessionStorage.setItem('openChatWithName', profile.nickname || '');
+                    sessionStorage.setItem('openChatWithPub', profile.publicUid || '');
+                } catch (e) {}
+                window.location.href = 'Perfil.html';
+            };
+
+            api('GET', '/users/profile/' + userId).then(function (data) {
+                profile = data.profile;
+                headerTitle.textContent = profile.nickname || 'Perfil';
+                heroName.textContent =
+                    (profile.nickname || '—') +
+                    (profile.age != null ? ', ' + profile.age + ' anos' : '');
+                heroLoc.textContent = joinMeta([profile.gym, profile.cidade, profile.estado]);
+
+                document.getElementById('txtSouProcuro').textContent =
+                    (profile.sou || '—') + ' · Procuro ' + (profile.procuro || '—');
+                document.getElementById('txtGym').textContent = profile.gym && String(profile.gym).trim() ? profile.gym : '—';
+                document.getElementById('txtUid').textContent = profile.publicUid || '—';
+
+                photos = [];
+                if (Array.isArray(profile.photos) && profile.photos.length) {
+                    photos = profile.photos.filter(function (x) {
+                        return x != null && String(x).trim() !== '';
+                    });
+                }
+                if (!photos.length && profile.photoUrl) photos = [profile.photoUrl];
+
+                thumbStrip.innerHTML = '';
+                photoGrid.innerHTML = '';
+                photoGrid.classList.remove('has-lead');
+
+                if (photos.length) {
+                    if (pubCount) {
+                        pubCount.textContent = photos.length + (photos.length === 1 ? ' foto' : ' fotos');
+                        pubCount.hidden = false;
+                    }
+                    var useLead = photos.length >= 3;
+                    photoGrid.classList.toggle('has-lead', useLead);
+
+                    photos.forEach(function (src, k) {
+                        var b = document.createElement('button');
+                        b.type = 'button';
+                        b.setAttribute('data-ti', String(k));
+                        if (k === 0) b.classList.add('is-active');
+                        b.setAttribute('aria-label', 'Foto ' + (k + 1));
+                        var im = document.createElement('img');
+                        im.src = src;
+                        im.alt = '';
+                        b.appendChild(im);
+                        b.onclick = function () { showHero(k); };
+                        thumbStrip.appendChild(b);
+
+                        var lead = useLead && k === 0 ? ' perfil-gallery-cell--lead' : '';
+                        var cell = document.createElement('button');
+                        cell.type = 'button';
+                        cell.className = 'perfil-gallery-cell' + lead;
+                        cell.setAttribute('aria-label', 'Ampliar foto ' + (k + 1));
+                        var im2 = document.createElement('img');
+                        im2.src = src;
+                        im2.alt = '';
+                        im2.loading = 'lazy';
+                        cell.appendChild(im2);
+                        cell.onclick = function () { openLightbox(k); };
+                        photoGrid.appendChild(cell);
+                    });
+                } else {
+                    if (pubCount) pubCount.hidden = true;
+                    photoGrid.innerHTML =
+                        '<div class="perfil-gallery-empty" role="status">' +
+                        '<i class="bi bi-images" aria-hidden="true"></i>' +
+                        '<p>Nenhuma foto cadastrada</p>' +
+                        '<p class="perfil-gallery-empty-hint">Este perfil ainda não publicou fotos na galeria.</p>' +
+                        '</div>';
+                }
+
+                showHero(0);
+            }).catch(function (err) {
+                if (err.status === 401) {
+                    window.location.href = 'login.html?next=' + encodeURIComponent('usuario.html?id=' + userId);
+                    return;
+                }
+                heroName.textContent = 'Não foi possível carregar';
+                heroLoc.textContent = err.message || 'Tente novamente mais tarde.';
+                heroPlaceholder.classList.remove('hidden');
+            });
+        })();
+    </script>
+</body>
+</html>

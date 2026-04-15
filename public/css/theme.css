@@ -1,0 +1,299 @@
+/**
+ * Gym Paquera — tokens visuais + header marketing (páginas sem Tailwind)
+ * Compat: variáveis antigas (--primary, --bg-light, …) apontam para os tokens.
+ */
+:root {
+  --gp-font: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --gp-bg: #f8fafc;
+  --gp-surface: #ffffff;
+  --gp-text: #0f172a;
+  --gp-text-muted: #64748b;
+  --gp-accent: #ea580c;
+  --gp-accent-hover: #c2410c;
+  --gp-brand-rose: #ff4d6d;
+  --gp-brand-rose-dark: #c9184a;
+  --gp-border: #e2e8f0;
+  --gp-success: #16a34a;
+  --gp-danger: #dc2626;
+  --gp-radius: 12px;
+  --gp-radius-lg: 20px;
+  --gp-radius-pill: 9999px;
+  --gp-shadow-header: 0 1px 0 rgba(0, 0, 0, 0.06), 0 4px 24px rgba(0, 0, 0, 0.06);
+  --gp-shadow-card: 0 10px 40px rgba(15, 23, 42, 0.08);
+  --gp-header-h: 4rem;
+  --gp-max-width: 1600px;
+  --gp-read-max: 56rem;
+
+  /* Legado (cadastro, login, mypay) */
+  --primary: var(--gp-brand-rose);
+  --primary-dark: var(--gp-brand-rose-dark);
+  --bg-light: var(--gp-bg);
+  --text-dark: #1e293b;
+  --gray: var(--gp-text-muted);
+  --white: var(--gp-surface);
+  --border: var(--gp-border);
+  --shadow: var(--gp-shadow-card);
+  --success: var(--gp-success);
+  --danger: var(--gp-danger);
+  --site-header-offset: var(--gp-header-h);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body.gp-has-marketing-nav {
+  padding-top: var(--gp-header-h);
+  font-family: var(--gp-font);
+  background: var(--gp-bg);
+  color: var(--gp-text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ——— Marketing nav ——— */
+.gp-marketing-nav {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  max-width: 100vw;
+  box-sizing: border-box;
+  background: var(--gp-surface);
+  box-shadow: var(--gp-shadow-header);
+}
+
+.gp-marketing-nav__bar {
+  max-width: var(--gp-max-width);
+  margin: 0 auto;
+  height: var(--gp-header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .gp-marketing-nav__bar {
+    padding: 0 2rem;
+  }
+}
+
+.gp-logo {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--gp-accent);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .gp-logo {
+    font-size: 1.35rem;
+  }
+}
+
+.gp-marketing-nav__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .gp-marketing-nav__links {
+    display: flex;
+  }
+}
+
+.gp-marketing-nav__links a {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--gp-text-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.gp-marketing-nav__links a:hover {
+  color: var(--gp-accent);
+}
+
+.gp-marketing-nav__links a.is-active {
+  color: var(--gp-accent);
+  font-weight: 600;
+}
+
+.gp-marketing-nav__cta {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .gp-marketing-nav__cta {
+    display: flex;
+  }
+}
+
+.gp-link-quiet {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--gp-text-muted);
+  text-decoration: none;
+}
+
+.gp-link-quiet:hover {
+  color: var(--gp-accent);
+}
+
+.gp-link-quiet.is-active {
+  color: var(--gp-accent);
+}
+
+.gp-btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gp-accent);
+  color: #fff !important;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--gp-radius-pill);
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25);
+  transition: background 0.15s ease, transform 0.1s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.gp-btn-pill:hover {
+  background: var(--gp-accent-hover);
+}
+
+.gp-btn-pill.is-active {
+  box-shadow: 0 0 0 2px var(--gp-accent);
+}
+
+.gp-marketing-burger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--gp-radius);
+  border: 1px solid var(--gp-border);
+  background: var(--gp-bg);
+  color: var(--gp-text);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.gp-marketing-burger:hover {
+  background: #f1f5f9;
+}
+
+@media (min-width: 768px) {
+  .gp-marketing-burger {
+    display: none;
+  }
+}
+
+.gp-marketing-panel {
+  overflow: hidden;
+  border-top: 1px solid var(--gp-border);
+  background: var(--gp-surface);
+  transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 768px) {
+  .gp-marketing-panel {
+    display: none !important;
+  }
+}
+
+.gp-marketing-panel__inner {
+  max-width: var(--gp-max-width);
+  margin: 0 auto;
+  padding: 1rem 1rem 1.25rem;
+}
+
+.gp-marketing-panel__inner a {
+  display: block;
+  padding: 0.75rem 0.75rem;
+  border-radius: var(--gp-radius);
+  font-weight: 600;
+  color: var(--gp-text);
+  text-decoration: none;
+}
+
+.gp-marketing-panel__inner a:hover {
+  background: #fff7ed;
+  color: var(--gp-accent);
+}
+
+.gp-marketing-panel__inner a.is-active {
+  background: #ffedd5;
+  color: var(--gp-accent-hover);
+}
+
+.gp-marketing-panel__cta {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--gp-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gp-marketing-panel__cta .gp-link-quiet {
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: var(--gp-radius);
+  border: 1px solid var(--gp-border);
+}
+
+.gp-marketing-panel__cta .gp-btn-pill {
+  text-align: center;
+}
+
+.gp-subscribe-link {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--gp-success) !important;
+}
+
+@media (min-width: 768px) {
+  .gp-marketing-nav__subscribe {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--gp-success) !important;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .gp-marketing-nav__subscribe:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 767px) {
+  body.gp-has-marketing-nav {
+    --site-header-offset: var(--gp-header-h);
+  }
+}
+
+@media (min-width: 768px) {
+  .gp-marketing-backdrop {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}

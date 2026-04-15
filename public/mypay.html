@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Paquera | Conexões Fitness</title>
+    <meta name="description" content="Conecte-se com pessoas da mesma academia. Encontre treino e paquera no mesmo lugar."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/site-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { width: 100%; min-height: 100%; }
+        body { line-height: 1.6; min-height: 100dvh; width: 100%; }
+
+        /* Container */
+        .main-container {
+            flex: 1;
+            width: 100%;
+            max-width: min(1200px, 100% - 32px);
+            margin: 20px auto 28px;
+            padding: 0 clamp(16px, 4vw, 28px);
+        }
+
+        .card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        h2 { 
+            color: var(--primary); 
+            margin-bottom: 20px; 
+            font-size: 1.4rem; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Pagamento */
+        .payment-box {
+            background: #fff0f3;
+            border: 2px solid var(--primary);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .price-tag {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin: 10px 0;
+        }
+
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .payment-methods-grid img {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        /* Upload de Comprovante (Opcional, mas melhora a UX) */
+        .upload-section {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn-submit:hover { background: var(--primary-dark); }
+
+        .badge-exclusive {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 20px;
+        }
+
+        .pix-box {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .pix-box img.qr-img {
+            max-width: 280px;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .pix-code-wrap {
+            margin-top: 1rem;
+            text-align: left;
+        }
+        .pix-code-wrap label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray);
+        }
+        .pix-code {
+            width: 100%;
+            margin-top: 0.35rem;
+            padding: 0.65rem;
+            font-size: 0.75rem;
+            font-family: ui-monospace, monospace;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 72px;
+        }
+        .btn-secondary {
+            background: #fff;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .btn-secondary:hover { background: #fff0f3; }
+        .status-pill {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        .status-pill.ok { background: #d4edda; color: #155724; }
+        .status-pill.wait { background: #fff3cd; color: #856404; }
+        .alert-config {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-top: 12px;
+            text-align: left;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 14px;
+            color: var(--gray);
+            font-size: 0.72rem;
+            line-height: 1.35;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+        }
+        footer p { margin: 0; }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .price-tag { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body class="gp-has-marketing-nav">
+
+<div id="gp-nav-backdrop" class="gp-nav-backdrop gp-marketing-backdrop" aria-hidden="true"></div>
+<nav class="gp-marketing-nav" aria-label="Principal">
+    <div class="gp-marketing-nav__bar">
+        <a href="index.html" class="gp-logo">Gym Paquera</a>
+        <ul class="gp-marketing-nav__links">
+            <li><a href="index.html" data-gp-nav="home">Home</a></li>
+            <li><a href="index.html#sobre" data-gp-nav="home">Sobre</a></li>
+            <li><a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a></li>
+            <li><a href="index.html#contato" data-gp-nav="home">Contato</a></li>
+        </ul>
+        <div class="gp-marketing-nav__cta">
+            <a href="login.html?next=mypay.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
+            <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+            <a href="mypay.html" class="gp-marketing-nav__subscribe" data-gp-nav="pay">Assine R$9,90/mês</a>
+        </div>
+        <button type="button" class="gp-marketing-burger" data-nav-toggle aria-expanded="false" aria-controls="gp-marketing-panel" aria-label="Abrir menu">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+    </div>
+    <div id="gp-marketing-panel" class="gp-marketing-panel" data-nav-panel data-nav-animate-height>
+        <div class="gp-marketing-panel__inner">
+            <a href="index.html" data-gp-nav="home">Home</a>
+            <a href="index.html#sobre" data-gp-nav="home">Sobre</a>
+            <a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a>
+            <a href="index.html#contato" data-gp-nav="home">Contato</a>
+            <a href="mypay.html" class="gp-subscribe-link" data-gp-nav="pay">Assine R$9,90/mês</a>
+            <div class="gp-marketing-panel__cta">
+                <a href="login.html?next=mypay.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
+                <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <main class="main-container">
+
+        <section class="payment-box">
+            <h2><i class="fas fa-crown"></i> Torne-se Premium</h2>
+            <p>Integração oficial <strong>Mercado Pago Checkout Pro</strong> — Pix, cartão e outros meios no ambiente deles.</p>
+            <div class="price-tag">R$ <span id="priceDisplay">9,90</span><small style="font-size: 1rem;">/mês</small></div>
+            <p id="premiumStatusLine" class="status-pill wait" style="display: none;"></p>
+            <p id="mpRetornoBox" class="alert-config" style="display: none; margin-top: 12px;"></p>
+
+            <div style="text-align: left; background: white; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                <p><strong><i class="fas fa-info-circle"></i> Como funciona</strong></p>
+                <ol style="margin-left: 20px; font-size: 0.9rem; margin-top: 10px; line-height: 1.5;">
+                    <li><strong>É obrigatório estar logado</strong> — sem sessão o checkout nem inicia (nem por link direto).</li>
+                    <li>Clique no botão abaixo: você vai para o <strong>checkout do Mercado Pago</strong> (fora deste site).</li>
+                    <li>Após pagar, você volta aqui; o plano libera quando o Mercado Pago confirmar (webhook ou consulta automática).</li>
+                </ol>
+                <p id="premiumDurationNote" style="font-size: 0.9rem; margin-top: 14px; line-height: 1.55; color: var(--gray); border-top: 1px solid var(--border); padding-top: 12px;">
+                    Cada pagamento aprovado libera o <strong>envio de mensagens</strong> por <strong id="premiumDaysSpan">30</strong> dias (contados a partir da liberação no sistema).
+                    Quando esse prazo acaba, <strong>volta o modo gratuito</strong> (sem poder enviar mensagens) até você fazer um novo pagamento.
+                    <strong>Não há cobrança ou renovação automática.</strong>
+                </p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2><i class="fas fa-credit-card"></i> Checkout Mercado Pago</h2>
+            <p style="color: var(--gray); margin-bottom: 15px;">Toda a etapa de pagamento ocorre no <strong>Mercado Pago</strong>. Este site só inicia o pedido e recebe o retorno.</p>
+
+            <p id="loginHint" style="display: none;">
+                <a href="login.html?next=mypay.html" style="color: var(--primary); font-weight: 700;">Faça login</a> para abrir o checkout. O pagamento só pode ser feito com conta autenticada.
+            </p>
+
+            <p id="checkoutErrBox" class="alert-config" style="display: none;"></p>
+
+            <form id="formPixCheckout" method="POST" action="/api/payments/pix/checkout" style="display: none;">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-external-link-alt"></i> Ir para o Mercado Pago pagar
+                </button>
+            </form>
+
+            <div id="pixConfigWarn" class="alert-config" style="display: none;">
+                O servidor ainda não tem <code>MERCADOPAGO_ACCESS_TOKEN</code>. Configure no ambiente de hospedagem para gerar cobranças reais.
+            </div>
+
+            <div id="pixArea" class="pix-box" style="display: none;">
+                <p style="font-size: 0.9rem; color: var(--gray);"><strong>Alternativa:</strong> escaneie no app do banco ou copie o Pix copia e cola (quando o Mercado Pago não devolver página própria).</p>
+                <img id="pixQrImg" class="qr-img" alt="QR Code Pix" style="display: none;">
+                <div class="pix-code-wrap">
+                    <label for="pixCopiaCola">Pix copia e cola</label>
+                    <textarea id="pixCopiaCola" class="pix-code" readonly rows="4"></textarea>
+                </div>
+                <button type="button" id="btnCopyPix" class="btn-secondary"><i class="fas fa-copy"></i> Copiar código</button>
+                <p id="pixPaymentStatus" style="margin-top: 12px; font-size: 0.9rem; color: var(--gray);"></p>
+            </div>
+        </section>
+
+        <section class="badge-exclusive">
+            <strong><i class="fas fa-lock"></i> Pagamento seguro</strong>
+            <p>Processamento pelo Mercado Pago (Checkout Pro). Você não digita dados de cartão ou banco nesta página.</p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gym Paquera · Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="js/toast.js"></script>
+    <script src="js/site-nav.js" defer></script>
+    <script src="js/nav-active.js" defer></script>
+    <script src="js/api.js"></script>
+    <script>
+        (function () {
+            var priceEl = document.getElementById('priceDisplay');
+            var loginHint = document.getElementById('loginHint');
+            var formCheckout = document.getElementById('formPixCheckout');
+            var checkoutErrBox = document.getElementById('checkoutErrBox');
+            var pixArea = document.getElementById('pixArea');
+            var pixQr = document.getElementById('pixQrImg');
+            var pixTa = document.getElementById('pixCopiaCola');
+            var pixStatus = document.getElementById('pixPaymentStatus');
+            var premiumLine = document.getElementById('premiumStatusLine');
+            var configWarn = document.getElementById('pixConfigWarn');
+            var currentPaymentId = null;
+            var pollTimer = null;
+
+            function fmtBrl(n) {
+                return Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            function showPremiumFromUser(u) {
+                if (!premiumLine) return;
+                if (u && u.premiumActive) {
+                    premiumLine.style.display = 'inline-block';
+                    premiumLine.className = 'status-pill ok';
+                    premiumLine.textContent = 'Você já é Premium até ' + (u.premiumUntil ? new Date(u.premiumUntil).toLocaleString('pt-BR') : '');
+                } else {
+                    premiumLine.style.display = 'none';
+                }
+            }
+
+            function stopPoll() {
+                if (pollTimer) clearInterval(pollTimer);
+                pollTimer = null;
+            }
+
+            function startPoll() {
+                stopPoll();
+                if (!currentPaymentId) return;
+                pollTimer = setInterval(async function () {
+                    try {
+                        var s = await api('GET', '/payments/pix/' + currentPaymentId + '/status');
+                        pixStatus.textContent = 'Status: ' + s.status + (s.premiumActive ? ' — Premium ativo!' : '');
+                        if (s.premiumActive) {
+                            stopPoll();
+                            premiumLine.style.display = 'inline-block';
+                            premiumLine.className = 'status-pill ok';
+                            premiumLine.textContent = 'Premium liberado! Até ' + (s.premiumUntil ? new Date(s.premiumUntil).toLocaleString('pt-BR') : '');
+                        }
+                    } catch (e) {
+                        pixStatus.textContent = e.message || 'Erro ao consultar status.';
+                    }
+                }, 4000);
+            }
+
+            fetch('/api/payments/info').then(function (r) { return r.json(); }).then(function (info) {
+                if (priceEl && info.priceBrl != null) priceEl.textContent = fmtBrl(info.priceBrl);
+                var daysSpan = document.getElementById('premiumDaysSpan');
+                if (daysSpan && info.premiumDays != null && Number.isFinite(Number(info.premiumDays))) {
+                    daysSpan.textContent = String(Math.max(1, Math.floor(Number(info.premiumDays))));
+                }
+            }).catch(function () {});
+
+            (function readCheckoutFlash() {
+                var q = new URLSearchParams(window.location.search);
+                var err = q.get('checkoutError');
+                if (err) {
+                    checkoutErrBox.style.display = 'block';
+                    checkoutErrBox.textContent = decodeURIComponent(err);
+                    if (q.get('code') === 'config') configWarn.style.display = 'block';
+                    history.replaceState({}, '', 'mypay.html');
+                }
+            })();
+
+            (function handleCheckoutReturn() {
+                var q = new URLSearchParams(window.location.search);
+                if (q.get('mp') !== 'retorno') return;
+                var box = document.getElementById('mpRetornoBox');
+                if (!box) return;
+                box.style.display = 'block';
+                var st = q.get('st') || '';
+                var lines = {
+                    aprovado: 'Pagamento aprovado no Mercado Pago. Sincronizando seu plano…',
+                    pendente: 'Pagamento pendente (ex.: aguardando Pix). Quando o MP confirmar, seu plano será liberado automaticamente.',
+                    recusado: 'Pagamento não concluído. Você pode tentar de novo com o botão abaixo.'
+                };
+                box.textContent = lines[st] || 'Retorno do Mercado Pago recebido.';
+                history.replaceState({}, '', 'mypay.html');
+                if (st !== 'aprovado' && st !== 'pendente') return;
+                var n = 0;
+                var maxTries = 40;
+                var iv = null;
+                function checkPremium() {
+                    n++;
+                    api('GET', '/auth/me')
+                        .then(function (d) {
+                            if (d.user && d.user.premiumActive) {
+                                if (iv) clearInterval(iv);
+                                showPremiumFromUser(d.user);
+                                box.style.background = '#d4edda';
+                                box.style.borderColor = '#c3e6cb';
+                                box.style.color = '#155724';
+                                box.textContent = 'Plano ativo! Você já pode enviar mensagens no Gym Paquera.';
+                                return;
+                            }
+                            if (n >= maxTries) {
+                                if (iv) clearInterval(iv);
+                                box.textContent +=
+                                    ' Ainda não apareceu aqui? Aguarde alguns minutos ou atualize a página (o webhook do Mercado Pago pode demorar).';
+                            }
+                        })
+                        .catch(function () {
+                            if (n >= maxTries && iv) clearInterval(iv);
+                        });
+                }
+                checkPremium();
+                iv = setInterval(checkPremium, 3000);
+            })();
+
+            if (formCheckout) {
+                formCheckout.addEventListener('submit', function () {
+                    var btn = formCheckout.querySelector('button[type="submit"]');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.textContent = 'Redirecionando…';
+                    }
+                });
+            }
+
+            var loggedUser = null;
+            api('GET', '/auth/me').then(function (data) {
+                loggedUser = data.user;
+                showPremiumFromUser(loggedUser);
+                loginHint.style.display = 'none';
+                formCheckout.style.display = 'block';
+
+                var q = new URLSearchParams(window.location.search);
+                var pid = q.get('paymentId');
+                if (pid) {
+                    currentPaymentId = pid;
+                    pixArea.style.display = 'block';
+                    pixStatus.textContent = 'Carregando dados do Pix…';
+                    api('GET', '/payments/pix/' + encodeURIComponent(pid) + '/receipt')
+                        .then(function (data) {
+                            if (data.qrCodeBase64) {
+                                pixQr.src = 'data:image/png;base64,' + data.qrCodeBase64;
+                                pixQr.style.display = 'inline-block';
+                            }
+                            pixTa.value = data.qrCode || '';
+                            pixStatus.textContent =
+                                'Status: ' + (data.status || 'pending') + '. Pague no app do banco; esta página atualiza quando confirmarmos.';
+                            if (data.ticketUrl) {
+                                pixStatus.innerHTML +=
+                                    ' <a href="' +
+                                    data.ticketUrl.replace(/"/g, '&quot;') +
+                                    '" target="_blank" rel="noopener">Abrir página do Mercado Pago</a>';
+                            }
+                            startPoll();
+                        })
+                        .catch(function (e) {
+                            pixStatus.textContent = e.message || 'Não foi possível carregar o Pix.';
+                        });
+                    history.replaceState({}, '', 'mypay.html');
+                }
+            }).catch(function () {
+                loginHint.style.display = 'block';
+                formCheckout.style.display = 'none';
+            });
+
+            document.getElementById('btnCopyPix').addEventListener('click', function () {
+                var t = pixTa.value;
+                if (!t) return;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(t).then(function () {
+                        if (window.showToast) showToast('Código Pix copiado.', { type: 'success' });
+                        else alert('Código Pix copiado.');
+                    }).catch(function () {
+                        pixTa.select();
+                        document.execCommand('copy');
+                        if (window.showToast) showToast('Código copiado.', { type: 'success' });
+                        else alert('Código copiado.');
+                    });
+                } else {
+                    pixTa.select();
+                    document.execCommand('copy');
+                    if (window.showToast) showToast('Código copiado.', { type: 'success' });
+                    else alert('Código copiado.');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

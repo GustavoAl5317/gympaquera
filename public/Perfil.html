@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Paquera | Meu Perfil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/perfil-panels.css">
+    <link rel="stylesheet" href="css/perfil-profile.css">
+    <link rel="stylesheet" href="css/site-ui.css">
+    <style>
+        :root {
+            --top-nav-h: 4rem;
+            --perfil-footer-h: 3rem;
+            --app-vh: 100dvh;
+            --sidebar-w: 260px;
+            --sidebar-collapsed-w: 68px;
+            --color-sidebar-bg: #0f172a;
+            --color-sidebar-hover: rgba(255,255,255,0.06);
+            --color-sidebar-active: rgba(249,115,22,0.15);
+            --color-sidebar-text: #94a3b8;
+            --color-sidebar-text-active: #f97316;
+            --color-sidebar-border: rgba(255,255,255,0.06);
+            --color-surface: #ffffff;
+            --color-page-bg: #f1f5f9;
+            --color-text: #0f172a;
+            --color-text-muted: #64748b;
+            --color-accent: #f97316;
+            --color-accent-dark: #ea580c;
+            --color-border: #e2e8f0;
+            --radius-sm: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.25rem;
+            --shadow-sm: 0 1px 2px rgba(15,23,42,0.05);
+            --shadow-md: 0 4px 12px rgba(15,23,42,0.08);
+            --shadow-lg: 0 12px 32px rgba(15,23,42,0.1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { width: 100%; height: 100%; -webkit-text-size-adjust: 100%; }
+        body {
+            font-family: "Inter", system-ui, -apple-system, sans-serif;
+            background: var(--color-page-bg);
+            color: var(--color-text);
+            min-height: var(--app-vh, 100dvh);
+            width: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ═══════ TOP NAVBAR ═══════ */
+        #site-top-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--top-nav-h);
+            z-index: 99999;
+            background: rgba(15,23,42,0.97);
+            backdrop-filter: blur(16px) saturate(1.8);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .nav-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0 1.25rem;
+        }
+        @media (min-width: 640px) { .nav-inner { padding: 0 2rem; } }
+        .nav-logo {
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            text-decoration: none;
+            color: #f97316;
+            flex-shrink: 0;
+        }
+        .nav-logo span { color: #ffffff; }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .nav-link-home {
+            display: none;
+            align-items: center;
+            gap: 0.4rem;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+        .nav-link-home:hover { color: #f97316; }
+        @media (min-width: 768px) { .nav-link-home { display: flex; } }
+        .nav-user { display: none; align-items: center; gap: 0.75rem; }
+        @media (min-width: 768px) { .nav-user { display: flex; } }
+        .nav-user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .nav-user-avatar {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 8px rgba(249,115,22,0.35);
+        }
+        .nav-burger {
+            display: flex;
+            align-items: center; justify-content: center;
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .nav-burger:hover { background: rgba(255,255,255,0.1); }
+        @media (min-width: 768px) { .nav-burger { display: none; } }
+
+        /* Mobile nav panel */
+        #perfil-nav-panel {
+            transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            overflow: hidden;
+            background: #1e293b;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        @media (min-width: 768px) { #perfil-nav-panel { display: none; } }
+        .nav-mobile-inner {
+            padding: 0.75rem 1rem 1rem;
+        }
+        .nav-mobile-inner a {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.65rem 0.75rem;
+            border-radius: 0.65rem;
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+        }
+        .nav-mobile-inner a:hover { background: rgba(255,255,255,0.06); color: #f97316; }
+        .nav-mobile-user {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.65rem 0.75rem;
+            border-radius: 0.65rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .nav-mobile-user .nav-user-avatar { width: 38px; height: 38px; }
+        .nav-mobile-user span {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        /* ═══════ LAYOUT SHELL ═══════ */
+        .perfil-main-shell {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
+            padding-top: var(--top-nav-h);
+        }
+        @media (min-width: 900px) {
+            body { height: var(--app-vh, 100dvh); max-height: var(--app-vh, 100dvh); overflow: hidden; }
+            .perfil-main-shell {
+                max-height: 100%;
+                overflow: hidden;
+            }
+        }
+
+        .perfil-main-grid {
+            flex: 1 1 auto;
+            min-height: 0;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+        @media (min-width: 900px) {
+            .perfil-main-grid {
+                grid-template-columns: var(--sidebar-w) 1fr;
+                grid-template-rows: 1fr;
+                height: 100%;
+                max-height: 100%;
+                overflow: hidden;
+            }
+            .perfil-main-grid.perfil-sidebar-collapsed {
+                grid-template-columns: var(--sidebar-collapsed-w) 1fr;
+            }
+        }
+
+        /* ═══════ SIDEBAR ═══════ */
+        #perfil-layout-aside {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            min-width: 0;
+        }
+        @media (min-width: 900px) {
+            #perfil-layout-aside {
+                background: var(--color-sidebar-bg);
+                height: 100%;
+                max-height: 100%;
+                overflow: hidden;
+                z-index: 20;
+            }
+        }
+
+        #perfil-sidebar-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        @media (max-width: 899px) {
+            #perfil-sidebar-details {
+                background: #fff;
+                border-bottom: 1px solid var(--color-border);
+            }
+            #perfil-sidebar-details > summary {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1rem 1.25rem;
+                font-weight: 600;
+                font-size: 0.9375rem;
+                color: var(--color-text);
+                cursor: pointer;
+                list-none: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+            #perfil-sidebar-details > summary::-webkit-details-marker { display: none; }
+            #perfil-sidebar-details > summary::marker { display: none; content: ""; }
+        }
+        @media (min-width: 900px) {
+            #perfil-sidebar-details {
+                border: none;
+                background: transparent;
+                box-shadow: none;
+                border-radius: 0;
+                overflow: hidden;
+            }
+            #perfil-sidebar-details > summary { display: none !important; }
+        }
+
+        .perfil-sidebar-shell {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+        @media (max-width: 899px) {
+            .perfil-sidebar-shell {
+                border-top: 1px solid var(--color-border);
+            }
+        }
+        @media (min-width: 900px) {
+            .perfil-sidebar-shell {
+                overflow-y: auto;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        .perfil-sidebar-inner {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            padding: 0.75rem;
+        }
+        @media (min-width: 900px) {
+            .perfil-sidebar-inner { padding: 1rem 0.75rem; }
+        }
+
+        /* Sidebar toggle (desktop) */
+        .perfil-sidebar-toolbar {
+            display: none;
+            margin-bottom: 0.75rem;
+        }
+        @media (min-width: 900px) { .perfil-sidebar-toolbar { display: block; } }
+
+        .perfil-sidebar-toggle {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            padding: 0.55rem 0.75rem;
+            border: 1px solid var(--color-sidebar-border);
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.04);
+            cursor: pointer;
+            color: var(--color-sidebar-text);
+            font: inherit;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            transition: background 0.15s, color 0.15s;
+        }
+        .perfil-sidebar-toggle:hover {
+            background: rgba(255,255,255,0.08);
+            color: #f97316;
+        }
+        .perfil-sidebar-toggle .perfil-sidebar-toggle-icon {
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        /* Sidebar headings */
+        .perfil-sidebar-heading {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #475569;
+            margin: 0.5rem 0 0.35rem;
+            padding: 0 0.75rem;
+        }
+        @media (min-width: 900px) {
+            .perfil-sidebar-heading { color: rgba(148,163,184,0.6); }
+        }
+
+        /* Sidebar items */
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            color: #475569;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            position: relative;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: inherit;
+            width: 100%;
+            text-align: left;
+        }
+        .sidebar-item i { margin-right: 0.65rem; font-size: 1.1rem; flex-shrink: 0; }
+        @media (min-width: 900px) {
+            .sidebar-item {
+                color: var(--color-sidebar-text);
+            }
+            .sidebar-item:hover {
+                background: var(--color-sidebar-hover);
+                color: #e2e8f0;
+            }
+        }
+        @media (max-width: 899px) {
+            .sidebar-item:hover {
+                background: rgba(249,115,22,0.06);
+                color: #ea580c;
+            }
+        }
+
+        .sidebar-item.active-link {
+            color: #f97316;
+            font-weight: 700;
+        }
+        @media (min-width: 900px) {
+            .sidebar-item.active-link {
+                background: var(--color-sidebar-active);
+                color: #f97316;
+                box-shadow: inset 3px 0 0 0 #f97316;
+            }
+        }
+        @media (max-width: 899px) {
+            .sidebar-item.active-link {
+                background: rgba(249,115,22,0.08);
+            }
+        }
+
+        /* Sidebar footer */
+        .perfil-sidebar-main { flex: 1 1 auto; min-height: 0; }
+        .perfil-sidebar-footer {
+            padding-top: 0.75rem;
+            margin-top: 1rem;
+            border-top: 1px solid var(--color-sidebar-border);
+        }
+        @media (min-width: 900px) {
+            .perfil-sidebar-footer { margin-top: auto; }
+        }
+        .perfil-sidebar-footer .sidebar-item {
+            color: #64748b;
+        }
+        @media (min-width: 900px) {
+            .perfil-sidebar-footer .sidebar-item { color: #64748b; }
+            .perfil-sidebar-footer .sidebar-item:hover { color: #ef4444; background: rgba(239,68,68,0.08); }
+        }
+
+        /* Collapsed sidebar (desktop) */
+        @media (min-width: 900px) {
+            .perfil-main-grid.perfil-sidebar-collapsed .perfil-sidebar-heading { display: none; }
+            .perfil-main-grid.perfil-sidebar-collapsed .perfil-sidebar-label { display: none; }
+            .perfil-main-grid.perfil-sidebar-collapsed .perfil-sidebar-toggle {
+                width: 2.375rem; height: 2.375rem; min-width: 2.375rem;
+                padding: 0; justify-content: center; gap: 0;
+                border-radius: var(--radius-sm);
+                margin-inline: auto;
+            }
+            .perfil-main-grid.perfil-sidebar-collapsed .perfil-sidebar-toolbar { text-align: center; }
+            .perfil-main-grid.perfil-sidebar-collapsed .sidebar-item,
+            .perfil-main-grid.perfil-sidebar-collapsed button[data-frame='excluir'],
+            .perfil-main-grid.perfil-sidebar-collapsed .perfil-sidebar-footer a[data-action="logout"] {
+                justify-content: center;
+                padding-left: 0.35rem; padding-right: 0.35rem;
+            }
+            .perfil-main-grid.perfil-sidebar-collapsed .sidebar-item i,
+            .perfil-main-grid.perfil-sidebar-collapsed button[data-frame='excluir'] i,
+            .perfil-main-grid.perfil-sidebar-collapsed .perfil-sidebar-footer a[data-action="logout"] i {
+                margin-right: 0 !important;
+            }
+            .perfil-main-grid.perfil-sidebar-collapsed #msgBadge {
+                right: 0.15rem; left: auto; top: 0.2rem; transform: none;
+            }
+            .perfil-main-grid.perfil-sidebar-collapsed .perfil-sidebar-inner { padding: 0.5rem 0.35rem; }
+            .perfil-main-grid.perfil-sidebar-collapsed .perfil-sidebar-toolbar { margin-bottom: 0.5rem; }
+        }
+
+        /* ═══════ CONTENT AREA ═══════ */
+        .perfil-content-col {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            background: var(--color-page-bg);
+        }
+        @media (min-width: 900px) {
+            .perfil-content-col {
+                height: 100%;
+                max-height: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        .perfil-content-inner {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 1.5rem 0.75rem 2rem;
+        }
+        @media (min-width: 640px) { .perfil-content-inner { padding: 2rem 1rem 2.5rem; } }
+        @media (min-width: 1024px) { .perfil-content-inner { padding: 2rem 1.25rem 2.5rem; } }
+
+        /* Dynamic panel fill (chat) */
+        #display-frame.perfil-display-fill {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+        #display-frame.perfil-display-fill #msgWrap {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 899px) {
+            #display-frame.perfil-display-fill {
+                min-height: calc(var(--app-vh, 100dvh) - var(--top-nav-h) - var(--perfil-footer-h) - 3.25rem);
+            }
+        }
+
+        /* ═══════ FOOTER ═══════ */
+        .perfil-footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: 0.75rem 1rem;
+            text-align: center;
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+        .perfil-footer p {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin: 0;
+        }
+        .perfil-footer span { color: var(--color-accent); font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div id="gp-nav-backdrop" class="gp-nav-backdrop" aria-hidden="true"></div>
+
+    <!-- ═══════ TOP NAVBAR ═══════ -->
+    <nav id="site-top-nav" aria-label="Principal">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">GYM<span>PAQUERA</span></a>
+            <div class="nav-right">
+                <a href="index.html" class="nav-link-home"><i class="bi bi-house-door"></i> Início</a>
+                <div class="nav-user">
+                    <span id="headerGreeting" class="nav-user-name">Olá!</span>
+                    <div id="headerAvatar" class="nav-user-avatar">
+                        <span id="headerAvatarLetter">?</span>
+                    </div>
+                </div>
+                <button type="button" class="nav-burger" data-nav-toggle aria-expanded="false" aria-controls="perfil-nav-panel" aria-label="Abrir menu">
+                    <i class="bi bi-list" style="font-size:1.25rem;" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="perfil-nav-panel" data-nav-panel data-nav-animate-height>
+            <div class="nav-mobile-inner">
+                <a href="index.html"><i class="bi bi-house-door"></i> Início</a>
+                <div class="nav-mobile-user" style="margin-top:0.5rem;">
+                    <div id="headerAvatarM" class="nav-user-avatar">
+                        <span id="headerAvatarLetterM">?</span>
+                    </div>
+                    <span id="headerGreetingM">Olá!</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════ MAIN LAYOUT ═══════ -->
+    <main class="perfil-main-shell">
+        <div class="perfil-main-grid perfil-main-flow">
+
+            <!-- ═══ SIDEBAR ═══ -->
+            <aside id="perfil-layout-aside">
+                <details id="perfil-sidebar-details" class="group" open>
+                    <summary>
+                        <span style="display:flex;align-items:center;gap:0.5rem;"><i class="bi bi-list" style="color:#f97316;"></i> Menu do painel</span>
+                        <i class="bi bi-chevron-down" style="color:#94a3b8;transition:transform 0.3s;"></i>
+                    </summary>
+                    <div class="perfil-sidebar-shell">
+                        <div class="perfil-sidebar-inner">
+
+                            <div class="perfil-sidebar-toolbar">
+                                <button type="button" id="perfilSidebarToggle" class="perfil-sidebar-toggle" aria-expanded="true" title="Recolher menu">
+                                    <i class="bi bi-chevron-left perfil-sidebar-toggle-icon" aria-hidden="true"></i>
+                                    <span class="perfil-sidebar-label">Recolher</span>
+                                </button>
+                            </div>
+
+                            <div class="perfil-sidebar-main">
+                                <h3 class="perfil-sidebar-heading">Painel do Atleta</h3>
+                                <nav style="display:flex;flex-direction:column;gap:2px;" aria-label="Painel do atleta">
+                                    <a href="#" data-frame="meu-perfil" title="Perfil" class="sidebar-item active-link">
+                                        <i class="bi bi-person-circle" aria-hidden="true"></i><span class="perfil-sidebar-label">Perfil</span>
+                                    </a>
+                                    <a href="#" data-frame="editar-perfil" title="Editar dados" class="sidebar-item">
+                                        <i class="bi bi-pencil-square" aria-hidden="true"></i><span class="perfil-sidebar-label">Editar dados</span>
+                                    </a>
+                                    <a href="#" data-frame="favoritos" title="Favoritos" class="sidebar-item">
+                                        <i class="bi bi-star-fill" aria-hidden="true"></i><span class="perfil-sidebar-label">Favoritos</span>
+                                    </a>
+                                    <a href="#" data-frame="busca" title="Pesquisar match" class="sidebar-item">
+                                        <i class="bi bi-search-heart" aria-hidden="true"></i><span class="perfil-sidebar-label">Pesquisar Match</span>
+                                    </a>
+                                    <a href="#" data-frame="mensagens" title="Mensagens" class="sidebar-item" style="position:relative;">
+                                        <i class="bi bi-chat-heart" aria-hidden="true"></i><span class="perfil-sidebar-label">Mensagens</span>
+                                        <span id="msgBadge" class="hidden" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:#f97316;color:#fff;font-size:10px;padding:2px 7px;border-radius:9999px;font-weight:700;"></span>
+                                    </a>
+                                </nav>
+
+                                <h3 class="perfil-sidebar-heading" style="margin-top:1.5rem;">Segurança</h3>
+                                <nav style="display:flex;flex-direction:column;gap:2px;" aria-label="Segurança">
+                                    <a href="#" data-frame="bloquear" title="Bloqueados" class="sidebar-item">
+                                        <i class="bi bi-ban" aria-hidden="true"></i><span class="perfil-sidebar-label">Bloqueados</span>
+                                    </a>
+                                    <a href="#" data-frame="denunciar" title="Denunciar" class="sidebar-item">
+                                        <i class="bi bi-megaphone-fill" aria-hidden="true"></i><span class="perfil-sidebar-label">Denunciar</span>
+                                    </a>
+                                    <button type="button" data-frame="excluir" title="Excluir conta" class="sidebar-item" style="color:#ef4444;">
+                                        <i class="bi bi-trash3-fill" aria-hidden="true"></i><span class="perfil-sidebar-label">Excluir Conta</span>
+                                    </button>
+                                </nav>
+                            </div>
+
+                            <div class="perfil-sidebar-footer">
+                                <a href="#" data-action="logout" title="Sair" class="sidebar-item">
+                                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i><span class="perfil-sidebar-label">Sair</span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </details>
+            </aside>
+
+            <!-- ═══ CONTENT ═══ -->
+            <div class="perfil-content-col">
+                <div class="perfil-content-inner">
+
+                    <!-- Profile overview (shown by default) -->
+                    <div id="perfil-overview">
+                        <div class="perfil-flow-root perfil-profile">
+
+                            <!-- Profile header card -->
+                            <div class="perfil-header-card">
+                                <div class="perfil-header-banner"></div>
+                                <div class="perfil-header-body">
+                                    <div class="perfil-header-top">
+                                        <div class="perfil-avatar-wrap">
+                                            <img id="profileMainPhoto" src="" alt="" class="perfil-avatar hidden">
+                                            <div id="profileMainPhotoPh" class="perfil-avatar-ph" aria-hidden="true">?</div>
+                                        </div>
+                                        <div class="perfil-header-info">
+                                            <h1 id="profileTitle" class="perfil-profile-title">Carregando…</h1>
+                                            <p id="profileGymLoc" class="perfil-profile-tagline">—</p>
+                                            <div class="perfil-public-code" aria-label="Código público">
+                                                <i class="bi bi-shield-check" aria-hidden="true"></i>
+                                                <span id="profilePublicUid">—</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="perfil-profile-actions">
+                                        <button type="button" data-frame="editar-perfil" class="perfil-btn perfil-btn--outline">
+                                            <i class="bi bi-pencil-square" aria-hidden="true"></i> Editar dados
+                                        </button>
+                                        <button type="button" data-frame="busca" class="perfil-btn perfil-btn--primary">
+                                            <i class="bi bi-search-heart" aria-hidden="true"></i> Buscar pessoas
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profile details card -->
+                            <div class="perfil-details-card">
+                                <h2 class="perfil-section-title"><i class="bi bi-info-circle"></i> Informações</h2>
+                                <dl class="perfil-details">
+                                    <div class="perfil-dl-row">
+                                        <dt><i class="bi bi-heart" aria-hidden="true"></i> Perfil e interesse</dt>
+                                        <dd class="perfil-dd-flex">
+                                            <i id="profileSouIcon" class="bi bi-gender-male perfil-sou-icon" aria-hidden="true"></i>
+                                            <div id="profileSouProcuro">—</div>
+                                        </dd>
+                                    </div>
+                                    <div class="perfil-dl-row">
+                                        <dt><i class="bi bi-geo-alt" aria-hidden="true"></i> Onde mora</dt>
+                                        <dd id="profileCityState">—</dd>
+                                    </div>
+                                    <div class="perfil-dl-row">
+                                        <dt><i class="bi bi-building" aria-hidden="true"></i> Academia</dt>
+                                        <dd id="digitalCardGym">—</dd>
+                                    </div>
+                                    <div class="perfil-dl-row">
+                                        <dt><i class="bi bi-upc-scan" aria-hidden="true"></i> Matrícula</dt>
+                                        <dd id="digitalCardMatricula" class="perfil-dd-mono">—</dd>
+                                    </div>
+                                </dl>
+                            </div>
+
+                            <!-- Gallery card -->
+                            <div class="perfil-gallery-card">
+                                <section class="perfil-gallery-section" aria-label="Fotos do perfil">
+                                    <div class="perfil-gallery-head">
+                                        <h2><i class="bi bi-images"></i> Galeria</h2>
+                                        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                                            <span id="galeriaCount" class="perfil-gallery-count" hidden></span>
+                                            <button type="button" id="galeriaAddBtn" class="perfil-gallery-add-btn" hidden aria-label="Adicionar foto à galeria">
+                                                <i class="bi bi-plus-lg"></i> Adicionar foto
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <input type="file" id="perfilGalReplaceInput" class="sr-only" accept="image/jpeg,image/png,image/webp" aria-hidden="true" tabindex="-1">
+                                    <div id="galeriaGrid" class="perfil-gallery"></div>
+                                </section>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Dynamic panels (search, favorites, chat, forms) -->
+                    <div id="display-frame" class="perfil-dynamic-panel hidden" style="min-height:0;"></div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ═══════ LIGHTBOX ═══════ -->
+    <div id="perfilLightbox" class="perfil-lightbox" hidden role="dialog" aria-modal="true" aria-label="Ampliar foto da galeria">
+        <div class="perfil-lightbox__bar">
+            <button type="button" id="perfilLightboxClose" class="perfil-lightbox__close" aria-label="Fechar">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+            <span id="perfilLightboxCount" class="perfil-lightbox__count"></span>
+            <span style="width:2.75rem;flex-shrink:0;" aria-hidden="true"></span>
+        </div>
+        <div class="perfil-lightbox__stage">
+            <button type="button" id="perfilLightboxPrev" class="perfil-lightbox__nav perfil-lightbox__nav--prev" aria-label="Foto anterior">
+                <i class="bi bi-chevron-left" aria-hidden="true"></i>
+            </button>
+            <img id="perfilLightboxImg" src="" alt="" class="perfil-lightbox__img">
+            <button type="button" id="perfilLightboxNext" class="perfil-lightbox__nav perfil-lightbox__nav--next" aria-label="Próxima foto">
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══════ FOOTER ═══════ -->
+    <footer class="perfil-footer">
+        <p>&copy; 2026 <span>Gym Paquera</span> &middot; Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" crossorigin="anonymous"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/site-nav.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/chat-socket.js"></script>
+    <script src="js/perfil.js"></script>
+    <script>
+      (function () {
+        function syncMobileHeader() {
+          var g = document.getElementById("headerGreeting");
+          var gm = document.getElementById("headerGreetingM");
+          var a = document.getElementById("headerAvatarLetter");
+          var am = document.getElementById("headerAvatarLetterM");
+          if (g && gm) gm.textContent = g.textContent;
+          if (a && am) am.textContent = a.textContent;
+        }
+        var obs = new MutationObserver(syncMobileHeader);
+        var t = document.getElementById("headerGreeting");
+        var t2 = document.getElementById("headerAvatarLetter");
+        if (t) obs.observe(t, { childList: true, characterData: true, subtree: true });
+        if (t2) obs.observe(t2, { childList: true, characterData: true, subtree: true });
+        syncMobileHeader();
+      })();
+    </script>
+    <script>
+        bootstrapPerfil();
+    </script>
+</body>
+</html>

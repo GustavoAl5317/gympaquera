@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Paquera | Conexões Fitness</title>
+    <meta name="description" content="Conecte-se com pessoas da mesma academia. Encontre treino e paquera no mesmo lugar."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/site-ui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { width: 100%; min-height: 100%; }
+        body { line-height: 1.6; min-height: 100dvh; width: 100%; }
+
+        /* Main Content */
+        .main-container {
+            flex: 1;
+            width: 100%;
+            max-width: min(1200px, 100% - 32px);
+            margin: 20px auto 28px;
+            padding: 0 clamp(16px, 4vw, 28px);
+        }
+
+        .card {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h1 { color: #2c3e50; margin-bottom: 10px; }
+        h2 { color: var(--primary); margin-bottom: 20px; font-size: 1.8rem; justify-content: center; }
+        p { color: var(--gray); margin-bottom: 20px; }
+
+        /* Image Gallery Otimizada */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover { transform: scale(1.02); }
+
+        /* Badge de Exclusividade */
+        .exclusivity-badge {
+            background: #fff0f3;
+            padding: 18px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px dashed var(--primary);
+            margin-top: 20px;
+        }
+
+        .exclusivity-badge strong { color: var(--primary-dark); font-size: 1.1rem; }
+
+        footer {
+            text-align: center;
+            padding: 10px 14px;
+            color: var(--gray);
+            font-size: 0.72rem;
+            line-height: 1.35;
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+        }
+        footer p { margin: 0; }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .card { padding: 20px; }
+        }
+    </style>
+</head>
+<body class="gp-has-marketing-nav">
+
+<div id="gp-nav-backdrop" class="gp-nav-backdrop gp-marketing-backdrop" aria-hidden="true"></div>
+<nav class="gp-marketing-nav" aria-label="Principal">
+    <div class="gp-marketing-nav__bar">
+        <a href="index.html" class="gp-logo">Gym Paquera</a>
+        <ul class="gp-marketing-nav__links">
+            <li><a href="index.html" data-gp-nav="home">Home</a></li>
+            <li><a href="index.html#sobre" data-gp-nav="home">Sobre</a></li>
+            <li><a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a></li>
+            <li><a href="index.html#contato" data-gp-nav="home">Contato</a></li>
+        </ul>
+        <div class="gp-marketing-nav__cta">
+            <a href="login.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
+            <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+            <a href="mypay.html" class="gp-marketing-nav__subscribe" data-gp-nav="pay">Assine R$9,90/mês</a>
+        </div>
+        <button type="button" class="gp-marketing-burger" data-nav-toggle aria-expanded="false" aria-controls="gp-marketing-panel" aria-label="Abrir menu">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+    </div>
+    <div id="gp-marketing-panel" class="gp-marketing-panel" data-nav-panel data-nav-animate-height>
+        <div class="gp-marketing-panel__inner">
+            <a href="index.html" data-gp-nav="home">Home</a>
+            <a href="index.html#sobre" data-gp-nav="home">Sobre</a>
+            <a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a>
+            <a href="index.html#contato" data-gp-nav="home">Contato</a>
+            <a href="mypay.html" class="gp-subscribe-link" data-gp-nav="pay">Assine R$9,90/mês</a>
+            <div class="gp-marketing-panel__cta">
+                <a href="login.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
+                <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <main class="main-container">
+
+        <section class="card">
+            <h1>Gym Parceiras</h1>
+            <h2>Sua conexão fitness começa aqui!</h2>
+            <p>Conecte-se com xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
+            
+            <div class="image-gallery">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+01" alt="Parceira 01 — use imagens locais em assets/">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+02" alt="Parceira 02">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+03" alt="Parceira 03">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+04" alt="Parceira 04">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+05" alt="Parceira 05">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+06" alt="Parceira 06">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+07" alt="Parceira 07">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+08" alt="Parceira 08">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+09" alt="Parceira 09">
+            </div>
+
+            <article class="exclusivity-badge">
+                <strong>🔒 Acesso Exclusivo | xxxxxxxxxxxxxxxxx</strong>
+                <p>Este portal é reservado xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p> <p>Verifique com a xxxxxxxxxxxxxxxxxxxx.</p>
+            </article>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Gym Paquera · Todos os direitos reservados.</p>
+    </footer>
+
+<script src="js/site-nav.js" defer></script>
+<script src="js/nav-active.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "gym-paquera",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gym Paquera — Express + SQLite (better-sqlite3)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^12.8.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.1",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^8.0.5",
+    "pix-payload": "^1.0.4",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.1"
+  }
+}
