@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitMatch | Conecte-se pelo Ritmo</title>
+    <title>Gym Paquera | Conexões Fitness</title>
+    <meta name="description" content="Conecte-se com pessoas da mesma academia. Encontre treino e paquera no mesmo lugar."/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/site-ui.css">
     <script>
-        /* Tailwind CDN v4 não aplica mais `tailwind.config.theme.extend` como o v3; mantemos só o que o CDN ainda honra. */
         tailwind.config = {
             theme: {
                 extend: {
@@ -23,9 +23,8 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        html { width: 100%; min-height: 100%; scroll-behavior: smooth; }
+        html { width: 100%; min-height: 100%; }
         body { font-family: var(--gp-font); min-height: 100dvh; width: 100%; margin: 0; display: flex; flex-direction: column; }
-        .hero-gradient { background: linear-gradient(135deg, #ff5f6d 0%, #ffc371 100%); }
         :root { --nav-bar-h: var(--gp-header-h); }
         #site-top-nav {
             position: fixed !important;
@@ -41,6 +40,115 @@
         }
         #home-nav-panel {
             transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        :root {
+            --primary: #ff4d6d;
+            --primary-dark: #c9184a;
+            --bg-light: #f8f9fa;
+            --text-dark: #2d3436;
+            --gray: #636e72;
+            --white: #ffffff;
+            --border: #eeeeee;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .idx1-main {
+            flex: 1;
+            max-width: 1100px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .idx1-tagline {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .idx1-main h1 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .idx1-intro {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .idx1-btn-join {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin: 20px 0 50px 0;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+        }
+
+        .idx1-btn-join:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+        }
+
+        .idx1-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .idx1-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: left;
+            transition: transform 0.3s ease;
+        }
+
+        .idx1-card:hover { transform: translateY(-5px); }
+
+        .idx1-card h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .idx1-card p {
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .idx1-card-highlight {
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            padding-top: 15px;
+            border-top: 1px solid var(--bg-light);
+        }
+
+        @media (max-width: 768px) {
+            .idx1-main h1 { font-size: 1.8rem; }
+            .idx1-features { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -83,32 +191,31 @@
         </div>
     </nav>
 
-    <main class="flex-1">
-    <section class="hero-gradient text-white px-5 sm:px-10 flex flex-col items-center justify-center text-center py-10 sm:py-14">
-        <p class="text-white/90 text-xs sm:text-sm font-medium uppercase tracking-[0.18em] mb-2">Treino · Conexão · Ritmo</p>
-        <h1 class="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 max-w-4xl leading-tight">O Gym Paquera perfeito para o seu treino.</h1>
-        <p class="text-sm sm:text-base md:text-lg mb-6 max-w-2xl text-white/95 leading-relaxed">
-            Encontre pessoas que compartilham sua paixão pelo esporte e transforme seu treino em um encontro inesquecível.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-3 w-full max-w-md sm:max-w-none justify-center">
-            <a href="cadastro.html" class="inline-flex items-center justify-center bg-white text-orange-600 px-6 sm:px-8 py-3 rounded-full font-bold text-sm sm:text-base hover:scale-[1.02] transition-transform shadow-xl no-underline">Começar agora</a>
-            <a href="sobre1.html" class="inline-flex items-center justify-center border-2 border-white/90 text-white px-6 sm:px-8 py-3 rounded-full font-bold text-sm sm:text-base hover:bg-white/15 transition-colors no-underline">Saiba mais</a>
-        </div>
-    </section>
+    <main class="idx1-main">
+        <p class="idx1-tagline">Amizades, Conversas, Namoros</p>
+        <h1>O lugar certo para conhecer pessoas novas.</h1>
+        <p class="idx1-intro">O portal ideal para encontros casuais ou namoro sério entre quem compartilha o mesmo estilo de vida fitness.</p>
 
-    <section id="gym" class="bg-gradient-to-b from-gray-100 to-gray-50 py-10 sm:py-14 px-5 sm:px-10 w-full">
-        <div class="w-full max-w-[min(100%,1400px)] mx-auto">
-            <h2 class="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-2">Nossas Gym Parceiras</h2>
-            <p class="text-center text-gray-600 max-w-xl mx-auto mb-6 text-sm sm:text-[15px]">Rede de academias com benefícios exclusivos para membros.</p>
-            <div class="flex flex-wrap justify-center gap-6 sm:gap-8 py-5 px-4 rounded-2xl bg-white/80 border border-gray-200/80">
-                <span class="text-xl sm:text-2xl font-black italic text-gray-400">XXX_GYM</span>
-                <span class="text-xl sm:text-2xl font-black italic text-gray-400">XXX_HOUSE</span>
-                <span class="text-xl sm:text-2xl font-black italic text-gray-400">BLUE_XXX</span>
-                <span class="text-xl sm:text-2xl font-black italic text-gray-400">XXX_VIBE</span>
+        <a href="cadastro.html" class="idx1-btn-join">Junte-se à Gym Paquera Agora</a>
+
+        <div class="idx1-features">
+            <div class="idx1-card">
+                <h3>🏋️‍♂️❤️ Onde o treino encontra a química!</h3>
+                <p>O portal exclusivo para quem leva o estilo de vida fitness a sério e busca conexões reais.</p>
+                <p><strong>Amizades:</strong> Encontre seu novo parceiro de treino.</p>
+                <p><strong>Conversas:</strong> Troque ideias com quem entende sua rotina.</p>
+                <p><strong>Namoro:</strong> Ache alguém que combine com seu ritmo.</p>
+                <div class="idx1-card-highlight">✨ Ambiente restrito para alunos de academias parceiras.</div>
             </div>
-            <p class="text-center mt-5 text-gray-500 text-xs sm:text-sm">Membros do Gym Paquera possuem desconto na mensalidade destas unidades.</p>
+
+            <div class="idx1-card">
+                <h3>💪 Conexões Reais</h3>
+                <p>Cansado de papo furado? Encontre pessoas que frequentam o mesmo ambiente que você.</p>
+                <p><strong>Estilo:</strong> Casual, descontraído e focado em resultados (no treino e no coração).</p>
+                <p>Sua academia, suas regras, novos encontros. 🔥</p>
+                <div class="idx1-card-highlight">🚀 Viva o agora com quem tem a mesma vibe que você.</div>
+            </div>
         </div>
-    </section>
     </main>
 
     <footer class="bg-gray-900 text-gray-500 py-2 px-4 w-full text-center text-xs leading-tight mt-auto">

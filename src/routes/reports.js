@@ -1,6 +1,7 @@
 const express = require('express');
 const { getDb } = require('../db');
 const { requireAuth } = require('../middleware/requireAuth');
+const { notifyReportToAdmin } = require('../notifyEmail');
 
 const router = express.Router();
 
@@ -8,19 +9,26 @@ router.post('/', requireAuth, function createReport(req, res) {
     const db = getDb();
     const reporterId = req.session.userId;
     const body = String(req.body.body || '').trim();
-    let reportedUserId = req.body.reportedUserId;
-    if (reportedUserId == null || reportedUserId === '') reportedUserId = null;
-    else reportedUserId = parseInt(reportedUserId, 10);
+    const pubRaw =
+        req.body.reportedPublicUid != null ? String(req.body.reportedPublicUid).trim() : '';
 
     if (!body || body.length > 8000) {
         return res.status(400).json({ error: 'Descreva a denúncia (máx. 8000 caracteres).' });
     }
-    if (reportedUserId && reportedUserId === reporterId) {
-        return res.status(400).json({ error: 'Denúncia inválida.' });
+    if (!pubRaw) {
+        return res.status(400).json({ error: 'Informe o código público do perfil denunciado.' });
     }
-    if (reportedUserId) {
-        const u = db.prepare('SELECT id FROM users WHERE id = ?').get(reportedUserId);
-        if (!u) return res.status(404).json({ error: 'Usuário denunciado não encontrado.' });
+
+    const row = db
+        .prepare("SELECT id FROM users WHERE LOWER(TRIM(COALESCE(public_uid, ''))) = LOWER(?)")
+        .get(pubRaw);
+    if (!row) {
+        return res.status(404).json({ error: 'Código público não encontrado.' });
+    }
+    const reportedUserId = row.id;
+
+    if (reportedUserId === reporterId) {
+        return res.status(400).json({ error: 'Denúncia inválida.' });
     }
 
     const createdAt = new Date().toISOString();
@@ -30,6 +38,19 @@ router.post('/', requireAuth, function createReport(req, res) {
         body,
         createdAt
     );
+
+    const reporter = db.prepare('SELECT nickname, email FROM users WHERE id = ?').get(reporterId);
+    const reported = db
+        .prepare('SELECT nickname, email, public_uid FROM users WHERE id = ?')
+        .get(reportedUserId);
+    notifyReportToAdmin({
+        reporter: reporter || {},
+        reported: reported || {},
+        body: body,
+        createdAt: createdAt
+    }).catch(function (err) {
+        console.warn('[reports/mail]', err && err.message ? err.message : err);
+    });
 
     return res.status(201).json({ ok: true });
 });

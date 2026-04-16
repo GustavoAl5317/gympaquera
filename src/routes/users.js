@@ -61,7 +61,7 @@ function photoRowsToUrls(rows) {
         .filter(Boolean);
 }
 
-/** procuro: Mulheres | Homens | Casais → filtra por campo sou */
+/** procuro: Mulheres | Homens | Casais | Todos → filtra por campo sou (Todos = sem filtro de tipo) */
 router.get('/search', requireAuth, function search(req, res) {
     const db = getDb();
     const me = req.session.userId;
@@ -73,14 +73,19 @@ router.get('/search', requireAuth, function search(req, res) {
         return res.status(400).json({ error: 'Informe o que procura e o estado.' });
     }
 
-    let souMatch = '';
+    let souMatch = null;
     const p = procuro.toLowerCase();
     if (p === 'mulheres') souMatch = 'Mulher';
     else if (p === 'homens') souMatch = 'Homem';
     else if (p === 'casais') souMatch = 'Casal';
+    else if (p === 'todos') souMatch = null;
     else return res.status(400).json({ error: 'Filtro inválido.' });
 
     const cidadeLike = '%' + cidade.replace(/%/g, '') + '%';
+    const souClause = souMatch != null ? 'AND u.sou = ?' : '';
+    const params = [me, estado, cidadeLike];
+    if (souMatch != null) params.push(souMatch);
+    params.push(me, me);
 
     const rows = db
         .prepare(
@@ -91,14 +96,16 @@ router.get('/search', requireAuth, function search(req, res) {
         WHERE u.id != ?
           AND u.estado = ?
           AND LOWER(u.cidade) LIKE LOWER(?)
-          AND u.sou = ?
+          ` +
+            souClause +
+            `
           AND u.id NOT IN (SELECT blocked_id FROM user_blocks WHERE blocker_id = ?)
           AND u.id NOT IN (SELECT blocker_id FROM user_blocks WHERE blocked_id = ?)
         ORDER BY u.nickname COLLATE NOCASE
         LIMIT 100
     `
         )
-        .all(me, estado, cidadeLike, souMatch, me, me);
+        .all(...params);
 
     const favRows = db.prepare('SELECT favorite_user_id FROM user_favorites WHERE user_id = ?').all(me);
     const favSet = new Set(favRows.map(function (r) { return r.favorite_user_id; }));
@@ -107,6 +114,11 @@ router.get('/search', requireAuth, function search(req, res) {
     var maxAge = parseInt(String(req.query.maxAge || ''), 10);
     var hasMin = Number.isFinite(minAge) && minAge > 0;
     var hasMax = Number.isFinite(maxAge) && maxAge > 0;
+    /** Plataforma 18+: idade mínima do filtro nunca abaixo de 18 */
+    if (hasMin) minAge = Math.max(18, minAge);
+    if (hasMax && maxAge < 18) {
+        return res.json({ results: [] });
+    }
 
     var out = rows.map(function (r) {
         const card = publicProfile(r, r.photo_path);
@@ -171,8 +183,8 @@ router.patch('/me', requireAuth, express.json(), function patchMe(req, res) {
     const procuro = b.procuro != null ? String(b.procuro).trim() : row.procuro;
     let nascimento = b.nascimento != null ? String(b.nascimento).trim() : row.nascimento;
 
-    if (!nickname || !gym || !estado || !cidade || !sou || !procuro || !nascimento) {
-        return res.status(400).json({ error: 'Campos obrigatórios não podem ficar vazios.' });
+    if (!nickname || !gym || !matricula || !estado || !cidade || !sou || !procuro || !nascimento) {
+        return res.status(400).json({ error: 'Campos obrigatórios não podem ficar vazios (incluindo matrícula ou ID).' });
     }
     if (nickname.length > 80) return res.status(400).json({ error: 'Apelido muito longo.' });
     if (gym.length > 120) return res.status(400).json({ error: 'Nome da academia muito longo.' });

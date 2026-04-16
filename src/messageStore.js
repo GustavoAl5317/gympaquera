@@ -23,10 +23,10 @@ function insertMessage(fromUserId, toUserId, bodyRaw) {
         return { error: 'Destinatário inválido.' };
     }
     if (!body || body.length > 8000) {
-        return { error: 'Mensagem vazia ou muito longa.' };
+        return { error: 'Texto vazio ou muito longo.' };
     }
     if (isBlocked(me, other)) {
-        return { error: 'Não é possível enviar mensagem para este usuário.' };
+        return { error: 'Não é possível enviar no chat para este usuário.' };
     }
 
     const exists = db.prepare('SELECT id FROM users WHERE id = ?').get(other);

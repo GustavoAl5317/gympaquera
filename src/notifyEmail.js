@@ -57,16 +57,16 @@ function notifyNewMessage(toUserId, toEmail, fromNickname, preview) {
     const body = String(preview || '').replace(/\s+/g, ' ').trim().slice(0, 200);
     sendMail({
         to: toEmail,
-        subject: name + ' — nova mensagem de ' + (fromNickname || 'alguém'),
+        subject: name + ' — novo chat de ' + (fromNickname || 'alguém'),
         text:
-            'Você recebeu uma nova mensagem no ' +
+            'Você recebeu algo novo no chat do ' +
             name +
             '.\n\n' +
             (fromNickname ? 'De: ' + fromNickname + '\n' : '') +
             (body ? 'Prévia: ' + body + '\n' : '') +
             '\nAbra o site para responder.',
         html:
-            '<p>Você recebeu uma nova mensagem no <strong>' +
+            '<p>Você recebeu algo novo no chat do <strong>' +
             escHtml(name) +
             '</strong>.</p>' +
             (fromNickname ? '<p>De: <strong>' + escHtml(fromNickname) + '</strong></p>' : '') +
@@ -101,6 +101,64 @@ function notifyPasswordReset(toEmail, resetUrl) {
             escHtml(u) +
             '</p>'
     });
+}
+
+/** Destino das denúncias (moderador). Padrão: gympaquera@gmail.com */
+function reportsToEmail() {
+    const raw = process.env.REPORTS_TO_EMAIL;
+    if (raw != null && String(raw).trim()) return String(raw).trim();
+    return 'gympaquera@gmail.com';
+}
+
+/**
+ * Notifica moderadores sobre nova denúncia (gravação no banco já ocorreu).
+ * @param {{ reporter: { nickname?: string, email?: string }, reported: { nickname?: string, email?: string, public_uid?: string }, body: string, createdAt: string }} opts
+ */
+function notifyReportToAdmin(opts) {
+    const to = reportsToEmail();
+    const name = appPublicName();
+    const rep = opts.reporter || {};
+    const tgt = opts.reported || {};
+    const txt = String(opts.body || '').trim();
+    const when = String(opts.createdAt || '');
+    const subj = '[' + name + '] Nova denúncia de perfil';
+    const textLines = [
+        'Nova denúncia registrada no ' + name + '.',
+        '',
+        'Quando: ' + when,
+        'Denunciante: ' + (rep.nickname || '—') + ' <' + (rep.email || '—') + '>',
+        'Denunciado: ' + (tgt.nickname || '—') + ' | código público: ' + (tgt.public_uid || '—') + ' | e-mail: ' + (tgt.email || '—'),
+        '',
+        'Descrição:',
+        txt
+    ];
+    const text = textLines.join('\n');
+    const html =
+        '<p><strong>Nova denúncia</strong> no ' +
+        escHtml(name) +
+        '.</p>' +
+        '<ul style="margin:0 0 12px;padding-left:20px;">' +
+        '<li><strong>Quando:</strong> ' +
+        escHtml(when) +
+        '</li>' +
+        '<li><strong>Denunciante:</strong> ' +
+        escHtml(rep.nickname || '—') +
+        ' &lt;' +
+        escHtml(rep.email || '—') +
+        '&gt;</li>' +
+        '<li><strong>Denunciado:</strong> ' +
+        escHtml(tgt.nickname || '—') +
+        ' · código <code>' +
+        escHtml(tgt.public_uid || '—') +
+        '</code> · ' +
+        escHtml(tgt.email || '—') +
+        '</li>' +
+        '</ul>' +
+        '<p><strong>Descrição</strong></p>' +
+        '<pre style="white-space:pre-wrap;font-family:inherit;background:#f5f5f5;padding:12px;border-radius:8px;">' +
+        escHtml(txt) +
+        '</pre>';
+    return sendMail({ to: to, subject: subj, text: text, html: html });
 }
 
 function notifyNewFavorite(toUserId, toEmail, fromNickname) {
@@ -138,4 +196,4 @@ function escHtml(s) {
         .replace(/"/g, '&quot;');
 }
 
-module.exports = { notifyNewMessage, notifyNewFavorite, notifyPasswordReset };
+module.exports = { notifyNewMessage, notifyNewFavorite, notifyPasswordReset, notifyReportToAdmin };

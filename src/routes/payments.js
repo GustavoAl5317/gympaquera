@@ -173,8 +173,8 @@ async function createCheckoutProForSessionUser(req) {
     var payload = {
         items: [
             {
-                title: 'Gym Paquera — Plano mensal (mensagens)',
-                description: 'Envio de mensagens na plataforma por ' + premiumDays() + ' dias.',
+                title: 'Gym Paquera — Plano mensal (chat)',
+                description: 'Uso do chat na plataforma por ' + premiumDays() + ' dias.',
                 quantity: 1,
                 unit_price: amount,
                 currency_id: 'BRL'

@@ -87,8 +87,8 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3">
-                <button type="button" id="btnMensagem" class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/25 transition border-0 cursor-pointer text-[15px]">
-                    <i class="bi bi-chat-heart-fill" aria-hidden="true"></i> Mensagem
+                <button type="button" id="btnChat" class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/25 transition border-0 cursor-pointer text-[15px]">
+                    <i class="bi bi-chat-heart-fill" aria-hidden="true"></i> Chat
                 </button>
                 <a href="Perfil.html" class="flex-1 flex items-center justify-center gap-2 bg-white text-slate-700 font-semibold py-3.5 rounded-xl border border-slate-200 shadow-sm hover:bg-slate-50 no-underline transition text-[15px]">
                     <i class="bi bi-search-heart" aria-hidden="true"></i> Buscar mais
@@ -104,6 +104,10 @@
             <div id="photoGrid" class="perfil-gallery"></div>
         </section>
     </main>
+
+    <footer class="bg-gray-900 text-gray-500 py-2 px-4 w-full text-center text-xs leading-tight mt-auto shrink-0">
+        <p class="m-0">&copy; 2026 Gym Paquera - O portal de paquera das academias. Todos os direitos reservados.</p>
+    </footer>
 
     <div id="pubLightbox" class="perfil-lightbox" hidden role="dialog" aria-modal="true" aria-label="Ampliar foto">
         <div class="perfil-lightbox__bar">
@@ -242,7 +246,7 @@
             heroPrev.onclick = function () { showHero(idx - 1); };
             heroNext.onclick = function () { showHero(idx + 1); };
 
-            document.getElementById('btnMensagem').onclick = function () {
+            document.getElementById('btnChat').onclick = function () {
                 if (!profile) return;
                 try {
                     sessionStorage.setItem('openChatWith', String(profile.id));

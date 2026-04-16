@@ -175,6 +175,36 @@
     box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
 }
 
+/* Regras de privacidade (mesmo conteúdo do cadastro), usado em Editar perfil */
+.perfil-privacy-box {
+    background: rgba(249, 115, 22, 0.06);
+    border: 1px solid rgba(249, 115, 22, 0.22);
+    border-left: 4px solid var(--pp-primary);
+    border-radius: var(--pp-radius);
+    padding: 1rem 1.15rem;
+    margin-bottom: 1rem;
+}
+.perfil-privacy-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--pp-primary-dark);
+    margin: 0 0 0.65rem;
+    line-height: 1.4;
+}
+.perfil-privacy-line {
+    font-size: 0.9rem;
+    color: var(--pp-dark);
+    margin: 0;
+    line-height: 1.55;
+}
+.perfil-privacy-line + .perfil-privacy-line {
+    margin-top: 0.5rem;
+}
+.edit-profile-gallery-embed {
+    margin: 0;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
 /* ═══════ BUTTONS ═══════ */
 .btn {
     display: inline-flex;
@@ -370,6 +400,17 @@
     font-size: 0.8125rem;
     margin-top: 0.75rem;
     color: var(--pp-dark);
+}
+.form-card-field-hint {
+    margin: 0.35rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--pp-gray);
+    font-weight: 500;
+}
+.form-card-field-hint + .form-card-field-hint {
+    margin-top: 0.25rem;
+    margin-bottom: 0.35rem;
 }
 .form-card input,
 .form-card select,
@@ -671,6 +712,29 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
+}
+
+.chat-premium-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.65rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(22, 163, 74, 0.08));
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    color: #14532d;
+}
+.chat-premium-banner i {
+    font-size: 1.1rem;
+    color: #16a34a;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+}
+.chat-premium-banner strong {
+    color: #14532d;
 }
 
 .chat-messages {

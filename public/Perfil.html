@@ -515,9 +515,9 @@
     <!-- ═══════ TOP NAVBAR ═══════ -->
     <nav id="site-top-nav" aria-label="Principal">
         <div class="nav-inner">
-            <a href="index.html" class="nav-logo">GYM<span>PAQUERA</span></a>
+            <a href="/" class="nav-logo">GYM<span>PAQUERA</span></a>
             <div class="nav-right">
-                <a href="index.html" class="nav-link-home"><i class="bi bi-house-door"></i> Início</a>
+                <a href="/" class="nav-link-home"><i class="bi bi-house-door"></i> Início</a>
                 <div class="nav-user">
                     <span id="headerGreeting" class="nav-user-name">Olá!</span>
                     <div id="headerAvatar" class="nav-user-avatar">
@@ -532,7 +532,7 @@
 
         <div id="perfil-nav-panel" data-nav-panel data-nav-animate-height>
             <div class="nav-mobile-inner">
-                <a href="index.html"><i class="bi bi-house-door"></i> Início</a>
+                <a href="/"><i class="bi bi-house-door"></i> Início</a>
                 <div class="nav-mobile-user" style="margin-top:0.5rem;">
                     <div id="headerAvatarM" class="nav-user-avatar">
                         <span id="headerAvatarLetterM">?</span>
@@ -565,22 +565,22 @@
                             </div>
 
                             <div class="perfil-sidebar-main">
-                                <h3 class="perfil-sidebar-heading">Painel do Atleta</h3>
-                                <nav style="display:flex;flex-direction:column;gap:2px;" aria-label="Painel do atleta">
+                                <h3 class="perfil-sidebar-heading">Painel do Usuário</h3>
+                                <nav style="display:flex;flex-direction:column;gap:2px;" aria-label="Painel do usuário">
                                     <a href="#" data-frame="meu-perfil" title="Perfil" class="sidebar-item active-link">
                                         <i class="bi bi-person-circle" aria-hidden="true"></i><span class="perfil-sidebar-label">Perfil</span>
                                     </a>
-                                    <a href="#" data-frame="editar-perfil" title="Editar dados" class="sidebar-item">
-                                        <i class="bi bi-pencil-square" aria-hidden="true"></i><span class="perfil-sidebar-label">Editar dados</span>
+                                    <a href="#" data-frame="editar-perfil" title="Editar perfil" class="sidebar-item">
+                                        <i class="bi bi-pencil-square" aria-hidden="true"></i><span class="perfil-sidebar-label">Editar perfil</span>
                                     </a>
                                     <a href="#" data-frame="favoritos" title="Favoritos" class="sidebar-item">
                                         <i class="bi bi-star-fill" aria-hidden="true"></i><span class="perfil-sidebar-label">Favoritos</span>
                                     </a>
-                                    <a href="#" data-frame="busca" title="Pesquisar match" class="sidebar-item">
-                                        <i class="bi bi-search-heart" aria-hidden="true"></i><span class="perfil-sidebar-label">Pesquisar Match</span>
+                                    <a href="#" data-frame="busca" title="Busca por match" class="sidebar-item">
+                                        <i class="bi bi-search-heart" aria-hidden="true"></i><span class="perfil-sidebar-label">Busca por match</span>
                                     </a>
-                                    <a href="#" data-frame="mensagens" title="Mensagens" class="sidebar-item" style="position:relative;">
-                                        <i class="bi bi-chat-heart" aria-hidden="true"></i><span class="perfil-sidebar-label">Mensagens</span>
+                                    <a href="#" data-frame="mensagens" title="Chat" class="sidebar-item" style="position:relative;">
+                                        <i class="bi bi-chat-heart" aria-hidden="true"></i><span class="perfil-sidebar-label">Chat</span>
                                         <span id="msgBadge" class="hidden" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:#f97316;color:#fff;font-size:10px;padding:2px 7px;border-radius:9999px;font-weight:700;"></span>
                                     </a>
                                 </nav>
@@ -638,10 +638,10 @@
                                     </div>
                                     <div class="perfil-profile-actions">
                                         <button type="button" data-frame="editar-perfil" class="perfil-btn perfil-btn--outline">
-                                            <i class="bi bi-pencil-square" aria-hidden="true"></i> Editar dados
+                                            <i class="bi bi-pencil-square" aria-hidden="true"></i> Editar perfil
                                         </button>
                                         <button type="button" data-frame="busca" class="perfil-btn perfil-btn--primary">
-                                            <i class="bi bi-search-heart" aria-hidden="true"></i> Buscar pessoas
+                                            <i class="bi bi-search-heart" aria-hidden="true"></i> Busca por match
                                         </button>
                                     </div>
                                 </div>
@@ -724,7 +724,7 @@
 
     <!-- ═══════ FOOTER ═══════ -->
     <footer class="perfil-footer">
-        <p>&copy; 2026 <span>Gym Paquera</span> &middot; Todos os direitos reservados.</p>
+        <p>&copy; 2026 Gym Paquera - O portal de paquera das academias. Todos os direitos reservados.</p>
     </footer>
 
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" crossorigin="anonymous"></script>

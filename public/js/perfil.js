@@ -62,6 +62,112 @@
         if (p.display) p.display.classList.remove('hidden');
     }
 
+    /**
+     * @param {object} u user from API
+     * @param {{ grid: string, gCount?: string, addBtn?: string, replaceInputId?: string }} cfg element ids
+     * @param {'overview'|'edit'} variant empty-state hint
+     */
+    function populateUserGallery(u, cfg, variant) {
+        variant = variant || 'overview';
+        var grid = document.getElementById(cfg.grid);
+        if (!grid || !u) return;
+
+        var gCount = cfg.gCount ? document.getElementById(cfg.gCount) : null;
+        var addBtn = cfg.addBtn ? document.getElementById(cfg.addBtn) : null;
+        var replaceInputId = cfg.replaceInputId || 'perfilGalReplaceInput';
+
+        var emptyHint =
+            variant === 'edit'
+                ? 'Use <strong>Adicionar foto</strong> acima. Você pode enviar até três imagens por vez, que substituirão o álbum anterior.'
+                : 'Use <strong>Adicionar foto</strong> acima ou envie até três imagens de uma vez em <strong>Editar perfil</strong>.';
+
+        function bindGaleriaAdd(urlsLen) {
+            if (!addBtn) return;
+            if (urlsLen >= 3) {
+                addBtn.hidden = true;
+                addBtn.onclick = null;
+                return;
+            }
+            addBtn.hidden = false;
+            addBtn.onclick = function (e) {
+                e.preventDefault();
+                galleryReplaceSlot = urlsLen;
+                var inp = document.getElementById(replaceInputId);
+                if (inp) inp.click();
+            };
+        }
+
+        if (!u.photos || !u.photos.length) {
+            grid.classList.remove('has-lead');
+            if (gCount) gCount.hidden = true;
+            grid.innerHTML =
+                '<div class="perfil-gallery-empty" role="status">' +
+                '<i class="bi bi-images" aria-hidden="true"></i>' +
+                '<p>Nenhuma foto na galeria</p>' +
+                '<p class="perfil-gallery-empty-hint">' +
+                emptyHint +
+                '</p>' +
+                '</div>';
+            bindGaleriaAdd(0);
+            return;
+        }
+
+        var urls = u.photos.filter(function (x) {
+            return x != null && String(x).trim() !== '';
+        });
+        if (gCount) {
+            gCount.textContent = urls.length + (urls.length === 1 ? ' foto' : ' fotos');
+            gCount.hidden = false;
+        }
+        bindGaleriaAdd(urls.length);
+        var useLead = urls.length >= 3;
+        grid.classList.toggle('has-lead', useLead);
+        grid.innerHTML = urls
+            .map(function (src, i) {
+                var leadItem = useLead && i === 0 ? ' perfil-gallery-item--lead' : '';
+                return (
+                    '<div class="perfil-gallery-item' +
+                    leadItem +
+                    '" data-gal-idx="' +
+                    i +
+                    '" role="button" tabindex="0" aria-label="Ampliar foto ' +
+                    (i + 1) +
+                    '">' +
+                    '<img src="' +
+                    esc(src) +
+                    '" alt="" loading="lazy" decoding="async" class="perfil-gallery-thumb">' +
+                    '<div class="perfil-gallery-manage">' +
+                    '<button type="button" class="perfil-gal-btn perfil-gal-replace" data-slot="' +
+                    i +
+                    '"><i class="bi bi-arrow-repeat" aria-hidden="true"></i><span>Trocar</span></button>' +
+                    '<button type="button" class="perfil-gal-btn perfil-gal-remove" data-slot="' +
+                    i +
+                    '"><i class="bi bi-trash3" aria-hidden="true"></i><span>Excluir</span></button>' +
+                    '</div></div>'
+                );
+            })
+            .join('');
+        wirePerfilGalleryLightbox(grid, urls);
+        wirePerfilGalleryManage(grid);
+    }
+
+    function afterUserPhotosChanged(u) {
+        if (!u) return;
+        fillPerfilOverview(u);
+        if (document.getElementById('editGaleriaGrid')) {
+            populateUserGallery(
+                u,
+                {
+                    grid: 'editGaleriaGrid',
+                    gCount: 'editGaleriaCount',
+                    addBtn: 'editGaleriaAddBtn',
+                    replaceInputId: 'perfilGalReplaceInput'
+                },
+                'edit'
+            );
+        }
+    }
+
     function fillPerfilOverview(u) {
         if (!u) return;
         var greet = document.getElementById('headerGreeting');
@@ -141,75 +247,16 @@
                       : 'bi-gender-male');
         }
 
-        var grid = document.getElementById('galeriaGrid');
-        var gCount = document.getElementById('galeriaCount');
-        var addBtn = document.getElementById('galeriaAddBtn');
-        function bindGaleriaAdd(urlsLen) {
-            if (!addBtn) return;
-            if (urlsLen >= 3) {
-                addBtn.hidden = true;
-                addBtn.onclick = null;
-                return;
-            }
-            addBtn.hidden = false;
-            addBtn.onclick = function (e) {
-                e.preventDefault();
-                galleryReplaceSlot = urlsLen;
-                var inp = document.getElementById('perfilGalReplaceInput');
-                if (inp) inp.click();
-            };
-        }
-        if (grid) {
-            if (!u.photos || !u.photos.length) {
-                grid.classList.remove('has-lead');
-                if (gCount) gCount.hidden = true;
-                grid.innerHTML =
-                    '<div class="perfil-gallery-empty" role="status">' +
-                    '<i class="bi bi-images" aria-hidden="true"></i>' +
-                    '<p>Nenhuma foto na galeria</p>' +
-                    '<p class="perfil-gallery-empty-hint">Use <strong>Adicionar foto</strong> acima ou envie até três imagens de uma vez em <strong>Editar dados</strong>.</p>' +
-                    '</div>';
-                bindGaleriaAdd(0);
-            } else {
-                var urls = u.photos.filter(function (x) {
-                    return x != null && String(x).trim() !== '';
-                });
-                if (gCount) {
-                    gCount.textContent = urls.length + (urls.length === 1 ? ' foto' : ' fotos');
-                    gCount.hidden = false;
-                }
-                bindGaleriaAdd(urls.length);
-                var useLead = urls.length >= 3;
-                grid.classList.toggle('has-lead', useLead);
-                grid.innerHTML = urls
-                    .map(function (src, i) {
-                        var leadItem = useLead && i === 0 ? ' perfil-gallery-item--lead' : '';
-                        return (
-                            '<div class="perfil-gallery-item' +
-                            leadItem +
-                            '" data-gal-idx="' +
-                            i +
-                            '" role="button" tabindex="0" aria-label="Ampliar foto ' +
-                            (i + 1) +
-                            '">' +
-                            '<img src="' +
-                            esc(src) +
-                            '" alt="" loading="lazy" decoding="async" class="perfil-gallery-thumb">' +
-                            '<div class="perfil-gallery-manage">' +
-                            '<button type="button" class="perfil-gal-btn perfil-gal-replace" data-slot="' +
-                            i +
-                            '"><i class="bi bi-arrow-repeat" aria-hidden="true"></i><span>Trocar</span></button>' +
-                            '<button type="button" class="perfil-gal-btn perfil-gal-remove" data-slot="' +
-                            i +
-                            '"><i class="bi bi-trash3" aria-hidden="true"></i><span>Excluir</span></button>' +
-                            '</div></div>'
-                        );
-                    })
-                    .join('');
-                wirePerfilGalleryLightbox(grid, urls);
-                wirePerfilGalleryManage(grid);
-            }
-        }
+        populateUserGallery(
+            u,
+            {
+                grid: 'galeriaGrid',
+                gCount: 'galeriaCount',
+                addBtn: 'galeriaAddBtn',
+                replaceInputId: 'perfilGalReplaceInput'
+            },
+            'overview'
+        );
     }
 
     function setSidebarUser(u) {
@@ -292,15 +339,15 @@
         if (inThread && document.visibilityState === 'visible') return;
         var body = String(msg.body || '').replace(/\s+/g, ' ').trim().slice(0, 180);
         if (document.visibilityState === 'visible' && window.showToast) {
-            var preview = (senderNickname ? senderNickname + ': ' : '') + (body || 'Nova mensagem');
+            var preview = (senderNickname ? senderNickname + ': ' : '') + (body || 'Novo chat');
             window.showToast(preview, { type: 'info', duration: 5200 });
             return;
         }
         if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
-        var title = senderNickname ? senderNickname + ' · Gym Paquera' : 'Nova mensagem · Gym Paquera';
+        var title = senderNickname ? senderNickname + ' · Gym Paquera' : 'Novo chat · Gym Paquera';
         try {
             new Notification(title, {
-                body: body || 'Você recebeu uma mensagem.',
+                body: body || 'Você recebeu algo no chat.',
                 tag: 'gym-chat-' + String(msg.from_user_id),
                 renotify: true
             });
@@ -403,7 +450,7 @@
             '<span class="badge-id">Seu código público · ' + esc(u.publicUid || '—') + '</span>' +
             '<div class="profile-hero-actions">' +
             '<a class="btn btn-primary" href="mypay.html">Premium</a>' +
-            '<button type="button" class="btn btn-ghost" onclick="loadFrame(\'busca\')">Buscar pessoas</button>' +
+            '<button type="button" class="btn btn-ghost" onclick="loadFrame(\'busca\')">Busca por match</button>' +
             '</div></div></div>' +
 
             '<div class="detail-grid">' +
@@ -438,21 +485,21 @@
     function frameBusca() {
         return (
             panelHeader(
-                'Pesquisar',
-                'Filtros combinam com o cadastro real no servidor. Idade usa a data de nascimento informada no cadastro — ajuda a criar matches mais alinhados. Respeitamos bloqueios.'
+                'Busca por match',
+                'Nossos filtros usam os dados reais da sua conta. A idade, por exemplo, é baseada na sua data de nascimento para criar conexões mais certeiras. E não se preocupe: seus bloqueios são sempre respeitados.'
             ) +
             '<div class="search-panel">' +
             '<div class="search-grid">' +
-            '<div class="field"><label for="buscaProcuro">Quero ver perfis de</label>' +
-            '<select id="buscaProcuro"><option value="Mulheres">Mulheres</option><option value="Homens">Homens</option><option value="Casais">Casais</option></select></div>' +
+            '<div class="field"><label for="buscaProcuro">Procuro por</label>' +
+            '<select id="buscaProcuro"><option value="Todos">Todos</option><option value="Mulheres">Mulheres</option><option value="Homens">Homens</option><option value="Casais">Casais</option></select></div>' +
             '<div class="field"><label for="buscaEstado">Estado</label><select id="buscaEstado">' + optsEstados + '</select></div>' +
             '<div class="field full-width"><label for="buscaCidade">Cidade (trecho do nome)</label>' +
-            '<input type="text" id="buscaCidade" placeholder="Ex.: Campinas, São José…"></div>' +
-            '<div class="field"><label for="buscaIdadeMin">Idade mínima (opcional)</label>' +
-            '<input type="number" id="buscaIdadeMin" min="18" max="120" placeholder="ex.: 22"></div>' +
+            '<input type="text" id="buscaCidade" placeholder="Digite sua cidade"></div>' +
+            '<div class="field"><label for="buscaIdadeMin">Idade mínima (opcional, mín. 18)</label>' +
+            '<input type="number" id="buscaIdadeMin" min="18" max="120" step="1" placeholder="mín. 18"></div>' +
             '<div class="field"><label for="buscaIdadeMax">Idade máxima (opcional)</label>' +
             '<input type="number" id="buscaIdadeMax" min="18" max="120" placeholder="ex.: 45"></div>' +
-            '<button type="button" class="btn btn-primary full-width" id="btnBuscar">Buscar perfis</button>' +
+            '<button type="button" class="btn btn-primary full-width" id="btnBuscar">Buscar match</button>' +
             '</div></div>' +
             '<div id="results" class="results-grid"></div>'
         );
@@ -475,8 +522,8 @@
         return (
             '<div class="edit-profile-page">' +
             panelHeader(
-                'Editar dados',
-                'Alterações refletem na busca, no cartão digital e na vitrine do seu perfil. Envie até três imagens por vez — elas substituem o álbum anterior.'
+                'Editar perfil',
+                'As alterações serão aplicadas à busca, ao cartão digital e à vitrine do seu perfil. Você pode enviar até três imagens por vez, que substituirão o álbum anterior.'
             ) +
             '<div class="edit-profile-card">' +
             '<div class="edit-profile-section">' +
@@ -487,7 +534,7 @@
             '<input type="text" id="editNick" maxlength="80" value="' +
             esc(u.nickname) +
             '" placeholder="Como quer ser chamado na plataforma" autocomplete="nickname">' +
-            '<span class="edit-hint">Aparece em buscas, mensagens e no topo do seu perfil.</span>' +
+            '<span class="edit-hint">Aparece em buscas, no chat e no topo do seu perfil.</span>' +
             '</div>' +
             '<div class="edit-field">' +
             '<label for="editNasc">Data de nascimento</label>' +
@@ -536,8 +583,8 @@
             '" placeholder="Nome da academia ou rede">' +
             '</div>' +
             '<div class="edit-field">' +
-            '<label for="editMat">Matrícula ou ID <span class="edit-hint-inline">(opcional)</span></label>' +
-            '<input type="text" id="editMat" value="' +
+            '<label for="editMat">Matrícula ou ID</label>' +
+            '<input type="text" id="editMat" required value="' +
             esc(u.matricula || '') +
             '" placeholder="Ex.: sócios, matrícula interna">' +
             '</div>' +
@@ -555,14 +602,24 @@
             '</div>' +
             '</div></div>' +
             '<div class="edit-profile-section">' +
-            '<h2 class="edit-profile-section-title">Galeria</h2>' +
-            '<div class="edit-profile-grid">' +
-            '<div class="edit-field edit-field--full">' +
-            '<label for="editFotos">Novas fotos</label>' +
-            '<input type="file" id="editFotos" accept="image/*" multiple>' +
-            '<span class="edit-hint">Opcional. Até 3 arquivos por envio — substituem o álbum inteiro. Para trocar ou excluir só uma foto, use a galeria no seu perfil.</span>' +
+            '<div class="perfil-privacy-box" role="note">' +
+            '<p class="perfil-privacy-title">⚠️ Respeite as Regras de Privacidade:</p>' +
+            '<p class="perfil-privacy-line">Fotos de rosto ou conteúdo explícito serão removidas automaticamente.</p>' +
+            '<p class="perfil-privacy-line">Apenas fotos de treino/shape. Rostos ou conteúdo explícito são proibidos.</p>' +
             '</div>' +
+            '<div class="perfil-gallery-card edit-profile-gallery-embed">' +
+            '<section class="perfil-gallery-section" aria-label="Fotos do perfil">' +
+            '<div class="perfil-gallery-head">' +
+            '<h2><i class="bi bi-images"></i> Galeria</h2>' +
+            '<div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">' +
+            '<span id="editGaleriaCount" class="perfil-gallery-count" hidden></span>' +
+            '<button type="button" id="editGaleriaAddBtn" class="perfil-gallery-add-btn" hidden aria-label="Adicionar foto à galeria">' +
+            '<i class="bi bi-plus-lg"></i> Adicionar foto' +
+            '</button>' +
             '</div></div>' +
+            '<div id="editGaleriaGrid" class="perfil-gallery"></div>' +
+            '</section></div>' +
+            '</div>' +
             '<div class="edit-profile-actions">' +
             '<button type="button" class="btn btn-primary" id="btnSalvarEdicao">Salvar alterações</button>' +
             '</div>' +
@@ -572,13 +629,17 @@
 
     function frameDenunciar() {
         return (
-            panelHeader('Denunciar', 'Sua denúncia fica registrada na base do sistema para análise. Se souber o ID do perfil (aparece nas buscas e favoritos), informe abaixo.') +
+            panelHeader(
+                'Denunciar',
+                'Denúncia registrada para análise. Caso possua o código público do perfil (exibido em buscas e favoritos), por favor, informe abaixo.'
+            ) +
             '<div class="form-card">' +
-            '<div class="alert-banner warn">Use com responsabilidade. Denúncias falsas podem resultar em sanção à conta.</div>' +
-            '<label for="denunciaUserId">ID do usuário (opcional)</label>' +
-            '<input type="number" id="denunciaUserId" placeholder="Ex.: 3">' +
-            '<label for="denunciaTxt">Descrição</label>' +
-            '<textarea id="denunciaTxt" placeholder="Conte o que aconteceu: datas, telas, conversas, etc."></textarea>' +
+            '<div class="alert-banner warn">O uso indevido deste recurso e o envio de denúncias falsas podem levar à suspensão da sua conta.</div>' +
+            '<label for="denunciaPublicUid">Código público</label>' +
+            '<input type="text" id="denunciaPublicUid" required autocomplete="off" placeholder="6d169bc8-ff95-4842-b0f7-2e261d091c55">' +
+            '<label for="denunciaTxt">DESCRIÇÃO</label>' +
+            '<p class="form-card-field-hint">Descreva detalhadamente a sua denúncia.</p>' +
+            '<textarea id="denunciaTxt" required></textarea>' +
             '<button type="button" class="btn btn-primary" id="btnDenuncia" style="margin-top:18px;width:100%;">Enviar denúncia</button>' +
             '</div>'
         );
@@ -586,28 +647,26 @@
 
     function frameExcluir() {
         return (
-            panelHeader('Excluir conta', 'Esta ação apaga seu usuário, arquivos de fotos enviadas, favoritos, bloqueios e mensagens onde você participa.') +
+            panelHeader(
+                'Excluir conta',
+                'Esta ação excluirá sua conta, fotos enviadas, favoritos, usuários bloqueados e todo o seu histórico de mensagens.'
+            ) +
             '<div class="form-card">' +
-            '<div class="alert-banner danger-zone"><strong>Zona de risco.</strong> Não há como desfazer. Considere apenas sair (menu “Sair”) se quiser voltar depois.</div>' +
-            '<button type="button" class="btn btn-danger" id="btnExcluirConta" style="width:100%;">Excluir minha conta para sempre</button>' +
+            '<div class="alert-banner danger-zone"><strong>Atenção:</strong> As alterações feitas aqui não podem ser desfeitas. Caso queira preservar seu progresso para voltar depois, escolha a opção &quot;Sair&quot; no menu principal.</div>' +
+            '<button type="button" class="btn btn-danger" id="btnExcluirConta" style="width:100%;">Excluir conta permanentemente</button>' +
             '</div>'
         );
     }
 
-    function emptyState(icon, title, text) {
+    function emptyState(icon, title, text, text2) {
         return (
             '<div class="empty-state">' +
             '<div class="empty-icon">' + icon + '</div>' +
             '<h3>' + esc(title) + '</h3>' +
             '<p>' + esc(text) + '</p>' +
+            (text2 ? '<p>' + esc(text2) + '</p>' : '') +
             '</div>'
         );
-    }
-
-    function shortPublicUid(uid) {
-        if (!uid) return '';
-        var s = String(uid);
-        return s.length > 12 ? s.slice(0, 8) + '…' : s;
     }
 
     function wirePerfilGalleryLightbox(grid, urls) {
@@ -705,7 +764,7 @@
                 try {
                     await api('DELETE', '/users/me/photos/' + slot);
                     var u = await requireMe();
-                    fillPerfilOverview(u);
+                    afterUserPhotosChanged(u);
                     notify('Foto removida.', 'success');
                 } catch (err) {
                     notify(err.message || String(err), 'error');
@@ -738,7 +797,7 @@
                 var js = txt ? JSON.parse(txt) : {};
                 if (!r.ok) throw new Error(js.error || 'Erro ao enviar foto.');
                 var u = await requireMe();
-                fillPerfilOverview(u);
+                afterUserPhotosChanged(u);
                 notify('Foto salva.', 'success');
             } catch (err) {
                 notify(err.message || String(err), 'error');
@@ -765,11 +824,28 @@
                 '&cidade=' + encodeURIComponent(cidade);
             var elMin = document.getElementById('buscaIdadeMin');
             var elMax = document.getElementById('buscaIdadeMax');
-            if (elMin && elMin.value !== '') q += '&minAge=' + encodeURIComponent(elMin.value);
-            if (elMax && elMax.value !== '') q += '&maxAge=' + encodeURIComponent(elMax.value);
+            if (elMin && elMin.value !== '') {
+                var vmin = parseInt(elMin.value, 10);
+                if (Number.isFinite(vmin) && vmin < 18) {
+                    notify('A idade mínima na busca é 18 anos.', 'warning');
+                    elMin.value = '18';
+                    q += '&minAge=18';
+                } else {
+                    q += '&minAge=' + encodeURIComponent(elMin.value);
+                }
+            }
+            if (elMax && elMax.value !== '') {
+                var vmax = parseInt(elMax.value, 10);
+                if (Number.isFinite(vmax) && vmax < 18) {
+                    notify('A idade máxima na busca não pode ser menor que 18 anos.', 'warning');
+                    elMax.value = '';
+                } else {
+                    q += '&maxAge=' + encodeURIComponent(elMax.value);
+                }
+            }
             var data = await api('GET', '/users/search' + q);
             if (!data.results.length) {
-                el.innerHTML = emptyState('🔎', 'Nenhum resultado', 'Ajuste estado, cidade ou o tipo “Quero ver perfis de”. Lembre-se: só aparecem cadastros reais no servidor.');
+                el.innerHTML = emptyState('🔎', 'Nenhum resultado', 'Ajuste estado, cidade ou o tipo em “Procuro por” (incluindo Todos). Lembre-se: só aparecem cadastros reais no servidor.');
                 return;
             }
             el.innerHTML = data.results.map(function (p) {
@@ -777,9 +853,9 @@
                     ? '<div class="card-media"><img src="' + esc(p.photoUrl) + '" alt=""></div>'
                     : '<div class="card-media"><div class="no-photo">Sem foto</div></div>';
                 var favLabel = p.favorited ? '★ Salvo' : '☆ Favoritar';
-                var pub = p.publicUid ? shortPublicUid(p.publicUid) : '';
+                var pub = p.publicUid ? String(p.publicUid) : '';
                 var codeLine = pub
-                    ? '<span style="font-weight:600;color:var(--gray);font-size:0.78rem;display:block;margin-top:4px;">Código ' + esc(pub) + '</span>'
+                    ? '<span style="font-weight:600;color:var(--gray);font-size:0.78rem;display:block;margin-top:4px;word-break:break-all;">Código ' + esc(pub) + '</span>'
                     : '';
                 var ageLine =
                     p.age != null
@@ -793,7 +869,7 @@
                     '<div class="card-actions">' +
                     '<button type="button" class="btn btn-secondary btn-sm" data-act="profile" data-id="' + esc(String(p.id)) + '">Abrir perfil</button>' +
                     '<button type="button" class="btn btn-primary btn-sm" data-act="fav" data-id="' + esc(String(p.id)) + '">' + favLabel + '</button>' +
-                    '<button type="button" class="btn btn-secondary btn-sm" data-act="chat" data-id="' + esc(String(p.id)) + '" data-name="' + esc(p.nickname) + '" data-pub="' + esc(p.publicUid || '') + '">Mensagem</button>' +
+                    '<button type="button" class="btn btn-secondary btn-sm" data-act="chat" data-id="' + esc(String(p.id)) + '" data-name="' + esc(p.nickname) + '" data-pub="' + esc(p.publicUid || '') + '">Chat</button>' +
                     '<button type="button" class="btn btn-ghost btn-sm" data-act="block" data-id="' + esc(String(p.id)) + '">Bloquear</button>' +
                     '</div></div></article>'
                 );
@@ -856,13 +932,13 @@
     function reportFromChat() {
         if (!chatOtherId) return;
         try {
-            sessionStorage.setItem('denunciaPrefillId', String(chatOtherId));
+            if (chatOtherPublicUid) sessionStorage.setItem('denunciaPrefillPublicUid', String(chatOtherPublicUid));
         } catch (e) {}
         loadFrame('denunciar');
     }
 
     async function blockFromSearch(userId) {
-        if (!confirm('Bloquear este usuário? Vocês deixam de se ver na busca e nas mensagens.')) return;
+        if (!confirm('Bloquear este usuário? Vocês deixam de se ver na busca e no chat.')) return;
         try {
             await api('POST', '/users/blocks/' + userId);
             notify('Usuário bloqueado.', 'success');
@@ -883,7 +959,7 @@
                 return;
             }
             container.innerHTML =
-                panelHeader('Favoritos', data.favorites.length + ' ' + (data.favorites.length === 1 ? 'pessoa salva' : 'pessoas salvas') + '. Toque em mensagem para conversar.') +
+                panelHeader('Favoritos', 'Contato salvo. Toque para abrir o chat.') +
                 '<div class="fav-grid">' +
                 data.favorites.map(function (f) {
                     var av = f.photoUrl
@@ -894,11 +970,11 @@
                         '<div class="fav-body">' +
                         '<strong>' + esc(f.nickname) + '</strong>' +
                         '<small>' + esc(f.gym) + ' · ' + esc(f.cidade) + '</small>' +
-                        '<small style="margin-top:6px;color:var(--primary);font-weight:700;">Código ' + esc(shortPublicUid(f.publicUid) || ('#' + f.id)) + '</small>' +
+                        '<small style="margin-top:6px;color:var(--primary);font-weight:700;word-break:break-all;">Código ' + esc(f.publicUid || '—') + '</small>' +
                         '</div>' +
                         '<div class="fav-actions">' +
                         '<button type="button" class="btn btn-secondary btn-sm" data-view-profile="' + f.id + '">Abrir perfil</button>' +
-                        '<button type="button" class="btn btn-primary btn-sm" data-open-chat="' + f.id + '" data-name="' + esc(f.nickname) + '" data-pub="' + esc(f.publicUid || '') + '">Mensagem</button>' +
+                        '<button type="button" class="btn btn-primary btn-sm" data-open-chat="' + f.id + '" data-name="' + esc(f.nickname) + '" data-pub="' + esc(f.publicUid || '') + '">Chat</button>' +
                         '<button type="button" class="btn btn-ghost btn-sm" data-unfav="' + f.id + '">Remover</button>' +
                         '</div></div>'
                     );
@@ -941,12 +1017,26 @@
             var data = await api('GET', '/users/blocks');
             if (!data.blocked.length) {
                 container.innerHTML =
-                    panelHeader('Bloqueados', 'Quem você bloqueou não aparece nas buscas nem troca mensagens com você.') +
-                    emptyState('🛡️', 'Lista vazia', 'Na busca, use “Bloquear” no card do perfil se precisar.');
+                    panelHeader(
+                        'Bloqueados',
+                        'Contatos bloqueados não aparecem em buscas nem podem enviar mensagens para você.'
+                    ) +
+                    emptyState(
+                        '🛡️',
+                        'Lista vazia',
+                        'Ao bloquear alguém, essa pessoa não aparecerá nas suas buscas e não poderá te enviar mensagens.',
+                        'Se necessário, utilize a opção Bloquear no card do perfil durante a busca.'
+                    );
                 return;
             }
             container.innerHTML =
-                panelHeader('Bloqueados', data.blocked.length + ' ' + (data.blocked.length === 1 ? 'conta bloqueada' : 'contas bloqueadas') + '.') +
+                panelHeader(
+                    'Bloqueados',
+                    data.blocked.length +
+                        ' ' +
+                        (data.blocked.length === 1 ? 'conta bloqueada' : 'contas bloqueadas') +
+                        '. Contatos bloqueados não aparecem em buscas nem podem enviar mensagens para você.'
+                ) +
                 data.blocked.map(function (u) {
                     return (
                         '<div class="block-card">' +
@@ -977,10 +1067,11 @@
         var actions = document.getElementById('chatTopActions');
         if (!titleEl) return;
         if (!chatOtherId) {
-            titleEl.textContent = 'Suas mensagens';
+            titleEl.textContent = 'Suas Mensagens';
             if (subEl) {
                 subEl.className = '';
-                subEl.textContent = 'Escolha uma conversa ao lado ou inicie pela busca / favoritos.';
+                subEl.textContent =
+                    'Selecione uma conversa ao lado ou utilize a busca e os favoritos para iniciar.';
             }
             if (actions) actions.style.display = 'none';
             return;
@@ -1008,7 +1099,17 @@
         if (!box) return;
         updateChatHeader();
         if (!chatOtherId) {
-            box.innerHTML = '<div class="empty-state" style="margin:12px;"><div class="empty-icon">💬</div><h3>Nenhuma conversa selecionada</h3><p>Abra uma conversa na lista ou vá em Pesquisar / Favoritos e envie mensagem.</p></div>';
+            var listBody0 = document.getElementById('convListBody');
+            var hasConvs = listBody0 && listBody0.querySelectorAll('.conv-row').length > 0;
+            if (hasConvs) {
+                box.innerHTML =
+                    '<div class="empty-state" style="margin:12px;"><div class="empty-icon">💬</div>' +
+                    '<h3>Nenhuma conversa selecionada.</h3>' +
+                    '<p>Selecione um chat na lista ou use a busca para iniciar uma nova mensagem.</p></div>';
+            } else {
+                box.innerHTML =
+                    '<div class="empty-state" style="margin:12px;"><div class="empty-icon">💬</div><p>Você ainda não tem conversas. Que tal buscar alguém?</p></div>';
+            }
             return;
         }
         try {
@@ -1038,30 +1139,24 @@
             if (wall) wall.hidden = true;
             ta.disabled = false;
             btn.disabled = false;
-            ta.placeholder = 'Mensagem ou emoji…';
+            ta.placeholder = 'Escreva no chat…';
             return;
         }
         var priceLabel = 'R$ 9,90';
-        var daysLabel = '30';
         try {
             var pi = await api('GET', '/payments/info');
             if (pi && pi.priceBrl != null && Number.isFinite(Number(pi.priceBrl))) {
                 priceLabel = 'R$ ' + Number(pi.priceBrl).toFixed(2).replace('.', ',');
             }
-            if (pi && pi.premiumDays != null && Number.isFinite(Number(pi.premiumDays))) {
-                daysLabel = String(Math.max(1, Math.floor(Number(pi.premiumDays))));
-            }
         } catch (e0) {}
         if (wall) {
             wall.hidden = false;
             wall.innerHTML =
-                '<p class="chat-paywall-text"><strong>Plano de mensagens</strong> — Envie mensagens após pagar ' +
+                '<p class="chat-paywall-text"><strong>Plano de Chat</strong> — Ative o envio de mensagens por apenas ' +
                 esc(priceLabel) +
-                ' no checkout oficial do Mercado Pago (Pix, cartão, etc.). Liberação por ' +
-                esc(daysLabel) +
-                ' dias; ao acabar o prazo, volta a precisar renovar (sem cobrança automática).</p>' +
+                '. O pagamento é feito via checkout oficial do Mercado Pago (Pix, cartão de crédito, etc.).</p>' +
                 '<form method="POST" action="/api/payments/pix/checkout" class="chat-paywall-form">' +
-                '<button type="submit" class="btn btn-primary btn-sm">Pagar e liberar mensagens</button></form>';
+                '<button type="submit" class="btn btn-primary btn-sm">Efetuar pagamento e liberar acesso</button></form>';
             var payForm = wall.querySelector('form.chat-paywall-form');
             if (payForm) {
                 payForm.addEventListener('submit', function () {
@@ -1075,12 +1170,29 @@
         }
         ta.disabled = true;
         btn.disabled = true;
-        ta.placeholder = 'Ative o plano de mensagens para enviar…';
+        ta.placeholder = 'Para enviar mensagens, ative o seu plano.';
     }
 
     async function refreshMensagensLayout(container, meUser) {
         if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
             Notification.requestPermission().catch(function () {});
+        }
+
+        var premiumBannerHtml = '';
+        if (meUser && meUser.premiumActive) {
+            var untilStr = '';
+            if (meUser.premiumUntil) {
+                var pd = new Date(meUser.premiumUntil);
+                if (!Number.isNaN(pd.getTime())) {
+                    untilStr = pd.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+                }
+            }
+            premiumBannerHtml =
+                '<div class="chat-premium-banner" role="status">' +
+                '<i class="bi bi-patch-check-fill" aria-hidden="true"></i> ' +
+                '<span><strong>Plano ativo</strong>' +
+                (untilStr ? ' até ' + esc(untilStr) : '') +
+                ' — envio no chat liberado.</span></div>';
         }
 
         container.innerHTML =
@@ -1092,17 +1204,18 @@
             '<div class="chat-top">' +
             '<div class="chat-top-row">' +
             '<div class="chat-top-text">' +
-            '<div id="chatTopTitle">Suas mensagens</div>' +
+            '<div id="chatTopTitle">Suas Mensagens</div>' +
             '<span id="chatTopSub"></span></div>' +
             '<div class="chat-top-actions" id="chatTopActions" style="display:none">' +
             '<button type="button" class="btn btn-ghost btn-sm" id="btnChatProfile">Perfil</button>' +
             '<button type="button" class="btn btn-ghost btn-sm" id="btnChatBlock">Bloquear</button>' +
             '<button type="button" class="btn btn-ghost btn-sm" id="btnChatReport">Denunciar</button>' +
             '</div></div></div>' +
+            premiumBannerHtml +
             '<div class="chat-messages" id="cb"></div>' +
             '<div id="chatMessagingPaywall" class="chat-messaging-paywall" hidden></div>' +
             '<div class="chat-composer">' +
-            '<textarea id="mi" rows="1" placeholder="Mensagem ou emoji…" autocomplete="off"></textarea>' +
+            '<textarea id="mi" rows="1" placeholder="Escreva no chat…" autocomplete="off"></textarea>' +
             '<button type="button" class="btn btn-primary" id="btnSend">Enviar</button>' +
             '</div></div></div>';
 
@@ -1110,7 +1223,8 @@
         try {
             var data = await api('GET', '/messages/conversations');
             if (!data.conversations.length) {
-                listBody.innerHTML = '<div class="loading-inline">Nenhuma conversa ainda. Inicie pela busca.</div>';
+                listBody.innerHTML =
+                    '<div class="loading-inline" role="status">Você ainda não tem conversas. Que tal buscar alguém?</div>';
             } else {
                 data.conversations.forEach(function (c) {
                     var row = document.createElement('div');
@@ -1178,7 +1292,7 @@
 
             function onErr(e) {
                 if (isPaymentRequiredErr(e)) {
-                    notify(e.message || 'Ative o plano de mensagens para enviar.', 'error');
+                    notify(e.message || 'Para enviar mensagens, ative o seu plano.', 'error');
                     applyMessagingComposerPaywall({ premiumActive: false });
                     return;
                 }
@@ -1262,11 +1376,26 @@
             try {
                 var ue = await requireMe();
                 display.innerHTML = frameEditarPerfil(ue);
+                populateUserGallery(
+                    ue,
+                    {
+                        grid: 'editGaleriaGrid',
+                        gCount: 'editGaleriaCount',
+                        addBtn: 'editGaleriaAddBtn',
+                        replaceInputId: 'perfilGalReplaceInput'
+                    },
+                    'edit'
+                );
                 document.getElementById('btnSalvarEdicao').onclick = async function () {
+                    var matriculaVal = document.getElementById('editMat').value.trim();
+                    if (!matriculaVal) {
+                        notify('Preencha a matrícula ou ID (obrigatório).', 'error');
+                        return;
+                    }
                     var body = {
                         nickname: document.getElementById('editNick').value.trim(),
                         gym: document.getElementById('editGym').value.trim(),
-                        matricula: document.getElementById('editMat').value.trim(),
+                        matricula: matriculaVal,
                         estado: document.getElementById('editEstado').value,
                         cidade: document.getElementById('editCidade').value.trim(),
                         sou: document.getElementById('editSou').value,
@@ -1275,20 +1404,6 @@
                     };
                     try {
                         await api('PATCH', '/users/me', body);
-                        var fin = document.getElementById('editFotos');
-                        if (fin && fin.files && fin.files.length) {
-                            var fd = new FormData();
-                            var n = Math.min(fin.files.length, 3);
-                            for (var i = 0; i < n; i++) fd.append('photos', fin.files[i]);
-                            var r = await fetch('/api/users/me/photos', {
-                                method: 'POST',
-                                body: fd,
-                                credentials: 'include'
-                            });
-                            var txt = await r.text();
-                            var js = txt ? JSON.parse(txt) : {};
-                            if (!r.ok) throw new Error(js.error || 'Erro ao enviar fotos.');
-                        }
                         await requireMe();
                         await loadFrame('meu-perfil');
                     } catch (err) {
@@ -1297,7 +1412,7 @@
                 };
             } catch (e) {
                 display.innerHTML =
-                    panelHeader('Editar', '') + '<div class="empty-state"><p>' + esc(e.message) + '</p></div>';
+                    panelHeader('Editar perfil', '') + '<div class="empty-state"><p>' + esc(e.message) + '</p></div>';
             }
             return;
         }
@@ -1332,30 +1447,32 @@
         if (key === 'denunciar') {
             display.innerHTML = frameDenunciar();
             try {
-                var preId = sessionStorage.getItem('denunciaPrefillId');
-                if (preId) {
-                    var uidEl0 = document.getElementById('denunciaUserId');
-                    if (uidEl0) uidEl0.value = preId;
-                    sessionStorage.removeItem('denunciaPrefillId');
+                sessionStorage.removeItem('denunciaPrefillId');
+                var prePub = sessionStorage.getItem('denunciaPrefillPublicUid');
+                if (prePub) {
+                    var pubEl0 = document.getElementById('denunciaPublicUid');
+                    if (pubEl0) pubEl0.value = prePub;
+                    sessionStorage.removeItem('denunciaPrefillPublicUid');
                 }
             } catch (e) {}
             document.getElementById('btnDenuncia').onclick = async function () {
                 var txt = document.getElementById('denunciaTxt').value.trim();
-                var uidEl = document.getElementById('denunciaUserId');
+                var pubEl = document.getElementById('denunciaPublicUid');
+                var codigo = pubEl && pubEl.value ? pubEl.value.trim() : '';
+                if (!codigo) {
+                    notify('Informe o código público do perfil.', 'warning');
+                    return;
+                }
                 if (!txt) {
                     notify('Preencha a descrição.', 'warning');
                     return;
                 }
-                var payload = { body: txt };
-                if (uidEl && uidEl.value !== '') {
-                    var n = parseInt(uidEl.value, 10);
-                    if (n) payload.reportedUserId = n;
-                }
+                var payload = { body: txt, reportedPublicUid: codigo };
                 try {
                     await api('POST', '/reports', payload);
-                    notify('Denúncia registrada. Obrigado.', 'success');
+                    notify('Denúncia registrada. Nossa equipe recebe um e-mail com os detalhes.', 'success');
                     document.getElementById('denunciaTxt').value = '';
-                    if (uidEl) uidEl.value = '';
+                    if (pubEl) pubEl.value = '';
                 } catch (e) {
                     notify(e.message, 'error');
                 }
@@ -1472,6 +1589,17 @@
             return;
         }
         registerChatRealtime();
+        try {
+            var qsBoot = new URLSearchParams(window.location.search);
+            if (qsBoot.get('frompay') === '1') {
+                try {
+                    history.replaceState({}, '', 'Perfil.html');
+                } catch (eR) {}
+                await loadFrame('mensagens');
+                notify('Plano ativo! Você já pode usar o chat.', 'success');
+                return;
+            }
+        } catch (ePay) {}
         try {
             var oid = sessionStorage.getItem('openChatWith');
             if (oid) {

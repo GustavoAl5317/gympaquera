@@ -8,7 +8,7 @@
     var parts = path.split("/");
     var file = parts.pop() || "";
     if (!file || file === "") return "home";
-    if (file === "index.html") return "home";
+    if (file === "index.html" || file === "index1.html") return "home";
     if (file === "login.html") return "login";
     if (file === "cadastro.html") return "cadastro";
     if (file === "gymparceiras.html") return "gym";

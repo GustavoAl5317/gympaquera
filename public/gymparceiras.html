@@ -3,155 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym Paquera | Conexões Fitness</title>
-    <meta name="description" content="Conecte-se com pessoas da mesma academia. Encontre treino e paquera no mesmo lugar."/>
+    <title>Gym Paquera | Gym Parceiras</title>
+    <meta name="description" content="Rede de academias parceiras do Gym Paquera. Conecte-se com quem treina na sua unidade."/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/site-ui.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Poppins", "system-ui", "sans-serif"]
+                    }
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --nav-bar-h: var(--gp-header-h); }
+        #site-top-nav {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100%;
+            max-width: 100vw;
+            z-index: 99999;
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.06);
+        }
+        #home-nav-panel {
+            transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    </style>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { width: 100%; min-height: 100%; }
-        body { line-height: 1.6; min-height: 100dvh; width: 100%; }
+        body { line-height: 1.6; min-height: 100dvh; width: 100%; font-family: var(--gp-font); }
 
-        /* Main Content */
-        .main-container {
+        .gym-partners-wrap {
             flex: 1;
             width: 100%;
-            max-width: min(1200px, 100% - 32px);
-            margin: 20px auto 28px;
-            padding: 0 clamp(16px, 4vw, 28px);
+            padding: 1.5rem clamp(16px, 4vw, 28px) 2rem;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--gp-brand-rose) 7%, var(--gp-bg)) 0%, var(--gp-bg) 35%, var(--gp-bg) 100%);
         }
 
-        .card {
-            background: var(--white);
-            padding: 24px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
+        .gym-partners-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .gym-partners-card {
+            position: relative;
+            background: var(--gp-surface);
+            border-radius: 1.25rem;
+            border: 1px solid color-mix(in srgb, var(--gp-border) 82%, var(--gp-brand-rose) 18%);
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 20px 40px -12px rgba(15, 23, 42, 0.1);
+            overflow: hidden;
             text-align: center;
+            padding: 2rem 1.5rem 1.75rem;
         }
 
-        h1 { color: #2c3e50; margin-bottom: 10px; }
-        h2 { color: var(--primary); margin-bottom: 20px; font-size: 1.8rem; justify-content: center; }
-        p { color: var(--gray); margin-bottom: 20px; }
+        .gym-partners-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gp-accent) 0%, var(--gp-brand-rose) 55%, #ffc371 100%);
+        }
 
-        /* Image Gallery Otimizada */
+        .gym-partners-title {
+            margin: 0 0 0.5rem;
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            line-height: 1.15;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: baseline;
+            gap: 0.125rem;
+        }
+
+        .gym-partners-title .gp-t-gym { color: var(--gp-accent); }
+        .gym-partners-title .gp-t-parceiras { color: var(--gp-text); }
+
+        .gym-partners-tagline {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--gp-brand-rose);
+            margin: 0 0 1rem;
+            line-height: 1.4;
+        }
+
+        .gym-partners-intro {
+            color: var(--gp-text-muted);
+            font-size: 1rem;
+            line-height: 1.65;
+            max-width: 36rem;
+            margin: 0 auto 1.75rem;
+        }
+
         .image-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 12px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin: 0 0 1.5rem;
         }
 
         .gallery-item {
             width: 100%;
-            height: 160px;
+            aspect-ratio: 16 / 10;
+            height: auto;
             object-fit: cover;
-            border-radius: 12px;
-            transition: transform 0.3s ease;
+            border-radius: 0.875rem;
+            border: 1px solid var(--gp-border);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
         }
 
-        .gallery-item:hover { transform: scale(1.02); }
+        .gallery-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+        }
 
-        /* Badge de Exclusividade */
-        .exclusivity-badge {
-            background: #fff0f3;
-            padding: 18px;
-            border-radius: 15px;
+        .gym-partners-notice {
             text-align: center;
-            border: 1px dashed var(--primary);
-            margin-top: 20px;
+            max-width: 32rem;
+            margin: 0 auto;
+            padding: 1rem 1.15rem;
+            font-size: 0.9rem;
+            line-height: 1.55;
+            font-weight: 600;
+            color: color-mix(in srgb, var(--gp-text) 88%, var(--gp-accent) 12%);
+            background: linear-gradient(135deg, color-mix(in srgb, #f59e0b 12%, var(--gp-surface)) 0%, color-mix(in srgb, var(--gp-brand-rose) 8%, var(--gp-surface)) 100%);
+            border: 1px dashed color-mix(in srgb, var(--gp-accent) 35%, var(--gp-border));
+            border-radius: 0.875rem;
         }
 
-        .exclusivity-badge strong { color: var(--primary-dark); font-size: 1.1rem; }
-
-        footer {
-            text-align: center;
-            padding: 10px 14px;
-            color: var(--gray);
-            font-size: 0.72rem;
-            line-height: 1.35;
-            margin-top: auto;
-            border-top: 1px solid var(--border);
+        .gym-partners-notice::before {
+            content: "ⓘ ";
+            font-weight: 800;
+            color: var(--gp-accent);
         }
-        footer p { margin: 0; }
 
-        /* Responsividade */
         @media (max-width: 768px) {
-            .card { padding: 20px; }
+            .gym-partners-card { padding: 1.5rem 1.1rem 1.35rem; }
+            .image-gallery { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body class="gp-has-marketing-nav">
+<body class="bg-gray-50 pt-[var(--nav-bar-h)] text-gray-900 antialiased flex flex-col min-h-dvh">
 
-<div id="gp-nav-backdrop" class="gp-nav-backdrop gp-marketing-backdrop" aria-hidden="true"></div>
-<nav class="gp-marketing-nav" aria-label="Principal">
-    <div class="gp-marketing-nav__bar">
-        <a href="index.html" class="gp-logo">Gym Paquera</a>
-        <ul class="gp-marketing-nav__links">
-            <li><a href="index.html" data-gp-nav="home">Home</a></li>
-            <li><a href="index.html#sobre" data-gp-nav="home">Sobre</a></li>
-            <li><a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a></li>
-            <li><a href="index.html#contato" data-gp-nav="home">Contato</a></li>
-        </ul>
-        <div class="gp-marketing-nav__cta">
-            <a href="login.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
-            <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
-            <a href="mypay.html" class="gp-marketing-nav__subscribe" data-gp-nav="pay">Assine R$9,90/mês</a>
+    <div id="gp-nav-backdrop" class="gp-nav-backdrop md:hidden" aria-hidden="true"></div>
+
+    <nav id="site-top-nav" aria-label="Principal">
+        <div class="max-w-[1600px] mx-auto flex items-center justify-between gap-3 px-4 sm:px-8 h-16">
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight shrink-0 no-underline inline-flex items-center gap-0.5 uppercase" aria-label="Gym Paquera — início">
+                <span class="text-orange-600">Gym</span><span class="text-gray-900">Paquera</span>
+            </a>
+
+            <ul class="hidden md:flex items-center gap-8 text-[15px] text-gray-600 font-medium">
+                <li><a href="/" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Home</a></li>
+                <li><a href="sobre1.html" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Sobre</a></li>
+                <li><a href="gymparceiras.html" data-gp-nav="gym" class="gp-tail-nav hover:text-orange-600 transition-colors">Gym Parceiras</a></li>
+            </ul>
+
+            <div class="hidden md:flex items-center gap-4 shrink-0">
+                <a href="login.html" data-gp-nav="login" class="gp-tail-nav text-gray-600 hover:text-orange-600 font-medium text-[15px] no-underline">Login</a>
+                <a href="cadastro.html" data-gp-nav="cadastro" class="inline-flex items-center justify-center bg-orange-600 text-white px-5 py-2.5 rounded-full font-semibold text-[15px] hover:bg-orange-700 transition-colors shadow-md shadow-orange-500/25 no-underline">Cadastro</a>
+            </div>
+
+            <button type="button" class="md:hidden flex items-center justify-center w-11 h-11 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 hover:bg-gray-100 transition-colors" data-nav-toggle aria-expanded="false" aria-controls="home-nav-panel" aria-label="Abrir menu">
+                <svg class="w-6 h-6 menu-icon-open" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
         </div>
-        <button type="button" class="gp-marketing-burger" data-nav-toggle aria-expanded="false" aria-controls="gp-marketing-panel" aria-label="Abrir menu">
-            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
-    </div>
-    <div id="gp-marketing-panel" class="gp-marketing-panel" data-nav-panel data-nav-animate-height>
-        <div class="gp-marketing-panel__inner">
-            <a href="index.html" data-gp-nav="home">Home</a>
-            <a href="index.html#sobre" data-gp-nav="home">Sobre</a>
-            <a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a>
-            <a href="index.html#contato" data-gp-nav="home">Contato</a>
-            <a href="mypay.html" class="gp-subscribe-link" data-gp-nav="pay">Assine R$9,90/mês</a>
-            <div class="gp-marketing-panel__cta">
-                <a href="login.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
-                <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+
+        <div id="home-nav-panel" data-nav-panel data-nav-animate-height class="md:hidden overflow-hidden border-t border-gray-100 bg-white shadow-inner">
+            <div class="max-w-[1600px] mx-auto px-4 py-4 space-y-1">
+                <a href="/" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Home</a>
+                <a href="sobre1.html" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Sobre</a>
+                <a href="gymparceiras.html" data-gp-nav="gym" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Gym Parceiras</a>
+                <div class="pt-3 mt-3 border-t border-gray-100 flex flex-col gap-2">
+                    <a href="login.html" data-gp-nav="login" class="text-center py-3 rounded-xl border border-gray-200 font-semibold text-gray-700 hover:bg-gray-50 no-underline">Login</a>
+                    <a href="cadastro.html" data-gp-nav="cadastro" class="text-center py-3 rounded-xl bg-orange-600 text-white font-semibold hover:bg-orange-700 no-underline">Cadastro</a>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-    <main class="main-container">
+    <main class="gym-partners-wrap flex-1">
 
-        <section class="card">
-            <h1>Gym Parceiras</h1>
-            <h2>Sua conexão fitness começa aqui!</h2>
-            <p>Conecte-se com xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
-            
+        <div class="gym-partners-inner">
+        <section class="gym-partners-card" aria-labelledby="gym-parceiras-titulo">
+            <h1 id="gym-parceiras-titulo" class="gym-partners-title">
+                <span class="gp-t-gym">Gym</span><span class="gp-t-parceiras">Parceiras</span>
+            </h1>
+            <p class="gym-partners-tagline">Sua conexão fitness começa aqui!</p>
+            <p class="gym-partners-intro">Conecte-se com pessoas reais que frequentam a sua unidade.</p>
+
             <div class="image-gallery">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+01" alt="Parceira 01 — use imagens locais em assets/">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+02" alt="Parceira 02">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+03" alt="Parceira 03">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+04" alt="Parceira 04">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+05" alt="Parceira 05">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+06" alt="Parceira 06">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+07" alt="Parceira 07">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+08" alt="Parceira 08">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+09" alt="Parceira 09">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+01" alt="Academia parceira 01 — substitua por foto local em assets/">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+02" alt="Academia parceira 02">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+03" alt="Academia parceira 03">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+04" alt="Academia parceira 04">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+05" alt="Academia parceira 05">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+06" alt="Academia parceira 06">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+07" alt="Academia parceira 07">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+08" alt="Academia parceira 08">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+09" alt="Academia parceira 09">
             </div>
 
-            <article class="exclusivity-badge">
-                <strong>🔒 Acesso Exclusivo | xxxxxxxxxxxxxxxxx</strong>
-                <p>Este portal é reservado xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p> <p>Verifique com a xxxxxxxxxxxxxxxxxxxx.</p>
-            </article>
+            <p class="gym-partners-notice" role="note">Verifique com a recepção da sua unidade.</p>
         </section>
+        </div>
 
     </main>
 
-    <footer>
-        <p>&copy; 2026 Gym Paquera · Todos os direitos reservados.</p>
+    <footer class="bg-gray-900 text-gray-500 py-2 px-4 w-full text-center text-xs leading-tight mt-auto">
+        <p class="m-0">&copy; 2026 Gym Paquera - O portal de paquera das academias. Todos os direitos reservados.</p>
     </footer>
 
 <script src="js/site-nav.js" defer></script>
 <script src="js/nav-active.js" defer></script>
+    <style>
+        .gp-tail-nav.is-active { color: #ea580c !important; font-weight: 600; }
+    </style>
 </body>
 </html>

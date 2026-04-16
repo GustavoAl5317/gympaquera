@@ -11,6 +11,37 @@ const { notifyPasswordReset } = require('../notifyEmail');
 
 const router = express.Router();
 
+/** Aceita DD/MM/AAAA ou AAAA-MM-DD; retorna sempre AAAA-MM-DD. */
+function normalizeBirthdateInput(raw) {
+    const s = String(raw || '').trim();
+    const br = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s);
+    if (br) {
+        const d = parseInt(br[1], 10);
+        const m = parseInt(br[2], 10);
+        const y = parseInt(br[3], 10);
+        if (m < 1 || m > 12 || d < 1 || d > 31) {
+            throw new Error('Data de nascimento inválida.');
+        }
+        const dt = new Date(y, m - 1, d, 12, 0, 0);
+        if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) {
+            throw new Error('Data de nascimento inválida.');
+        }
+        return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    }
+    const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+    if (iso) {
+        const y = parseInt(iso[1], 10);
+        const m = parseInt(iso[2], 10);
+        const d = parseInt(iso[3], 10);
+        const dt = new Date(y, m - 1, d, 12, 0, 0);
+        if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) {
+            throw new Error('Data de nascimento inválida.');
+        }
+        return s;
+    }
+    throw new Error('Informe a data de nascimento no formato DD/MM/AAAA.');
+}
+
 function publicOrigin(req) {
     var base = process.env.APP_PUBLIC_URL;
     if (base && String(base).trim()) return String(base).trim().replace(/\/$/, '');
@@ -74,11 +105,18 @@ router.post('/register', upload.array('photos', 3), function register(req, res) 
         if (!email || !password || password.length < 6) {
             return res.status(400).json({ error: 'E-mail e senha (mín. 6 caracteres) são obrigatórios.' });
         }
-        if (!sou || !procuro || !gym || !estado || !cidade || !nickname || !nascimento) {
-            return res.status(400).json({ error: 'Preencha todos os campos obrigatórios.' });
+        if (!sou || !procuro || !gym || !matricula || !estado || !cidade || !nickname || !nascimento) {
+            return res.status(400).json({ error: 'Preencha todos os campos obrigatórios (incluindo ID da matrícula).' });
         }
 
-        assertAdult(nascimento);
+        let nascimentoNorm;
+        try {
+            nascimentoNorm = normalizeBirthdateInput(nascimento);
+        } catch (e) {
+            return res.status(400).json({ error: e.message || 'Data de nascimento inválida.' });
+        }
+
+        assertAdult(nascimentoNorm);
 
         const exists = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
         if (exists) {
@@ -105,11 +143,11 @@ router.post('/register', upload.array('photos', 3), function register(req, res) 
                 sou,
                 procuro,
                 gym,
-                matricula || null,
+                matricula,
                 estado,
                 cidade,
                 nickname,
-                nascimento,
+                nascimentoNorm,
                 createdAt
             );
             const userId = info.lastInsertRowid;

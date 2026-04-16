@@ -17,8 +17,7 @@ function sendChatMessage(fromUserId, toUserId, bodyRaw) {
     var db = getDb();
     if (!isPremiumActive(db, fromUserId)) {
         return {
-            error:
-                'Para enviar mensagens, ative o plano de mensagens (Pix). Abra Pagamentos no menu e conclua o pagamento.',
+            error: 'Para enviar mensagens, ative o seu plano.',
             code: 'PAYMENT_REQUIRED'
         };
     }

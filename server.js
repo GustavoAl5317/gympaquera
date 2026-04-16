@@ -34,8 +34,24 @@ const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 
 /** Atrás de Nginx/Caddy (HTTPS): necessário para cookie seguro e IP real. */
-if (isProduction || process.env.TRUST_PROXY === '1') {
+const trustProxy = isProduction || process.env.TRUST_PROXY === '1';
+if (trustProxy) {
     app.set('trust proxy', 1);
+}
+
+/**
+ * Cookie Secure: em produção fica true por padrão (navegador só envia o cookie em HTTPS).
+ * Se NODE_ENV=production mas o acesso ao site é por HTTP (ex.: IP:3000 sem TLS), o login
+ * “funciona” na API mas a próxima página perde a sessão — defina SESSION_COOKIE_SECURE=false.
+ * Forçar true: SESSION_COOKIE_SECURE=true
+ */
+var sessionCookieSecure;
+if (process.env.SESSION_COOKIE_SECURE === 'true' || process.env.SESSION_COOKIE_SECURE === '1') {
+    sessionCookieSecure = true;
+} else if (process.env.SESSION_COOKIE_SECURE === 'false' || process.env.SESSION_COOKIE_SECURE === '0') {
+    sessionCookieSecure = false;
+} else {
+    sessionCookieSecure = isProduction;
 }
 
 const sessionMiddleware = session({
@@ -43,11 +59,13 @@ const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET || 'defina_SESSION_SECRET_em_producao',
     resave: false,
     saveUninitialized: false,
+    proxy: trustProxy,
     cookie: {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         sameSite: 'lax',
-        secure: isProduction
+        secure: sessionCookieSecure,
+        path: '/'
     }
 });
 
@@ -79,7 +97,9 @@ app.use(function requireSessionForMypayPage(req, res, next) {
     next();
 });
 
-app.use(express.static(path.join(root, 'public'), { extensions: ['html'], index: ['index.html'] }));
+app.use(
+    express.static(path.join(root, 'public'), { extensions: ['html'], index: ['index1.html', 'index.html'] })
+);
 
 app.use(function notFound(req, res, next) {
     if (req.path.startsWith('/api/')) {
@@ -109,6 +129,9 @@ attachSocketChat(io, sessionMiddleware);
 httpServer.listen(PORT, function () {
     console.log('Gym Paquera rodando em http://localhost:' + PORT);
     console.log('Chat em tempo real (Socket.IO) no mesmo endereço.');
+    if (sessionCookieSecure) {
+        console.log('[sessão] Cookie com Secure — use HTTPS no navegador (ou SESSION_COOKIE_SECURE=false só em HTTP).');
+    }
 });
 
 httpServer.on('error', function (err) {

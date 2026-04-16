@@ -7,235 +7,342 @@
     <meta name="description" content="Conecte-se com pessoas da mesma academia. Encontre treino e paquera no mesmo lugar."/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/site-ui.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Poppins", "system-ui", "sans-serif"]
+                    }
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --nav-bar-h: var(--gp-header-h); }
+        #site-top-nav {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100%;
+            max-width: 100vw;
+            z-index: 99999;
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.06);
+        }
+        #home-nav-panel {
+            transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    </style>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { -webkit-text-size-adjust: 100%; width: 100%; min-height: 100%; }
 
-        body {
+        .cadastro-page {
             line-height: 1.6;
             width: 100%;
             min-height: 100dvh;
+            font-family: var(--gp-font);
         }
 
-        .page-body {
+        .cadastro-page .page-body {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
             min-width: 0;
             width: 100%;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--gp-brand-rose) 8%, var(--gp-bg)) 0%, var(--gp-bg) 36%, var(--gp-bg) 100%);
         }
 
-        /* Main Content */
-        .main-container {
+        .cadastro-page .main-container {
             flex: 1;
             width: 100%;
-            max-width: min(1200px, 100% - 32px);
-            margin: 20px auto 28px;
-            padding: 0 clamp(16px, 4vw, 28px);
+            max-width: min(1180px, calc(100% - 32px));
+            margin: 1.5rem auto 2rem;
+            padding: 0 clamp(16px, 4vw, 32px);
         }
 
-        .card {
-            background: var(--white);
-            padding: 22px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
+        .cadastro-form .card {
+            position: relative;
+            background: var(--gp-surface);
+            padding: 1.75rem 1.5rem;
+            border-radius: 1.25rem;
+            border: 1px solid color-mix(in srgb, var(--gp-border) 82%, var(--gp-brand-rose) 18%);
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 20px 40px -12px rgba(15, 23, 42, 0.1);
+            margin-bottom: 1.25rem;
+            overflow: hidden;
         }
 
-        h2 { 
-            color: var(--primary); 
-            margin-bottom: 25px; 
-            font-size: 1.6rem; 
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .cadastro-form .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gp-accent) 0%, var(--gp-brand-rose) 55%, #ffc371 100%);
         }
 
-        /* Grid System */
-        .form-grid {
+        .cadastro-form .card h2 {
+            color: var(--gp-brand-rose);
+            margin: 0 0 1.25rem;
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .cadastro-form .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 1.1rem 1.25rem;
         }
 
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
-        .full-width { grid-column: span 2; }
-
-        label { 
-            font-weight: 600; 
-            font-size: 0.85rem; 
-            color: var(--gray); 
-            margin-left: 4px;
+        .cadastro-form .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
         }
 
-        input, select {
+        .cadastro-form .full-width { grid-column: span 2; }
+
+        /* Preflight do Tailwind: reforçar bordas e tipografia nos campos */
+        .cadastro-form .form-group > label {
+            display: block;
+            font-family: var(--gp-font);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--gp-text);
+            margin: 0 0 0 2px;
+            line-height: 1.35;
+        }
+
+        .cadastro-form .form-group > input:not([type="file"]):not([type="hidden"]),
+        .cadastro-form .form-group > select {
+            display: block;
+            box-sizing: border-box;
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--border);
-            border-radius: 10px;
+            max-width: 100%;
+            margin: 0;
+            padding: 0.75rem 0.9rem;
+            font-family: var(--gp-font);
             font-size: 1rem;
-            transition: all 0.3s ease;
-            background-color: var(--white);
+            line-height: 1.45;
+            color: var(--gp-text);
+            background-color: var(--gp-surface);
+            border-width: 1.5px;
+            border-style: solid;
+            border-color: var(--gp-border);
+            border-radius: 0.75rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        input:focus, select:focus { 
-            border-color: var(--primary); 
-            outline: none; 
-            box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1);
+        .cadastro-form .form-group > input:not([type="file"]):not([type="hidden"]) {
+            appearance: none;
+            -webkit-appearance: none;
         }
 
-        /* Alert Area */
-        .alert {
-            background: #fff0f3;
-            border-left: 5px solid var(--primary);
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            border-radius: 8px;
+        .cadastro-form .form-group > select {
+            appearance: auto;
+            cursor: pointer;
         }
-        .alert strong { color: var(--primary-dark); display: block; margin-bottom: 5px; }
-        .alert p { font-size: 0.9rem; color: #a04255; }
 
-        /* Photo Upload UI */
-        .photo-grid {
+        .cadastro-form .form-group > input::placeholder {
+            color: color-mix(in srgb, var(--gp-text-muted) 70%, transparent);
+            opacity: 1;
+        }
+
+        .cadastro-form .form-group > input:focus,
+        .cadastro-form .form-group > select:focus {
+            border-color: var(--gp-brand-rose);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--gp-brand-rose) 22%, transparent);
+        }
+
+        .cadastro-form .field-hint {
+            font-size: 0.78rem;
+            color: var(--gp-text-muted);
+            margin: 0.15rem 0 0;
+            line-height: 1.45;
+        }
+
+        .cadastro-form .cadastro-privacy-box {
+            background: color-mix(in srgb, var(--gp-brand-rose) 8%, var(--gp-surface));
+            border: 1px solid color-mix(in srgb, var(--gp-brand-rose) 22%, var(--gp-border));
+            border-left: 4px solid var(--gp-brand-rose);
+            border-radius: 0.75rem;
+            padding: 1rem 1.15rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .cadastro-form .cadastro-privacy-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--gp-brand-rose-dark);
+            margin: 0 0 0.65rem;
+            line-height: 1.4;
+        }
+
+        .cadastro-form .cadastro-privacy-line {
+            font-size: 0.9rem;
+            color: var(--gp-text);
+            margin: 0;
+            line-height: 1.55;
+        }
+
+        .cadastro-form .cadastro-privacy-line + .cadastro-privacy-line {
+            margin-top: 0.5rem;
+        }
+
+        .cadastro-form .photo-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 20px 0;
+            gap: 0.9rem;
+            margin: 1rem 0 1.25rem;
         }
 
-        .photo-box {
+        .cadastro-form .photo-box {
             aspect-ratio: 1/1;
-            border: 2px dashed #ccd1d1;
-            border-radius: 15px;
+            border: 2px dashed color-mix(in srgb, var(--gp-border) 70%, var(--gp-brand-rose) 30%);
+            border-radius: 0.875rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: #fafafa;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+            background: color-mix(in srgb, var(--gp-bg) 50%, var(--gp-surface));
             position: relative;
             overflow: hidden;
         }
 
-        .photo-box:hover { border-color: var(--primary); background: #fff5f7; }
-        .photo-box span { font-size: 2rem; color: #abb2b9; }
-        .photo-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+        .cadastro-form .photo-box:hover {
+            border-color: var(--gp-brand-rose);
+            background: color-mix(in srgb, var(--gp-brand-rose) 6%, var(--gp-surface));
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+        }
 
-        /* Buttons & Footer */
-        .btn-submit {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 18px;
+        .cadastro-form .photo-box > span {
+            font-size: 1.75rem;
+            font-weight: 300;
+            color: var(--gp-text-muted);
+            position: relative;
+            z-index: 1;
+        }
+
+        .cadastro-form .photo-box img {
             width: 100%;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+
+        .cadastro-form .btn-submit {
+            background: linear-gradient(135deg, var(--gp-brand-rose) 0%, var(--gp-brand-rose-dark) 100%);
+            color: #fff;
+            border: none;
+            padding: 0.95rem 1rem;
+            width: 100%;
+            border-radius: 9999px;
+            font-size: 1rem;
             font-weight: 700;
+            font-family: var(--gp-font);
             cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+            margin-top: 0.25rem;
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            box-shadow: 0 4px 14px color-mix(in srgb, var(--gp-brand-rose) 45%, transparent);
         }
 
-        .btn-submit:hover { 
-            background: var(--primary-dark); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+        .cadastro-form .btn-submit:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px color-mix(in srgb, var(--gp-brand-rose) 40%, transparent);
         }
 
-        .info-text {
+        .cadastro-form .info-text {
             text-align: center;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: var(--gray);
+            margin-top: 1.25rem;
+            font-size: 0.8rem;
+            color: var(--gp-text-muted);
+            line-height: 1.55;
         }
 
-        .error-msg {
-            color: var(--primary);
+        .cadastro-form .info-text p { margin: 0 0 0.65rem; }
+        .cadastro-form .info-text p:last-child { margin-bottom: 0; }
+        .cadastro-form .info-text a { color: var(--gp-brand-rose); font-weight: 600; }
+
+        .cadastro-form .error-msg {
+            color: var(--gp-brand-rose);
             font-size: 0.75rem;
             font-weight: 600;
-            margin-top: 4px;
+            margin-top: 0.25rem;
             display: none;
         }
 
-        .exclusivity-badge {
-            background: #e9ecef;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 10px 14px;
-            color: var(--gray);
-            font-size: 0.72rem;
-            line-height: 1.35;
-            margin-top: auto;
-            border-top: 1px solid var(--border);
-        }
-        footer p { margin: 0; }
-
-        /* Responsividade */
         @media (max-width: 768px) {
-            .main-container { margin: 24px auto; padding: 0 16px; }
-            .card { padding: 22px 18px; border-radius: 16px; }
-            h2 { font-size: 1.35rem; flex-wrap: wrap; }
-            .form-grid { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-            .photo-grid { grid-template-columns: 1fr 1fr; }
+            .cadastro-page .main-container { margin: 1.25rem auto 1.75rem; }
+            .cadastro-form .card { padding: 1.35rem 1.1rem; }
+            .cadastro-form .form-grid { grid-template-columns: 1fr; }
+            .cadastro-form .full-width { grid-column: span 1; }
+            .cadastro-form .photo-grid { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 480px) {
-            .photo-grid { grid-template-columns: 1fr; }
+            .cadastro-form .photo-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body class="gp-has-marketing-nav">
+<body class="cadastro-page bg-gray-50 pt-[var(--nav-bar-h)] text-gray-900 antialiased flex flex-col min-h-dvh">
 
-<div id="gp-nav-backdrop" class="gp-nav-backdrop gp-marketing-backdrop" aria-hidden="true"></div>
-<nav class="gp-marketing-nav" aria-label="Principal">
-    <div class="gp-marketing-nav__bar">
-        <a href="index.html" class="gp-logo">Gym Paquera</a>
-        <ul class="gp-marketing-nav__links">
-            <li><a href="index.html" data-gp-nav="home">Home</a></li>
-            <li><a href="index.html#sobre" data-gp-nav="home">Sobre</a></li>
-            <li><a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a></li>
-            <li><a href="index.html#contato" data-gp-nav="home">Contato</a></li>
-        </ul>
-        <div class="gp-marketing-nav__cta">
-            <a href="login.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
-            <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
-            <a href="mypay.html" class="gp-marketing-nav__subscribe" data-gp-nav="pay">Assine R$9,90/mês</a>
+    <div id="gp-nav-backdrop" class="gp-nav-backdrop md:hidden" aria-hidden="true"></div>
+
+    <nav id="site-top-nav" aria-label="Principal">
+        <div class="max-w-[1600px] mx-auto flex items-center justify-between gap-3 px-4 sm:px-8 h-16">
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight shrink-0 no-underline inline-flex items-center gap-0.5 uppercase" aria-label="Gym Paquera — início">
+                <span class="text-orange-600">Gym</span><span class="text-gray-900">Paquera</span>
+            </a>
+
+            <ul class="hidden md:flex items-center gap-8 text-[15px] text-gray-600 font-medium">
+                <li><a href="/" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Home</a></li>
+                <li><a href="sobre1.html" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Sobre</a></li>
+                <li><a href="gymparceiras.html" data-gp-nav="gym" class="gp-tail-nav hover:text-orange-600 transition-colors">Gym Parceiras</a></li>
+            </ul>
+
+            <div class="hidden md:flex items-center gap-4 shrink-0">
+                <a href="login.html" data-gp-nav="login" class="gp-tail-nav text-gray-600 hover:text-orange-600 font-medium text-[15px] no-underline">Login</a>
+                <a href="cadastro.html" data-gp-nav="cadastro" class="inline-flex items-center justify-center bg-orange-600 text-white px-5 py-2.5 rounded-full font-semibold text-[15px] hover:bg-orange-700 transition-colors shadow-md shadow-orange-500/25 no-underline">Cadastro</a>
+            </div>
+
+            <button type="button" class="md:hidden flex items-center justify-center w-11 h-11 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 hover:bg-gray-100 transition-colors" data-nav-toggle aria-expanded="false" aria-controls="home-nav-panel" aria-label="Abrir menu">
+                <svg class="w-6 h-6 menu-icon-open" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
         </div>
-        <button type="button" class="gp-marketing-burger" data-nav-toggle aria-expanded="false" aria-controls="gp-marketing-panel" aria-label="Abrir menu">
-            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
-    </div>
-    <div id="gp-marketing-panel" class="gp-marketing-panel" data-nav-panel data-nav-animate-height>
-        <div class="gp-marketing-panel__inner">
-            <a href="index.html" data-gp-nav="home">Home</a>
-            <a href="index.html#sobre" data-gp-nav="home">Sobre</a>
-            <a href="gymparceiras.html" data-gp-nav="gym">Gym Parceiras</a>
-            <a href="index.html#contato" data-gp-nav="home">Contato</a>
-            <a href="mypay.html" class="gp-subscribe-link" data-gp-nav="pay">Assine R$9,90/mês</a>
-            <div class="gp-marketing-panel__cta">
-                <a href="login.html" class="gp-link-quiet" data-gp-nav="login">Login</a>
-                <a href="cadastro.html" class="gp-btn-pill" data-gp-nav="cadastro">Cadastro</a>
+
+        <div id="home-nav-panel" data-nav-panel data-nav-animate-height class="md:hidden overflow-hidden border-t border-gray-100 bg-white shadow-inner">
+            <div class="max-w-[1600px] mx-auto px-4 py-4 space-y-1">
+                <a href="/" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Home</a>
+                <a href="sobre1.html" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Sobre</a>
+                <a href="gymparceiras.html" data-gp-nav="gym" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Gym Parceiras</a>
+                <div class="pt-3 mt-3 border-t border-gray-100 flex flex-col gap-2">
+                    <a href="login.html" data-gp-nav="login" class="text-center py-3 rounded-xl border border-gray-200 font-semibold text-gray-700 hover:bg-gray-50 no-underline">Login</a>
+                    <a href="cadastro.html" data-gp-nav="cadastro" class="text-center py-3 rounded-xl bg-orange-600 text-white font-semibold hover:bg-orange-700 no-underline">Cadastro</a>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <div class="page-body">
     <main class="main-container">
-        <form id="profileForm">
+        <form id="profileForm" class="cadastro-form">
             <section class="card">
                 <h2>Crie o seu perfil</h2>
                 <div class="form-grid">
@@ -269,7 +376,7 @@
                     </div>
                     <div class="form-group">
                         <label for="matricula">ID Matrícula</label>
-                        <input type="text" id="matricula" placeholder="Wellhub, Particular, TotalPass">
+                        <input type="text" id="matricula" name="matricula" placeholder="Ex.: Wellhub, Particular, TotalPass" required autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="estado">Estado</label>
@@ -294,7 +401,8 @@
                     </div>
                     <div class="form-group">
                         <label for="nascimento">Data de Nascimento</label>
-                        <input type="date" id="nascimento" required>
+                        <input type="text" id="nascimento" name="nascimento" placeholder="DD/MM/AAAA" required inputmode="numeric" autocomplete="bday" maxlength="10">
+                        <p class="field-hint">Digite a data (ex.: 15/04/1990). Apenas <strong>maiores de 18 anos</strong> podem se cadastrar.</p>
                     </div>
                 </div>
             </section>
@@ -320,10 +428,10 @@
 
             <section class="card">
                 <h2>Fotos do Shape</h2>
-                <div class="alert">
-                    <strong>⚠️ Respeite as Regras de Privacidade:</strong>
-                    <p>Fotos de rosto ou conteúdo explícito serão removidos automaticamente.</p><p>
-Apenas fotos de treino/shape. Rostos ou conteúdo explícito são proibidos.</p>
+                <div class="cadastro-privacy-box" role="note">
+                    <p class="cadastro-privacy-title">⚠️ Respeite as Regras de Privacidade:</p>
+                    <p class="cadastro-privacy-line">Fotos de rosto ou conteúdo explícito serão removidas automaticamente.</p>
+                    <p class="cadastro-privacy-line">Apenas fotos de treino/shape. Rostos ou conteúdo explícito são proibidos.</p>
                 </div>
 
                 <div class="photo-grid">
@@ -347,23 +455,17 @@ Apenas fotos de treino/shape. Rostos ou conteúdo explícito são proibidos.</p>
                 <button type="submit" class="btn-submit">Finalizar Cadastro</button>
                 
                 <div class="info-text">
-                    <p>Ao prosseguir, você declara estar ciente e de acordo com os nossos <a href="#" onclick="return false;">Termos de Uso</a> (substitua pelo link real).
-                <p>O cadastro e uso da plataforma são <b>permitidos apenas para pessoas maiores de 18 (dezoito) anos.</b></p> 
-                <p>Para garantir o comprimento dessa regra, poderemos realizar a verificação de idade dos usuários cadastrados.</p>
-                É proibido o uso para fins ilicitos, inclusive prostituição, bem como atividades comerciais de qualquer natureza.
-                </p>
+                    <p>Ao prosseguir, você declara estar ciente e de acordo com os nossos <a href="#" onclick="return false;">Termos de Uso</a> (substitua pelo link real).</p>
+                    <p>O cadastro e uso da plataforma são <b>permitidos apenas para pessoas maiores de 18 (dezoito) anos.</b></p>
+                    <p>Para garantir o cumprimento dessa regra, poderemos realizar a verificação de idade dos usuários cadastrados.</p>
+                    <p>É proibido o uso para fins ilícitos, inclusive prostituição, bem como atividades comerciais de qualquer natureza.</p>
                 </div>
             </section>
         </form>
-
-        <section class="exclusivity-badge">
-            <strong>🔒 Acesso Exclusivo | xxxxxxxxxxxxxxxxxx</strong>
-            <p>Este portal é reservado xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.</p>
-        </section>
     </main>
 
-    <footer>
-        <p>&copy; 2026 Gym Paquera · Todos os direitos reservados.</p>
+    <footer class="bg-gray-900 text-gray-500 py-2 px-4 w-full text-center text-xs leading-tight mt-auto">
+        <p class="m-0">&copy; 2026 Gym Paquera - O portal de paquera das academias. Todos os direitos reservados.</p>
     </footer>
     </div>
 
@@ -397,15 +499,52 @@ Apenas fotos de treino/shape. Rostos ou conteúdo explícito são proibidos.</p>
         function validarSenha() {
             if (confirma.value !== '' && senha.value !== confirma.value) {
                 erro.style.display = 'block';
-                confirma.style.borderColor = 'var(--primary)';
+                confirma.style.borderColor = 'var(--gp-brand-rose)';
             } else {
                 erro.style.display = 'none';
-                confirma.style.borderColor = 'var(--border)';
+                confirma.style.borderColor = 'var(--gp-border)';
             }
         }
 
         senha.addEventListener('input', validarSenha);
         confirma.addEventListener('input', validarSenha);
+
+        (function formatNascimentoDigitacao() {
+            var el = document.getElementById('nascimento');
+            if (!el) return;
+            el.addEventListener('input', function () {
+                var v = el.value.replace(/\D/g, '').slice(0, 8);
+                if (v.length >= 5) {
+                    el.value = v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4);
+                } else if (v.length >= 3) {
+                    el.value = v.slice(0, 2) + '/' + v.slice(2);
+                } else {
+                    el.value = v;
+                }
+            });
+        })();
+
+        function parseNascimentoParaIso(s) {
+            s = String(s || '').trim();
+            var br = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s);
+            if (!br) return { error: 'Informe a data de nascimento no formato DD/MM/AAAA.' };
+            var d = parseInt(br[1], 10);
+            var m = parseInt(br[2], 10);
+            var y = parseInt(br[3], 10);
+            if (m < 1 || m > 12 || d < 1 || d > 31) return { error: 'Data de nascimento inválida.' };
+            var dt = new Date(y, m - 1, d, 12, 0, 0);
+            if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) {
+                return { error: 'Data de nascimento inválida.' };
+            }
+            var iso = y + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+            var birth = new Date(y, m - 1, d, 12, 0, 0);
+            var today = new Date();
+            var age = today.getFullYear() - birth.getFullYear();
+            var mo = today.getMonth() - birth.getMonth();
+            if (mo < 0 || (mo === 0 && today.getDate() < birth.getDate())) age -= 1;
+            if (age < 18) return { error: 'Cadastro permitido apenas para maiores de 18 anos.' };
+            return { iso: iso };
+        }
 
         document.getElementById('profileForm').onsubmit = async function (e) {
             e.preventDefault();
@@ -414,15 +553,27 @@ Apenas fotos de treino/shape. Rostos ou conteúdo explícito são proibidos.</p>
                 else alert('As senhas precisam ser iguais!');
                 return;
             }
+            var matVal = document.getElementById('matricula').value.trim();
+            if (!matVal) {
+                if (window.showToast) showToast('Preencha o ID da matrícula (obrigatório).', { type: 'warning' });
+                else alert('Preencha o ID da matrícula (obrigatório).');
+                return;
+            }
+            var nascParsed = parseNascimentoParaIso(document.getElementById('nascimento').value);
+            if (nascParsed.error) {
+                if (window.showToast) showToast(nascParsed.error, { type: 'warning' });
+                else alert(nascParsed.error);
+                return;
+            }
             var fd = new FormData();
             fd.append('sou', document.getElementById('sou').value);
             fd.append('procuro', document.getElementById('procuro').value);
             fd.append('gym', document.getElementById('gym').value.trim());
-            fd.append('matricula', document.getElementById('matricula').value.trim());
+            fd.append('matricula', matVal);
             fd.append('estado', document.getElementById('estado').value);
             fd.append('cidade', document.getElementById('cidade').value.trim());
             fd.append('nickname', document.getElementById('nickname').value.trim());
-            fd.append('nascimento', document.getElementById('nascimento').value);
+            fd.append('nascimento', nascParsed.iso);
             fd.append('email', document.getElementById('email').value.trim());
             fd.append('password', document.getElementById('senha').value);
             for (var i = 1; i <= 3; i++) {
@@ -441,5 +592,8 @@ Apenas fotos de treino/shape. Rostos ou conteúdo explícito são proibidos.</p>
             }
         };
     </script>
+    <style>
+        .gp-tail-nav.is-active { color: #ea580c !important; font-weight: 600; }
+    </style>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /**
- * Notificações tipo toast — window.showToast(mensagem, { type, duration })
+ * Notificações tipo toast — window.showToast(texto, { type, duration })
  * type: 'success' | 'error' | 'danger' | 'info' | 'warning'
  */
 (function () {
