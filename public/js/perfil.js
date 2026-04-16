@@ -1142,32 +1142,11 @@
             ta.placeholder = 'Escreva no chat…';
             return;
         }
-        var priceLabel = 'R$ 9,90';
-        try {
-            var pi = await api('GET', '/payments/info');
-            if (pi && pi.priceBrl != null && Number.isFinite(Number(pi.priceBrl))) {
-                priceLabel = 'R$ ' + Number(pi.priceBrl).toFixed(2).replace('.', ',');
-            }
-        } catch (e0) {}
         if (wall) {
             wall.hidden = false;
             wall.innerHTML =
-                '<p class="chat-paywall-text"><strong>Plano de Chat</strong> — Ative o envio de mensagens por apenas ' +
-                esc(priceLabel) +
-                '. O pagamento é feito via checkout oficial do Mercado Pago (Pix, cartão de crédito, etc.).</p>' +
-                '<form method="POST" action="/api/payments/pix/checkout" class="chat-paywall-form">' +
-                '<input type="hidden" name="plan" value="30d">' +
-                '<button type="submit" class="btn btn-primary btn-sm">Efetuar pagamento e liberar acesso</button></form>';
-            var payForm = wall.querySelector('form.chat-paywall-form');
-            if (payForm) {
-                payForm.addEventListener('submit', function () {
-                    var b = payForm.querySelector('button[type="submit"]');
-                    if (b) {
-                        b.disabled = true;
-                        b.textContent = 'Redirecionando…';
-                    }
-                });
-            }
+                '<p class="chat-paywall-text"><strong>Plano de Chat</strong> — Escolha um plano (1, 2 ou 3 meses) e pague com segurança no Mercado Pago (Pix, cartão, etc.). Você continua logado.</p>' +
+                '<a class="btn btn-primary btn-sm" href="mypay.html">Ir para pagamento</a>';
         }
         ta.disabled = true;
         btn.disabled = true;
@@ -1616,6 +1595,25 @@
                 return;
             }
         } catch (e2) {}
+        try {
+            var qsFrame = new URLSearchParams(window.location.search).get('frame');
+            var allowedBootFrames = {
+                busca: 1,
+                'meu-perfil': 1,
+                'editar-perfil': 1,
+                favoritos: 1,
+                mensagens: 1,
+                bloquear: 1,
+                denunciar: 1
+            };
+            if (qsFrame && allowedBootFrames[qsFrame]) {
+                try {
+                    history.replaceState({}, '', 'Perfil.html');
+                } catch (eRf) {}
+                await loadFrame(qsFrame);
+                return;
+            }
+        } catch (eFrame) {}
         await loadFrame('meu-perfil');
     };
 })();

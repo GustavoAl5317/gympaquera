@@ -134,16 +134,16 @@
                         </div>
 
                         <form id="formPixCheckout" class="hidden" method="POST" action="/api/payments/pix/checkout">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                 <label class="plan-choice relative block rounded-2xl p-4 is-selected" data-plan-card="30d">
                                     <input class="sr-only-plan js-plan-radio" type="radio" name="plan" value="30d" checked>
                                     <div class="plan-choice-body">
                                         <div class="text-[10px] font-black uppercase tracking-widest text-brand-600 mb-1">1 mês</div>
                                         <div class="flex items-baseline gap-1">
                                             <span class="text-slate-400 text-sm font-medium">R$</span>
-                                            <span class="text-3xl font-black text-slate-900 tracking-tighter js-price-30">9,90</span>
+                                            <span class="text-3xl font-black text-slate-900 tracking-tighter js-price-30">19,90</span>
                                         </div>
-                                        <p class="text-xs text-slate-500 mt-1">30 dias de chat ilimitado</p>
+                                        <p class="text-xs text-slate-500 mt-1 js-days-30">30 dias de chat ilimitado</p>
                                     </div>
                                 </label>
                                 <label class="plan-choice relative block rounded-2xl p-4" data-plan-card="60d">
@@ -152,9 +152,20 @@
                                         <div class="text-[10px] font-black uppercase tracking-widest text-brand-600 mb-1">2 meses</div>
                                         <div class="flex items-baseline gap-1">
                                             <span class="text-slate-400 text-sm font-medium">R$</span>
-                                            <span class="text-3xl font-black text-slate-900 tracking-tighter js-price-60">29,70</span>
+                                            <span class="text-3xl font-black text-slate-900 tracking-tighter js-price-60">19,80</span>
                                         </div>
-                                        <p class="text-xs text-slate-500 mt-1">60 dias de chat ilimitado</p>
+                                        <p class="text-xs text-slate-500 mt-1 js-days-60">60 dias de chat ilimitado</p>
+                                    </div>
+                                </label>
+                                <label class="plan-choice relative block rounded-2xl p-4" data-plan-card="90d">
+                                    <input class="sr-only-plan js-plan-radio" type="radio" name="plan" value="90d">
+                                    <div class="plan-choice-body">
+                                        <div class="text-[10px] font-black uppercase tracking-widest text-brand-600 mb-1">3 meses</div>
+                                        <div class="flex items-baseline gap-1">
+                                            <span class="text-slate-400 text-sm font-medium">R$</span>
+                                            <span class="text-3xl font-black text-slate-900 tracking-tighter js-price-90">9,90</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 mt-1 js-days-90">90 dias de chat ilimitado</p>
                                     </div>
                                 </label>
                             </div>
@@ -162,7 +173,7 @@
                             <div class="flex items-baseline gap-1 mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-100">
                                 <span class="text-slate-400 text-lg font-medium">Total selecionado:</span>
                                 <span class="text-slate-400 text-lg font-medium">R$</span>
-                                <span id="priceDisplay" class="text-4xl font-black text-slate-900 tracking-tighter">9,90</span>
+                                <span id="priceDisplay" class="text-4xl font-black text-slate-900 tracking-tighter">19,90</span>
                                 <span class="text-slate-400 font-medium" id="pricePeriodSuffix">/ 30 dias</span>
                             </div>
 
@@ -265,9 +276,10 @@
             var premiumLine = document.getElementById('premiumStatusLine');
             var configWarn = document.getElementById('pixConfigWarn');
             var daysSpan = document.getElementById('premiumDaysSpan');
-            var planPricing = { '30d': { price: 9.9, days: 30 }, '60d': { price: 29.7, days: 60 } };
+            var planPricing = { '30d': { price: 19.9, days: 30 }, '60d': { price: 19.8, days: 60 }, '90d': { price: 9.9, days: 90 } };
             var currentPaymentId = null;
             var pollTimer = null;
+            var mpReturnPollTimer = null;
 
             function fmtBrl(n) {
                 return Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -304,6 +316,43 @@
 
             function stopPoll() { if (pollTimer) clearInterval(pollTimer); pollTimer = null; }
 
+            function stopMpReturnPoll() {
+                if (mpReturnPollTimer) clearInterval(mpReturnPollTimer);
+                mpReturnPollTimer = null;
+            }
+
+            function redirectToChatUnlocked() {
+                stopMpReturnPoll();
+                window.location.replace('Perfil.html?frompay=1');
+            }
+
+            function startMpReturnPolling(mpPaymentId) {
+                stopMpReturnPoll();
+                var tries = 0;
+                var maxTries = 100;
+                mpReturnPollTimer = setInterval(async function () {
+                    tries += 1;
+                    if (tries > maxTries) {
+                        stopMpReturnPoll();
+                        checkoutErrBox.classList.remove('hidden');
+                        checkoutErrBox.textContent =
+                            'O pagamento pode estar sendo processado. Abra o chat no portal em alguns instantes ou atualize a página.';
+                        return;
+                    }
+                    try {
+                        if (mpPaymentId) {
+                            try {
+                                await api('GET', '/payments/mp/' + encodeURIComponent(mpPaymentId) + '/sync');
+                            } catch (eSync) {}
+                        }
+                        var data = await api('GET', '/auth/me');
+                        if (data && data.user && data.user.premiumActive) {
+                            redirectToChatUnlocked();
+                        }
+                    } catch (e) {}
+                }, 2500);
+            }
+
             function startPoll() {
                 stopPoll();
                 if (!currentPaymentId) return;
@@ -313,7 +362,7 @@
                         pixStatus.textContent = 'Status: ' + s.status;
                         if (s.premiumActive) {
                             stopPoll();
-                            window.location.href = 'Perfil.html?frompay=1';
+                            window.location.replace('Perfil.html?frompay=1');
                         }
                     } catch (e) { pixStatus.textContent = 'Erro ao consultar status.'; }
                 }, 4000);
@@ -328,11 +377,22 @@
                                 planPricing['30d'] = { price: Number(pl.priceBrl), days: pl.days };
                                 var el30 = document.querySelector('.js-price-30');
                                 if (el30) el30.textContent = fmtBrl(pl.priceBrl);
+                                var d30 = document.querySelector('.js-days-30');
+                                if (d30) d30.textContent = pl.days + ' dias de chat ilimitado';
                             }
                             if (pl.id === '60d' && pl.priceBrl != null && pl.days != null) {
                                 planPricing['60d'] = { price: Number(pl.priceBrl), days: pl.days };
                                 var el60 = document.querySelector('.js-price-60');
                                 if (el60) el60.textContent = fmtBrl(pl.priceBrl);
+                                var d60 = document.querySelector('.js-days-60');
+                                if (d60) d60.textContent = pl.days + ' dias de chat ilimitado';
+                            }
+                            if (pl.id === '90d' && pl.priceBrl != null && pl.days != null) {
+                                planPricing['90d'] = { price: Number(pl.priceBrl), days: pl.days };
+                                var el90 = document.querySelector('.js-price-90');
+                                if (el90) el90.textContent = fmtBrl(pl.priceBrl);
+                                var d90 = document.querySelector('.js-days-90');
+                                if (d90) d90.textContent = pl.days + ' dias de chat ilimitado';
                             }
                         });
                     }
@@ -343,8 +403,35 @@
             (function handleCheckoutReturn() {
                 var q = new URLSearchParams(window.location.search);
                 if (q.get('mp') !== 'retorno') return;
+                var st = (q.get('st') || '').toLowerCase();
+                if (st === 'recusado' || st === 'failure' || q.get('collection_status') === 'rejected') {
+                    checkoutErrBox.className =
+                        'p-4 bg-red-50 border border-red-100 text-red-700 rounded-2xl text-sm font-medium';
+                    checkoutErrBox.classList.remove('hidden');
+                    checkoutErrBox.textContent = 'Pagamento não concluído. Você pode tentar de novo escolhendo um plano abaixo.';
+                    return;
+                }
+                checkoutErrBox.className =
+                    'p-4 bg-blue-50 border border-blue-100 text-blue-800 rounded-2xl text-sm font-medium';
                 checkoutErrBox.classList.remove('hidden');
-                checkoutErrBox.textContent = 'Processando retorno do pagamento...';
+                checkoutErrBox.textContent =
+                    'Confirmando seu pagamento com o Mercado Pago… Você será levado ao chat automaticamente quando liberar.';
+                var mpId = q.get('payment_id') || q.get('collection_id');
+                (async function () {
+                    try {
+                        if (mpId) {
+                            try {
+                                await api('GET', '/payments/mp/' + encodeURIComponent(mpId) + '/sync');
+                            } catch (e0) {}
+                        }
+                        var data = await api('GET', '/auth/me');
+                        if (data && data.user && data.user.premiumActive) {
+                            redirectToChatUnlocked();
+                            return;
+                        }
+                    } catch (e1) {}
+                    startMpReturnPolling(mpId);
+                })();
             })();
 
             api('GET', '/auth/me').then(function (data) {

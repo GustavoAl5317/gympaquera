@@ -20,8 +20,8 @@ function mpAccessToken() {
 }
 
 function monthlyPriceBrl() {
-    var n = parseFloat(process.env.PREMIUM_PRICE_BRL || '9.9', 10);
-    return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : 9.9;
+    var n = parseFloat(process.env.PREMIUM_PRICE_BRL || '19.9', 10);
+    return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : 19.9;
 }
 
 function premiumDays() {
@@ -30,8 +30,13 @@ function premiumDays() {
 }
 
 function priceTwoMonthsBrl() {
-    var n = parseFloat(process.env.PREMIUM_2M_PRICE_BRL || '29.7', 10);
-    return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : 29.7;
+    var n = parseFloat(process.env.PREMIUM_2M_PRICE_BRL || '19.8', 10);
+    return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : 19.8;
+}
+
+function priceThreeMonthsBrl() {
+    var n = parseFloat(process.env.PREMIUM_3M_PRICE_BRL || '9.9', 10);
+    return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : 9.9;
 }
 
 function premiumDaysTwoMonths() {
@@ -39,8 +44,23 @@ function premiumDaysTwoMonths() {
     return Number.isFinite(d) && d > 0 ? d : 60;
 }
 
+function premiumDaysThreeMonths() {
+    var d = parseInt(process.env.PREMIUM_3M_DAYS || '90', 10);
+    return Number.isFinite(d) && d > 0 ? d : 90;
+}
+
 function resolvePlanFromBody(body) {
     var id = body && body.plan != null ? String(body.plan).trim().toLowerCase() : '30d';
+    if (id === '90d' || id === '90' || id === '3m') {
+        var d90 = premiumDaysThreeMonths();
+        return {
+            id: '90d',
+            priceBrl: priceThreeMonthsBrl(),
+            days: d90,
+            itemTitle: 'Gym Paquera — Plano 3 meses (chat)',
+            itemDesc: 'Uso do chat na plataforma por ' + d90 + ' dias.'
+        };
+    }
     if (id === '60d' || id === '60' || id === '2m') {
         var d60 = premiumDaysTwoMonths();
         return {
@@ -68,8 +88,10 @@ function getPremiumDaysForGrant(payment) {
     }
     var amt = Number(payment.transaction_amount);
     if (Number.isFinite(amt)) {
+        var p90 = priceThreeMonthsBrl();
         var p60 = priceTwoMonthsBrl();
         var p30 = monthlyPriceBrl();
+        if (Math.abs(amt - p90) < 0.05) return premiumDaysThreeMonths();
         if (Math.abs(amt - p60) < 0.05) return premiumDaysTwoMonths();
         if (Math.abs(amt - p30) < 0.05) return premiumDays();
     }
@@ -90,8 +112,14 @@ router.get('/info', function paymentInfo(_req, res) {
         days: premiumDaysTwoMonths(),
         label: '2 meses'
     };
+    var p90 = {
+        id: '90d',
+        priceBrl: priceThreeMonthsBrl(),
+        days: premiumDaysThreeMonths(),
+        label: '3 meses'
+    };
     res.json({
-        plans: [p30, p60],
+        plans: [p30, p60, p90],
         priceBrl: p30.priceBrl,
         premiumDays: p30.days,
         currency: 'BRL',
@@ -405,6 +433,36 @@ router.post('/pix/checkout', requireAuthOrRedirectLogin, async function checkout
         var msg = encodeURIComponent(e.message || 'Erro ao iniciar pagamento.');
         var code = e.status === 503 ? 'config' : e.status === 401 ? 'auth' : 'fail';
         return res.redirect(303, '/mypay.html?checkoutError=' + msg + '&code=' + code);
+    }
+});
+
+/**
+ * Após o Checkout Pro, o Mercado Pago redireciona com payment_id na URL.
+ * Sincroniza o pagamento na API do MP e libera premium sem esperar só pelo webhook.
+ */
+router.get('/mp/:paymentId/sync', requireAuth, async function mpPaymentSync(req, res) {
+    try {
+        var db = getDb();
+        var pid = String(req.params.paymentId);
+        var payment = await syncPaymentFromMp(db, pid);
+        var uid = parseUserIdFromPayment(payment);
+        if (!uid || uid !== req.session.userId) {
+            return res.status(403).json({ error: 'Pagamento não associado à sua conta.' });
+        }
+        var urow = db.prepare('SELECT premium_until FROM users WHERE id = ?').get(req.session.userId);
+        var active = false;
+        if (urow && urow.premium_until) {
+            var d = new Date(urow.premium_until);
+            if (!Number.isNaN(d.getTime()) && d > new Date()) active = true;
+        }
+        return res.json({
+            paymentStatus: String(payment.status || ''),
+            premiumActive: active,
+            premiumUntil: urow ? urow.premium_until : null
+        });
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({ error: e.message || 'Erro ao confirmar pagamento.' });
     }
 });
 

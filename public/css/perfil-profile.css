@@ -379,10 +379,6 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 0.85rem;
   }
-  .perfil-gallery.has-lead .perfil-gallery-item--lead {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
 }
 
 .perfil-gallery-item {
@@ -398,11 +394,7 @@
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 .perfil-gallery-item--lead {
-  aspect-ratio: auto;
-  min-height: 11rem;
-}
-@media (min-width: 768px) {
-  .perfil-gallery-item--lead { min-height: 0; }
+  aspect-ratio: 1;
 }
 .perfil-gallery-item:focus {
   outline: none;
@@ -421,12 +413,9 @@
   height: 100%;
   min-height: 6rem;
   object-fit: cover;
+  object-position: center;
   display: block;
   transition: transform 0.35s ease;
-}
-.perfil-gallery-item--lead .perfil-gallery-thumb { min-height: 12rem; }
-@media (min-width: 768px) {
-  .perfil-gallery-item--lead .perfil-gallery-thumb { min-height: 100%; height: 100%; }
 }
 .perfil-gallery-item:hover .perfil-gallery-thumb {
   transform: scale(1.04);
@@ -723,12 +712,6 @@
   transition: transform 0.35s ease;
 }
 .perfil-gallery-cell:hover img { transform: scale(1.04); }
-@media (min-width: 768px) {
-  .perfil-gallery.has-lead .perfil-gallery-cell--lead {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-}
 
 /* Panel headers inside content area */
 .perfil-content-col .panel-header h1 {
