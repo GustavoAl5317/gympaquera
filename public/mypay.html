@@ -1,318 +1,250 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym Paquera | Conexões Fitness</title>
-    <meta name="description" content="Conecte-se com pessoas da mesma academia. Encontre treino e paquera no mesmo lugar."/>
+    <title>Premium | Gym Paquera</title>
+    <meta name="description" content="Eleve seu nível no Gym Paquera. Conexões reais em ambientes fitness."/>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/site-ui.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#ea580c', // Orange-600
+                            600: '#ea580c',
+                            700: '#c2410c',
+                        },
+                        dark: '#111827'
+                    },
                     fontFamily: {
-                        sans: ["Poppins", "system-ui", "sans-serif"]
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '2xl': '1.25rem',
+                        '3xl': '1.5rem',
                     }
                 }
             }
         };
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root { --nav-bar-h: var(--gp-header-h); }
-        #site-top-nav {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100%;
-            max-width: 100vw;
-            z-index: 99999;
-            box-sizing: border-box;
-            background: #fff;
-            box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.06);
-        }
-        #home-nav-panel {
-            transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-    </style>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { width: 100%; min-height: 100%; }
-        body { line-height: 1.6; min-height: 100dvh; width: 100%; }
 
-        /* Container */
-        .main-container {
-            flex: 1;
-            width: 100%;
-            max-width: min(1200px, 100% - 32px);
-            margin: 20px auto 28px;
-            padding: 0 clamp(16px, 4vw, 28px);
+    <style type="text/css">
+        body { -webkit-font-smoothing: antialiased; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
-
-        .card {
-            background: var(--white);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
+        .gradient-brand {
+            background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
         }
-
-        h2 { 
-            color: var(--primary); 
-            margin-bottom: 20px; 
-            font-size: 1.4rem; 
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Pagamento */
-        .payment-box {
-            background: #fff0f3;
-            border: 2px solid var(--primary);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .price-tag {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--primary-dark);
-            margin: 10px 0;
-        }
-
-        .payment-methods-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .payment-methods-grid img {
-            width: 100%;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-        }
-
-        /* Upload de Comprovante (Opcional, mas melhora a UX) */
-        .upload-section {
-            margin-top: 20px;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-        }
-
-        .btn-submit {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
+        .plan-choice {
             cursor: pointer;
-            transition: 0.3s;
-            margin-top: 15px;
+            border-width: 2px;
+            border-color: #e2e8f0;
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
         }
-
-        .btn-submit:hover { background: var(--primary-dark); }
-
-        .badge-exclusive {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-top: 20px;
+        .plan-choice:hover { border-color: #fdba74; }
+        .plan-choice.is-selected {
+            border-color: #ea580c;
+            background: rgba(255, 247, 237, 0.85);
+            box-shadow: 0 0 0 1px rgba(234, 88, 12, 0.2);
         }
-
-        .pix-box {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.25rem;
-            margin-top: 1rem;
-            text-align: center;
+        .plan-choice input:focus-visible + .plan-choice-body {
+            outline: 2px solid #ea580c;
+            outline-offset: 2px;
         }
-        .pix-box img.qr-img {
-            max-width: 280px;
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
-            border: 1px solid var(--border);
+        .sr-only-plan {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
-        .pix-code-wrap {
-            margin-top: 1rem;
-            text-align: left;
-        }
-        .pix-code-wrap label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--gray);
-        }
-        .pix-code {
-            width: 100%;
-            margin-top: 0.35rem;
-            padding: 0.65rem;
-            font-size: 0.75rem;
-            font-family: ui-monospace, monospace;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            resize: vertical;
-            min-height: 72px;
-        }
-        .btn-secondary {
-            background: #fff;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-        }
-        .btn-secondary:hover { background: #fff0f3; }
-        .status-pill {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-top: 8px;
-        }
-        .status-pill.ok { background: #d4edda; color: #155724; }
-        .status-pill.wait { background: #fff3cd; color: #856404; }
-        .alert-config {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            color: #856404;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            margin-top: 12px;
-            text-align: left;
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .price-tag { font-size: 2rem; }
-        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
     </style>
 </head>
-<body class="bg-gray-50 pt-[var(--nav-bar-h)] text-gray-900 antialiased flex flex-col min-h-dvh">
 
-    <div id="gp-nav-backdrop" class="gp-nav-backdrop md:hidden" aria-hidden="true"></div>
+<body class="bg-[#f8fafc] text-slate-900 font-sans min-h-screen flex flex-col">
 
-    <nav id="site-top-nav" aria-label="Principal">
-        <div class="max-w-[1600px] mx-auto flex items-center justify-between gap-3 px-4 sm:px-8 h-16">
-            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight shrink-0 no-underline inline-flex items-center gap-0.5 uppercase" aria-label="Gym Paquera — início">
-                <span class="text-orange-600">Gym</span><span class="text-gray-900">Paquera</span>
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-1 group">
+                <span class="text-2xl font-black tracking-tighter text-brand-600 uppercase transition-transform group-hover:scale-105">Gym</span>
+                <span class="text-2xl font-black tracking-tighter text-dark uppercase">Paquera</span>
             </a>
-
-            <ul class="hidden md:flex items-center gap-8 text-[15px] text-gray-600 font-medium">
-                <li><a href="/" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Home</a></li>
-                <li><a href="sobre1.html" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Sobre</a></li>
-                <li><a href="gymparceiras.html" data-gp-nav="gym" class="gp-tail-nav hover:text-orange-600 transition-colors">Gym Parceiras</a></li>
-            </ul>
-
-            <div class="hidden md:flex items-center gap-4 shrink-0">
-                <a href="login.html?next=mypay.html" data-gp-nav="login" class="gp-tail-nav text-gray-600 hover:text-orange-600 font-medium text-[15px] no-underline">Login</a>
-                <a href="cadastro.html" data-gp-nav="cadastro" class="inline-flex items-center justify-center bg-orange-600 text-white px-5 py-2.5 rounded-full font-semibold text-[15px] hover:bg-orange-700 transition-colors shadow-md shadow-orange-500/25 no-underline">Cadastro</a>
+            
+            <div class="hidden md:flex items-center gap-8 font-semibold text-sm text-slate-600">
+                <a href="/" class="hover:text-brand-600 transition-colors">Home</a>
+                <a href="sobre.html" class="hover:text-brand-600 transition-colors">Sobre</a>
+                <a href="gymparceiras.html" class="hover:text-brand-600 transition-colors">Academias parceiras</a>
             </div>
 
-            <button type="button" class="md:hidden flex items-center justify-center w-11 h-11 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 hover:bg-gray-100 transition-colors" data-nav-toggle aria-expanded="false" aria-controls="home-nav-panel" aria-label="Abrir menu">
-                <svg class="w-6 h-6 menu-icon-open" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-            </button>
-        </div>
-
-        <div id="home-nav-panel" data-nav-panel data-nav-animate-height class="md:hidden overflow-hidden border-t border-gray-100 bg-white shadow-inner">
-            <div class="max-w-[1600px] mx-auto px-4 py-4 space-y-1">
-                <a href="/" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Home</a>
-                <a href="sobre1.html" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Sobre</a>
-                <a href="gymparceiras.html" data-gp-nav="gym" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Gym Parceiras</a>
-                <div class="pt-3 mt-3 border-t border-gray-100 flex flex-col gap-2">
-                    <a href="login.html?next=mypay.html" data-gp-nav="login" class="text-center py-3 rounded-xl border border-gray-200 font-semibold text-gray-700 hover:bg-gray-50 no-underline">Login</a>
-                    <a href="cadastro.html" data-gp-nav="cadastro" class="text-center py-3 rounded-xl bg-orange-600 text-white font-semibold hover:bg-orange-700 no-underline">Cadastro</a>
-                </div>
+            <div class="flex items-center gap-3">
+                <a href="login.html" class="text-sm font-bold text-slate-700 px-4 py-2 hover:bg-slate-50 rounded-full transition-all">Entrar no Portal</a>
+                <a href="cadastro.html" class="gradient-brand text-white text-sm font-bold px-6 py-2.5 rounded-full shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 transition-all active:scale-95">CADASTRE-SE</a>
             </div>
         </div>
     </nav>
 
-    <main class="main-container flex-1">
+    <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8 md:py-12">
+        
+        <header class="text-center mb-10">
+            <span class="inline-block bg-orange-100 text-brand-700 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4">Upgrade</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">Sua experiência <span class="text-brand-600">Premium</span></h1>
+            <p class="text-slate-500 max-w-lg mx-auto text-sm md:text-base">Libere o chat ilimitado e conecte-se com quem frequenta o mesmo treino que você.</p>
+        </header>
 
-        <section class="payment-box">
-            <h2><i class="fas fa-crown"></i> Torne-se Premium</h2>
-            <p>Integração oficial <strong>Mercado Pago Checkout Pro</strong> — Pix, cartão e outros meios no ambiente deles.</p>
-            <div class="price-tag">R$ <span id="priceDisplay">9,90</span><small style="font-size: 1rem;">/mês</small></div>
-            <p id="premiumStatusLine" class="status-pill wait" style="display: none;"></p>
-            <p id="mpRetornoBox" class="alert-config" style="display: none; margin-top: 12px;"></p>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+            
+            <div class="md:col-span-3 flex flex-col gap-6">
+                
+                <section class="glass-card rounded-3xl p-6 md:p-8 shadow-xl shadow-slate-200/50 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4">
+                        <i class="fas fa-crown text-orange-200 text-6xl -rotate-12 pointer-events-none"></i>
+                    </div>
+                    
+                    <div class="relative">
+                        <h2 class="text-xl font-bold flex items-center gap-2 mb-2">
+                            <i class="fas fa-receipt text-brand-600"></i> Planos Premium
+                        </h2>
+                        <p class="text-sm text-slate-500 mb-6">Escolha a duração e pague com segurança no Mercado Pago.</p>
 
-            <div style="text-align: left; background: white; padding: 15px; border-radius: 10px; margin-top: 15px;">
-                <p><strong><i class="fas fa-info-circle"></i> Como funciona</strong></p>
-                <ol style="margin-left: 20px; font-size: 0.9rem; margin-top: 10px; line-height: 1.5;">
-                    <li><strong>É obrigatório estar logado</strong> — sem sessão o checkout nem inicia (nem por link direto).</li>
-                    <li>Clique no botão abaixo: você vai para o <strong>checkout do Mercado Pago</strong> (fora deste site).</li>
-                    <li>Após pagar, você volta aqui; o plano libera quando o Mercado Pago confirmar (webhook ou consulta automática).</li>
-                </ol>
-                <p id="premiumDurationNote" style="font-size: 0.9rem; margin-top: 14px; line-height: 1.55; color: var(--gray); border-top: 1px solid var(--border); padding-top: 12px;">
-                    Cada pagamento aprovado libera o <strong>uso do chat</strong> por <strong id="premiumDaysSpan">30</strong> dias (contados a partir da liberação no sistema).
-                    Quando esse prazo acaba, <strong>volta o modo gratuito</strong> (sem poder enviar no chat) até você fazer um novo pagamento.
-                    <strong>Não há cobrança ou renovação automática.</strong>
-                </p>
-            </div>
-        </section>
+                        <div id="premiumStatusLine" class="hidden mb-6 p-3 bg-green-50 border border-green-100 text-green-700 rounded-2xl text-xs font-bold items-center gap-2">
+                            <i class="fas fa-check-circle"></i> <span>Status: Premium Ativo</span>
+                        </div>
 
-        <section class="card">
-            <h2><i class="fas fa-credit-card"></i> Checkout Mercado Pago</h2>
-            <p style="color: var(--gray); margin-bottom: 15px;">Toda a etapa de pagamento ocorre no <strong>Mercado Pago</strong>. Este site só inicia o pedido e recebe o retorno.</p>
+                        <form id="formPixCheckout" class="hidden" method="POST" action="/api/payments/pix/checkout">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                                <label class="plan-choice relative block rounded-2xl p-4 is-selected" data-plan-card="30d">
+                                    <input class="sr-only-plan js-plan-radio" type="radio" name="plan" value="30d" checked>
+                                    <div class="plan-choice-body">
+                                        <div class="text-[10px] font-black uppercase tracking-widest text-brand-600 mb-1">1 mês</div>
+                                        <div class="flex items-baseline gap-1">
+                                            <span class="text-slate-400 text-sm font-medium">R$</span>
+                                            <span class="text-3xl font-black text-slate-900 tracking-tighter js-price-30">9,90</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 mt-1">30 dias de chat ilimitado</p>
+                                    </div>
+                                </label>
+                                <label class="plan-choice relative block rounded-2xl p-4" data-plan-card="60d">
+                                    <input class="sr-only-plan js-plan-radio" type="radio" name="plan" value="60d">
+                                    <div class="plan-choice-body">
+                                        <div class="text-[10px] font-black uppercase tracking-widest text-brand-600 mb-1">2 meses</div>
+                                        <div class="flex items-baseline gap-1">
+                                            <span class="text-slate-400 text-sm font-medium">R$</span>
+                                            <span class="text-3xl font-black text-slate-900 tracking-tighter js-price-60">29,70</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 mt-1">60 dias de chat ilimitado</p>
+                                    </div>
+                                </label>
+                            </div>
 
-            <p id="loginHint" style="display: none;">
-                <a href="login.html?next=mypay.html" style="color: var(--primary); font-weight: 700;">Faça login</a> para abrir o checkout. O pagamento só pode ser feito com conta autenticada.
-            </p>
+                            <div class="flex items-baseline gap-1 mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                                <span class="text-slate-400 text-lg font-medium">Total selecionado:</span>
+                                <span class="text-slate-400 text-lg font-medium">R$</span>
+                                <span id="priceDisplay" class="text-4xl font-black text-slate-900 tracking-tighter">9,90</span>
+                                <span class="text-slate-400 font-medium" id="pricePeriodSuffix">/ 30 dias</span>
+                            </div>
 
-            <p id="checkoutErrBox" class="alert-config" style="display: none;"></p>
+                            <ul class="space-y-4 mb-8">
+                                <li class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-orange-100 text-brand-600 flex items-center justify-center shrink-0 text-xs font-bold">1</div>
+                                    <p class="text-sm text-slate-600 leading-relaxed">Você será redirecionado para o ambiente seguro do <strong>Mercado Pago</strong>.</p>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-orange-100 text-brand-600 flex items-center justify-center shrink-0 text-xs font-bold">2</div>
+                                    <p class="text-sm text-slate-600 leading-relaxed">Pague via <strong>Pix</strong> (liberação instantânea) ou <strong>Cartão</strong>.</p>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-orange-100 text-brand-600 flex items-center justify-center shrink-0 text-xs font-bold">3</div>
+                                    <p class="text-sm text-slate-600 leading-relaxed">O acesso ao chat é liberado automaticamente por <span class="font-bold text-slate-900" id="premiumDaysSpan">30</span> dias.</p>
+                                </li>
+                            </ul>
 
-            <form id="formPixCheckout" method="POST" action="/api/payments/pix/checkout" style="display: none;">
-                <button type="submit" class="btn-submit">
-                    <i class="fas fa-external-link-alt"></i> Ir para o Mercado Pago pagar
-                </button>
-            </form>
+                            <button type="submit" class="w-full gradient-brand text-white font-extrabold py-4 rounded-2xl shadow-xl shadow-brand-500/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3">
+                                PAGAR COM MERCADO PAGO <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </form>
 
-            <div id="pixConfigWarn" class="alert-config" style="display: none;">
-                O servidor ainda não tem <code>MERCADOPAGO_ACCESS_TOKEN</code>. Configure no ambiente de hospedagem para gerar cobranças reais.
-            </div>
+                        <div id="loginHint" class="hidden">
+                            <a href="login.html?next=mypay.html" class="block w-full text-center bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-slate-800 transition-all shadow-lg">Entrar no portal para comprar</a>
+                        </div>
+                    </div>
+                </section>
 
-            <div id="pixArea" class="pix-box" style="display: none;">
-                <p style="font-size: 0.9rem; color: var(--gray);"><strong>Alternativa:</strong> escaneie no app do banco ou copie o Pix copia e cola (quando o Mercado Pago não devolver página própria).</p>
-                <img id="pixQrImg" class="qr-img" alt="QR Code Pix" style="display: none;">
-                <div class="pix-code-wrap">
-                    <label for="pixCopiaCola">Pix copia e cola</label>
-                    <textarea id="pixCopiaCola" class="pix-code" readonly rows="4"></textarea>
+                <div id="mpRetornoBox" class="hidden p-4 bg-blue-50 border border-blue-100 text-blue-800 rounded-2xl text-sm font-medium"></div>
+                <div id="checkoutErrBox" class="hidden p-4 bg-red-50 border border-red-100 text-red-700 rounded-2xl text-sm font-medium"></div>
+                <div id="pixConfigWarn" class="hidden p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-2xl text-sm italic">
+                    <i class="fas fa-exclamation-triangle mr-2"></i> Token do Mercado Pago não configurado no servidor.
                 </div>
-                <button type="button" id="btnCopyPix" class="btn-secondary"><i class="fas fa-copy"></i> Copiar código</button>
-                <p id="pixPaymentStatus" style="margin-top: 12px; font-size: 0.9rem; color: var(--gray);"></p>
             </div>
-        </section>
 
-        <section class="badge-exclusive">
-            <strong><i class="fas fa-lock"></i> Pagamento seguro</strong>
-            <p>Processamento pelo Mercado Pago (Checkout Pro). Você não digita dados de cartão ou banco nesta página.</p>
-        </section>
+            <div class="md:col-span-2 space-y-6">
+                
+                <div id="pixArea" class="hidden glass-card rounded-3xl p-6 shadow-lg border-2 border-brand-100">
+                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i class="fas fa-qrcode text-brand-600"></i> Pagamento Pix
+                    </h3>
+                    <div class="bg-white p-2 rounded-2xl border border-slate-100 mb-4 mx-auto w-fit">
+                        <img id="pixQrImg" class="hidden w-48 h-48" alt="QR Code">
+                    </div>
+                    <p id="pixPaymentStatus" class="text-[11px] text-center text-slate-500 font-medium mb-4 uppercase tracking-tighter"></p>
+                    
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase ml-1">Código Copia e Cola</label>
+                        <textarea id="pixCopiaCola" class="w-full text-xs font-mono p-3 bg-slate-50 border border-slate-200 rounded-xl resize-none focus:outline-none" readonly rows="3"></textarea>
+                        <button id="btnCopyPix" class="w-full bg-slate-900 text-white text-xs font-bold py-3 rounded-xl hover:bg-slate-800 transition-colors">
+                            <i class="fas fa-copy mr-2"></i> COPIAR CÓDIGO
+                        </button>
+                    </div>
+                </div>
 
+                <div class="bg-slate-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden">
+                    <i class="fas fa-shield-alt absolute -bottom-2 -right-2 text-white/10 text-7xl"></i>
+                    <h3 class="font-bold text-sm mb-2 flex items-center gap-2">
+                        <i class="fas fa-lock text-green-400"></i> Pagamento Seguro
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed relative z-10">
+                        Não armazenamos seus dados de pagamento. Todo o processo é criptografado pelo Mercado Pago.
+                    </p>
+                </div>
+
+                <div class="p-6 border border-slate-200 rounded-3xl">
+                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Sem renovação</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed italic">
+                        "O Gym Paquera não faz cobranças automáticas no seu cartão. Você paga apenas quando quiser usar."
+                    </p>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-gray-900 text-gray-500 py-2 px-4 w-full text-center text-xs leading-tight mt-auto">
-        <p class="m-0">&copy; 2026 Gym Paquera - O portal de paquera das academias. Todos os direitos reservados.</p>
+    <footer class="bg-white border-t border-slate-100 py-8">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-slate-400 text-[11px] font-medium tracking-wide">
+                &copy; 2026 GYM PAQUERA • O PORTAL DE PAQUERA DAS ACADEMIAS. TODOS OS DIREITOS RESERVADOS.
+            </p>
+        </div>
     </footer>
 
     <script src="js/toast.js"></script>
@@ -322,6 +254,7 @@
     <script>
         (function () {
             var priceEl = document.getElementById('priceDisplay');
+            var periodSuffixEl = document.getElementById('pricePeriodSuffix');
             var loginHint = document.getElementById('loginHint');
             var formCheckout = document.getElementById('formPixCheckout');
             var checkoutErrBox = document.getElementById('checkoutErrBox');
@@ -331,6 +264,8 @@
             var pixStatus = document.getElementById('pixPaymentStatus');
             var premiumLine = document.getElementById('premiumStatusLine');
             var configWarn = document.getElementById('pixConfigWarn');
+            var daysSpan = document.getElementById('premiumDaysSpan');
+            var planPricing = { '30d': { price: 9.9, days: 30 }, '60d': { price: 29.7, days: 60 } };
             var currentPaymentId = null;
             var pollTimer = null;
 
@@ -338,21 +273,36 @@
                 return Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
 
+            function selectedPlanId() {
+                var r = document.querySelector('.js-plan-radio:checked');
+                return r ? r.value : '30d';
+            }
+
+            function syncPlanUi() {
+                var id = selectedPlanId();
+                var p = planPricing[id] || planPricing['30d'];
+                if (priceEl) priceEl.textContent = fmtBrl(p.price);
+                if (daysSpan) daysSpan.textContent = String(p.days);
+                if (periodSuffixEl) periodSuffixEl.textContent = '/ ' + p.days + ' dias';
+                document.querySelectorAll('[data-plan-card]').forEach(function (el) {
+                    el.classList.toggle('is-selected', el.getAttribute('data-plan-card') === id);
+                });
+            }
+
+            document.querySelectorAll('.js-plan-radio').forEach(function (radio) {
+                radio.addEventListener('change', syncPlanUi);
+            });
+
             function showPremiumFromUser(u) {
                 if (!premiumLine) return;
                 if (u && u.premiumActive) {
-                    premiumLine.style.display = 'inline-block';
-                    premiumLine.className = 'status-pill ok';
-                    premiumLine.textContent = 'Você já é Premium até ' + (u.premiumUntil ? new Date(u.premiumUntil).toLocaleString('pt-BR') : '');
-                } else {
-                    premiumLine.style.display = 'none';
+                    premiumLine.classList.remove('hidden');
+                    premiumLine.classList.add('flex');
+                    premiumLine.querySelector('span').textContent = 'Você é Premium até ' + (u.premiumUntil ? new Date(u.premiumUntil).toLocaleDateString('pt-BR') : '');
                 }
             }
 
-            function stopPoll() {
-                if (pollTimer) clearInterval(pollTimer);
-                pollTimer = null;
-            }
+            function stopPoll() { if (pollTimer) clearInterval(pollTimer); pollTimer = null; }
 
             function startPoll() {
                 stopPoll();
@@ -360,152 +310,83 @@
                 pollTimer = setInterval(async function () {
                     try {
                         var s = await api('GET', '/payments/pix/' + currentPaymentId + '/status');
-                        pixStatus.textContent = 'Status: ' + s.status + (s.premiumActive ? ' — Premium ativo!' : '');
+                        pixStatus.textContent = 'Status: ' + s.status;
                         if (s.premiumActive) {
                             stopPoll();
                             window.location.href = 'Perfil.html?frompay=1';
                         }
-                    } catch (e) {
-                        pixStatus.textContent = e.message || 'Erro ao consultar status.';
-                    }
+                    } catch (e) { pixStatus.textContent = 'Erro ao consultar status.'; }
                 }, 4000);
             }
 
-            fetch('/api/payments/info').then(function (r) { return r.json(); }).then(function (info) {
-                if (priceEl && info.priceBrl != null) priceEl.textContent = fmtBrl(info.priceBrl);
-                var daysSpan = document.getElementById('premiumDaysSpan');
-                if (daysSpan && info.premiumDays != null && Number.isFinite(Number(info.premiumDays))) {
-                    daysSpan.textContent = String(Math.max(1, Math.floor(Number(info.premiumDays))));
-                }
-            }).catch(function () {});
-
-            (function readCheckoutFlash() {
-                var q = new URLSearchParams(window.location.search);
-                var err = q.get('checkoutError');
-                if (err) {
-                    checkoutErrBox.style.display = 'block';
-                    checkoutErrBox.textContent = decodeURIComponent(err);
-                    if (q.get('code') === 'config') configWarn.style.display = 'block';
-                    history.replaceState({}, '', 'mypay.html');
-                }
-            })();
+            fetch('/api/payments/info')
+                .then(function (r) { return r.json(); })
+                .then(function (info) {
+                    if (info && Array.isArray(info.plans)) {
+                        info.plans.forEach(function (pl) {
+                            if (pl.id === '30d' && pl.priceBrl != null && pl.days != null) {
+                                planPricing['30d'] = { price: Number(pl.priceBrl), days: pl.days };
+                                var el30 = document.querySelector('.js-price-30');
+                                if (el30) el30.textContent = fmtBrl(pl.priceBrl);
+                            }
+                            if (pl.id === '60d' && pl.priceBrl != null && pl.days != null) {
+                                planPricing['60d'] = { price: Number(pl.priceBrl), days: pl.days };
+                                var el60 = document.querySelector('.js-price-60');
+                                if (el60) el60.textContent = fmtBrl(pl.priceBrl);
+                            }
+                        });
+                    }
+                    syncPlanUi();
+                })
+                .catch(function () { syncPlanUi(); });
 
             (function handleCheckoutReturn() {
                 var q = new URLSearchParams(window.location.search);
                 if (q.get('mp') !== 'retorno') return;
-                var box = document.getElementById('mpRetornoBox');
-                if (!box) return;
-                box.style.display = 'block';
-                var st = q.get('st') || '';
-                var lines = {
-                    aprovado: 'Pagamento aprovado no Mercado Pago. Sincronizando seu plano…',
-                    pendente: 'Pagamento pendente (ex.: aguardando Pix). Quando o MP confirmar, seu plano será liberado automaticamente.',
-                    recusado: 'Pagamento não concluído. Você pode tentar de novo com o botão abaixo.'
-                };
-                box.textContent = lines[st] || 'Retorno do Mercado Pago recebido.';
-                history.replaceState({}, '', 'mypay.html');
-                if (st !== 'aprovado' && st !== 'pendente') return;
-                var n = 0;
-                var maxTries = 40;
-                var iv = null;
-                function checkPremium() {
-                    n++;
-                    api('GET', '/auth/me')
-                        .then(function (d) {
-                            if (d.user && d.user.premiumActive) {
-                                if (iv) clearInterval(iv);
-                                iv = null;
-                                window.location.href = 'Perfil.html?frompay=1';
-                                return;
-                            }
-                            if (n >= maxTries) {
-                                if (iv) clearInterval(iv);
-                                box.textContent +=
-                                    ' Ainda não apareceu aqui? Aguarde alguns minutos ou atualize a página (o webhook do Mercado Pago pode demorar).';
-                            }
-                        })
-                        .catch(function () {
-                            if (n >= maxTries && iv) clearInterval(iv);
-                        });
-                }
-                checkPremium();
-                iv = setInterval(checkPremium, 3000);
+                checkoutErrBox.classList.remove('hidden');
+                checkoutErrBox.textContent = 'Processando retorno do pagamento...';
             })();
+
+            api('GET', '/auth/me').then(function (data) {
+                showPremiumFromUser(data.user);
+                loginHint.classList.add('hidden');
+                formCheckout.classList.remove('hidden');
+                syncPlanUi();
+
+                var pid = new URLSearchParams(window.location.search).get('paymentId');
+                if (pid) {
+                    currentPaymentId = pid;
+                    pixArea.classList.remove('hidden');
+                    api('GET', '/payments/pix/' + encodeURIComponent(pid) + '/receipt').then(function (data) {
+                        if (data.qrCodeBase64) {
+                            pixQr.src = 'data:image/png;base64,' + data.qrCodeBase64;
+                            pixQr.classList.remove('hidden');
+                        }
+                        pixTa.value = data.qrCode || '';
+                        startPoll();
+                    });
+                }
+            }).catch(function () {
+                loginHint.classList.remove('hidden');
+                formCheckout.classList.add('hidden');
+            });
+
+            document.getElementById('btnCopyPix').addEventListener('click', function () {
+                pixTa.select();
+                document.execCommand('copy');
+                if (window.showToast) showToast('Copiado!', { type: 'success' });
+            });
 
             if (formCheckout) {
                 formCheckout.addEventListener('submit', function () {
                     var btn = formCheckout.querySelector('button[type="submit"]');
                     if (btn) {
                         btn.disabled = true;
-                        btn.textContent = 'Redirecionando…';
+                        btn.innerHTML = 'Redirecionando… <i class="fas fa-arrow-right"></i>';
                     }
                 });
             }
-
-            var loggedUser = null;
-            api('GET', '/auth/me').then(function (data) {
-                loggedUser = data.user;
-                showPremiumFromUser(loggedUser);
-                loginHint.style.display = 'none';
-                formCheckout.style.display = 'block';
-
-                var q = new URLSearchParams(window.location.search);
-                var pid = q.get('paymentId');
-                if (pid) {
-                    currentPaymentId = pid;
-                    pixArea.style.display = 'block';
-                    pixStatus.textContent = 'Carregando dados do Pix…';
-                    api('GET', '/payments/pix/' + encodeURIComponent(pid) + '/receipt')
-                        .then(function (data) {
-                            if (data.qrCodeBase64) {
-                                pixQr.src = 'data:image/png;base64,' + data.qrCodeBase64;
-                                pixQr.style.display = 'inline-block';
-                            }
-                            pixTa.value = data.qrCode || '';
-                            pixStatus.textContent =
-                                'Status: ' + (data.status || 'pending') + '. Pague no app do banco; esta página atualiza quando confirmarmos.';
-                            if (data.ticketUrl) {
-                                pixStatus.innerHTML +=
-                                    ' <a href="' +
-                                    data.ticketUrl.replace(/"/g, '&quot;') +
-                                    '" target="_blank" rel="noopener">Abrir página do Mercado Pago</a>';
-                            }
-                            startPoll();
-                        })
-                        .catch(function (e) {
-                            pixStatus.textContent = e.message || 'Não foi possível carregar o Pix.';
-                        });
-                    history.replaceState({}, '', 'mypay.html');
-                }
-            }).catch(function () {
-                loginHint.style.display = 'block';
-                formCheckout.style.display = 'none';
-            });
-
-            document.getElementById('btnCopyPix').addEventListener('click', function () {
-                var t = pixTa.value;
-                if (!t) return;
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(t).then(function () {
-                        if (window.showToast) showToast('Código Pix copiado.', { type: 'success' });
-                        else alert('Código Pix copiado.');
-                    }).catch(function () {
-                        pixTa.select();
-                        document.execCommand('copy');
-                        if (window.showToast) showToast('Código copiado.', { type: 'success' });
-                        else alert('Código copiado.');
-                    });
-                } else {
-                    pixTa.select();
-                    document.execCommand('copy');
-                    if (window.showToast) showToast('Código copiado.', { type: 'success' });
-                    else alert('Código copiado.');
-                }
-            });
         })();
     </script>
-    <style>
-        .gp-tail-nav.is-active { color: #ea580c !important; font-weight: 600; }
-    </style>
 </body>
 </html>

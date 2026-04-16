@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym Paquera | Gym Parceiras</title>
+    <title>Gym Paquera | Academias parceiras</title>
     <meta name="description" content="Rede de academias parceiras do Gym Paquera. Conecte-se com quem treina na sua unidade."/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,7 +83,6 @@
             font-size: clamp(1.75rem, 4vw, 2.25rem);
             font-weight: 800;
             letter-spacing: -0.02em;
-            text-transform: uppercase;
             line-height: 1.15;
             display: flex;
             flex-wrap: wrap;
@@ -134,24 +133,68 @@
             box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
         }
 
-        .gym-partners-notice {
+        .gym-partners-cta {
+            position: relative;
+            overflow: hidden;
             text-align: center;
-            max-width: 32rem;
-            margin: 0 auto;
-            padding: 1rem 1.15rem;
-            font-size: 0.9rem;
-            line-height: 1.55;
-            font-weight: 600;
-            color: color-mix(in srgb, var(--gp-text) 88%, var(--gp-accent) 12%);
-            background: linear-gradient(135deg, color-mix(in srgb, #f59e0b 12%, var(--gp-surface)) 0%, color-mix(in srgb, var(--gp-brand-rose) 8%, var(--gp-surface)) 100%);
-            border: 1px dashed color-mix(in srgb, var(--gp-accent) 35%, var(--gp-border));
-            border-radius: 0.875rem;
+            max-width: 36rem;
+            margin: 0.25rem auto 0;
+            padding: 1.75rem 1.5rem 1.65rem;
+            border-radius: 1.125rem;
+            background: linear-gradient(160deg, #1a2332 0%, #121a26 45%, #0f141c 100%);
+            border: 1px solid color-mix(in srgb, #fff 10%, transparent);
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.35);
         }
 
-        .gym-partners-notice::before {
-            content: "ⓘ ";
-            font-weight: 800;
+        .gym-partners-cta::after {
+            content: "";
+            position: absolute;
+            top: -2.5rem;
+            right: -2.5rem;
+            width: 7rem;
+            height: 7rem;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 40%, color-mix(in srgb, #7c2d3a 55%, #312e81) 0%, transparent 70%);
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        .gym-partners-cta-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .gym-partners-cta h2 {
+            margin: 0 0 0.75rem;
+            font-size: clamp(1.15rem, 3vw, 1.35rem);
+            font-weight: 700;
+            color: #f8fafc;
+            line-height: 1.35;
+        }
+
+        .gym-partners-cta p {
+            margin: 0 0 1.25rem;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+
+        .gym-partners-cta a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            font-size: 0.95rem;
+            font-weight: 700;
             color: var(--gp-accent);
+            text-decoration: none;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .gym-partners-cta a:hover {
+            color: color-mix(in srgb, var(--gp-accent) 88%, #fff);
+            transform: translateX(2px);
         }
 
         @media (max-width: 768px) {
@@ -172,12 +215,12 @@
 
             <ul class="hidden md:flex items-center gap-8 text-[15px] text-gray-600 font-medium">
                 <li><a href="/" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Home</a></li>
-                <li><a href="sobre1.html" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Sobre</a></li>
-                <li><a href="gymparceiras.html" data-gp-nav="gym" class="gp-tail-nav hover:text-orange-600 transition-colors">Gym Parceiras</a></li>
+                <li><a href="sobre.html" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Sobre</a></li>
+                <li><a href="gymparceiras.html" data-gp-nav="gym" class="gp-tail-nav hover:text-orange-600 transition-colors">Academias parceiras</a></li>
             </ul>
 
             <div class="hidden md:flex items-center gap-4 shrink-0">
-                <a href="login.html" data-gp-nav="login" class="gp-tail-nav text-gray-600 hover:text-orange-600 font-medium text-[15px] no-underline">Login</a>
+                <a href="login.html" data-gp-nav="login" class="gp-tail-nav text-gray-600 hover:text-orange-600 font-medium text-[15px] no-underline">Entrar no Portal</a>
                 <a href="cadastro.html" data-gp-nav="cadastro" class="inline-flex items-center justify-center bg-orange-600 text-white px-5 py-2.5 rounded-full font-semibold text-[15px] hover:bg-orange-700 transition-colors shadow-md shadow-orange-500/25 no-underline">Cadastro</a>
             </div>
 
@@ -189,10 +232,10 @@
         <div id="home-nav-panel" data-nav-panel data-nav-animate-height class="md:hidden overflow-hidden border-t border-gray-100 bg-white shadow-inner">
             <div class="max-w-[1600px] mx-auto px-4 py-4 space-y-1">
                 <a href="/" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Home</a>
-                <a href="sobre1.html" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Sobre</a>
-                <a href="gymparceiras.html" data-gp-nav="gym" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Gym Parceiras</a>
+                <a href="sobre.html" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Sobre</a>
+                <a href="gymparceiras.html" data-gp-nav="gym" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Academias parceiras</a>
                 <div class="pt-3 mt-3 border-t border-gray-100 flex flex-col gap-2">
-                    <a href="login.html" data-gp-nav="login" class="text-center py-3 rounded-xl border border-gray-200 font-semibold text-gray-700 hover:bg-gray-50 no-underline">Login</a>
+                    <a href="login.html" data-gp-nav="login" class="text-center py-3 rounded-xl border border-gray-200 font-semibold text-gray-700 hover:bg-gray-50 no-underline">Entrar no Portal</a>
                     <a href="cadastro.html" data-gp-nav="cadastro" class="text-center py-3 rounded-xl bg-orange-600 text-white font-semibold hover:bg-orange-700 no-underline">Cadastro</a>
                 </div>
             </div>
@@ -202,26 +245,32 @@
     <main class="gym-partners-wrap flex-1">
 
         <div class="gym-partners-inner">
-        <section class="gym-partners-card" aria-labelledby="gym-parceiras-titulo">
-            <h1 id="gym-parceiras-titulo" class="gym-partners-title">
-                <span class="gp-t-gym">Gym</span><span class="gp-t-parceiras">Parceiras</span>
+        <section class="gym-partners-card" aria-labelledby="academias-parceiras-titulo">
+            <h1 id="academias-parceiras-titulo" class="gym-partners-title">
+                <span class="gp-t-gym">Academias</span><span class="gp-t-parceiras">parceiras</span>
             </h1>
             <p class="gym-partners-tagline">Sua conexão fitness começa aqui!</p>
             <p class="gym-partners-intro">Conecte-se com pessoas reais que frequentam a sua unidade.</p>
 
             <div class="image-gallery">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+01" alt="Academia parceira 01 — substitua por foto local em assets/">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+02" alt="Academia parceira 02">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+03" alt="Academia parceira 03">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+04" alt="Academia parceira 04">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+05" alt="Academia parceira 05">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+06" alt="Academia parceira 06">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+07" alt="Academia parceira 07">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+08" alt="Academia parceira 08">
-                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Parceira+09" alt="Academia parceira 09">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Academia+parceira+01" alt="Academia parceira 01 — substitua por foto local em assets/">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Academia+parceira+02" alt="Academia parceira 02">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Academia+parceira+03" alt="Academia parceira 03">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Academia+parceira+04" alt="Academia parceira 04">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Academia+parceira+05" alt="Academia parceira 05">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Academia+parceira+06" alt="Academia parceira 06">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Academia+parceira+07" alt="Academia parceira 07">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Academia+parceira+08" alt="Academia parceira 08">
+                <img class="gallery-item" src="https://placehold.co/400x200/f8f9fa/ff4d6d/png?text=Academia+parceira+09" alt="Academia parceira 09">
             </div>
 
-            <p class="gym-partners-notice" role="note">Verifique com a recepção da sua unidade.</p>
+            <aside class="gym-partners-cta" aria-labelledby="gym-partners-cta-title">
+                <div class="gym-partners-cta-inner">
+                    <h2 id="gym-partners-cta-title">Sua academia ainda não é parceira?</h2>
+                    <p>Solicite a integração na recepção da sua unidade ou peça para o gerente entrar em contato conosco.</p>
+                    <a href="mailto:contato@gympaquera.com?subject=Indica%C3%A7%C3%A3o%20de%20academia%20parceira">Indicar minha academia <span aria-hidden="true">→</span></a>
+                </div>
+            </aside>
         </section>
         </div>
 

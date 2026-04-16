@@ -101,6 +101,14 @@ function runMigrations(database) {
     CREATE INDEX IF NOT EXISTS idx_password_reset_user ON password_reset_tokens (user_id);
     `);
 
+    var pixCols = database.prepare('PRAGMA table_info(pix_charges)').all();
+    var hasPremiumDaysCol = pixCols.some(function (c) {
+        return c && c.name === 'premium_days';
+    });
+    if (!hasPremiumDaysCol) {
+        database.exec('ALTER TABLE pix_charges ADD COLUMN premium_days INTEGER');
+    }
+
     const needUid = database.prepare("SELECT id FROM users WHERE public_uid IS NULL OR public_uid = ''").all();
     const setUid = database.prepare('UPDATE users SET public_uid = ? WHERE id = ?');
     for (var i = 0; i < needUid.length; i++) {

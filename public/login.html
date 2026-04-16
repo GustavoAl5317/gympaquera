@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym Paquera - Login </title>
+    <title>Gym Paquera — Entrar no portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -183,7 +183,7 @@
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, var(--gp-brand-rose) 0%, var(--gp-brand-rose-dark) 100%);
+            background: linear-gradient(90deg, #f97316 0%, #ea580c 42%, #dc2626 100%);
             color: white;
             border: none;
             padding: 0.9rem 1rem;
@@ -194,12 +194,12 @@
             cursor: pointer;
             margin-top: 0.5rem;
             transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
-            box-shadow: 0 4px 14px color-mix(in srgb, var(--gp-brand-rose) 45%, transparent);
+            box-shadow: 0 4px 16px rgba(234, 88, 12, 0.42);
         }
         .btn-submit:hover {
             filter: brightness(1.05);
             transform: translateY(-1px);
-            box-shadow: 0 6px 20px color-mix(in srgb, var(--gp-brand-rose) 40%, transparent);
+            box-shadow: 0 6px 22px rgba(220, 38, 38, 0.35);
         }
         .btn-submit:active { transform: translateY(0); }
 
@@ -216,15 +216,44 @@
         .form-link a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
         .login-footnote {
-            margin-top: 1.25rem;
-            padding: 0.85rem 1rem;
-            font-size: 0.78rem;
+            display: flex;
+            gap: 0.55rem;
+            align-items: flex-start;
+            margin-top: 1.15rem;
+            padding: 0.9rem 1rem;
+            font-size: 0.8125rem;
+            line-height: 1.55;
+            color: color-mix(in srgb, #9a3412 82%, var(--gp-text));
+            text-align: left;
+            background: linear-gradient(135deg, color-mix(in srgb, #ffedd5 55%, var(--gp-surface)) 0%, color-mix(in srgb, #fed7aa 22%, var(--gp-surface)) 100%);
+            border: 1px solid color-mix(in srgb, var(--gp-accent) 30%, var(--gp-border));
+            border-radius: 0.875rem;
+        }
+        .login-footnote::before {
+            content: "ⓘ";
+            flex-shrink: 0;
+            font-weight: 800;
+            color: var(--gp-accent);
+            font-size: 0.95rem;
+            line-height: 1.2;
+            margin-top: 0.06rem;
+        }
+
+        .login-register-line {
+            margin-top: 1.2rem;
+            font-size: 0.875rem;
             line-height: 1.5;
-            color: var(--gp-text-muted);
             text-align: center;
-            background: color-mix(in srgb, var(--gp-brand-rose) 7%, var(--gp-surface));
-            border: 1px solid color-mix(in srgb, var(--gp-brand-rose) 14%, var(--gp-border));
-            border-radius: 0.75rem;
+            color: var(--gp-text-muted);
+        }
+        .login-register-line a {
+            color: var(--gp-accent);
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .login-register-line a:hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
@@ -248,12 +277,12 @@
 
             <ul class="hidden md:flex items-center gap-8 text-[15px] text-gray-600 font-medium">
                 <li><a href="/" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Home</a></li>
-                <li><a href="sobre1.html" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Sobre</a></li>
-                <li><a href="gymparceiras.html" data-gp-nav="gym" class="gp-tail-nav hover:text-orange-600 transition-colors">Gym Parceiras</a></li>
+                <li><a href="sobre.html" data-gp-nav="home" class="gp-tail-nav hover:text-orange-600 transition-colors">Sobre</a></li>
+                <li><a href="gymparceiras.html" data-gp-nav="gym" class="gp-tail-nav hover:text-orange-600 transition-colors">Academias parceiras</a></li>
             </ul>
 
             <div class="hidden md:flex items-center gap-4 shrink-0">
-                <a href="login.html" data-gp-nav="login" class="gp-tail-nav text-gray-600 hover:text-orange-600 font-medium text-[15px] no-underline">Login</a>
+                <a href="login.html" data-gp-nav="login" class="gp-tail-nav text-gray-600 hover:text-orange-600 font-medium text-[15px] no-underline">Entrar no Portal</a>
                 <a href="cadastro.html" data-gp-nav="cadastro" class="inline-flex items-center justify-center bg-orange-600 text-white px-5 py-2.5 rounded-full font-semibold text-[15px] hover:bg-orange-700 transition-colors shadow-md shadow-orange-500/25 no-underline">Cadastro</a>
             </div>
 
@@ -265,10 +294,10 @@
         <div id="home-nav-panel" data-nav-panel data-nav-animate-height class="md:hidden overflow-hidden border-t border-gray-100 bg-white shadow-inner">
             <div class="max-w-[1600px] mx-auto px-4 py-4 space-y-1">
                 <a href="/" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Home</a>
-                <a href="sobre1.html" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Sobre</a>
-                <a href="gymparceiras.html" data-gp-nav="gym" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Gym Parceiras</a>
+                <a href="sobre.html" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Sobre</a>
+                <a href="gymparceiras.html" data-gp-nav="gym" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-orange-50 hover:text-orange-600 no-underline">Academias parceiras</a>
                 <div class="pt-3 mt-3 border-t border-gray-100 flex flex-col gap-2">
-                    <a href="login.html" data-gp-nav="login" class="text-center py-3 rounded-xl border border-gray-200 font-semibold text-gray-700 hover:bg-gray-50 no-underline">Login</a>
+                    <a href="login.html" data-gp-nav="login" class="text-center py-3 rounded-xl border border-gray-200 font-semibold text-gray-700 hover:bg-gray-50 no-underline">Entrar no Portal</a>
                     <a href="cadastro.html" data-gp-nav="cadastro" class="text-center py-3 rounded-xl bg-orange-600 text-white font-semibold hover:bg-orange-700 no-underline">Cadastro</a>
                 </div>
             </div>
@@ -295,12 +324,13 @@
                     <label for="loginSenha">Senha</label>
                     <input id="loginSenha" name="password" type="password" placeholder="Digite sua senha" required autocomplete="current-password">
                 </div>
-                <button type="submit" class="btn-submit">Acessar Conta</button>
+                <button type="submit" class="btn-submit">Entrar no Portal</button>
             </form>
             <div class="form-link">
                 <a href="#" onclick="switchTab('recuperacao'); return false;">Esqueceu a senha?</a>
             </div>
-            <p class="login-footnote">Este portal é reservado apenas para alunos matriculados em academias parceiras.</p>
+            <p class="login-footnote">Acesso exclusivo para alunos matriculados em unidades parceiras da rede Gym Paquera.</p>
+            <p class="login-register-line">Ainda não tem uma conta? <a href="cadastro.html">Cadastre-se agora</a></p>
         </div>
 
         <div id="recuperacao" class="tab-content">
@@ -314,7 +344,7 @@
                 <button type="submit" class="btn-submit">Enviar solicitação</button>
             </form>
             <div class="form-link">
-                <a href="#" onclick="switchTab('login'); return false;">Voltar para Login</a>
+                <a href="#" onclick="switchTab('login'); return false;">Voltar para entrar no portal</a>
             </div>
         </div>
     </div>

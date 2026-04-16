@@ -3,289 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gym Paquera | Conexões Fitness</title>
-    <meta name="description" content="Conecte-se com pessoas da mesma academia. Encontre treino e paquera no mesmo lugar."/>
-    
+    <title>Gym Paquera | Sobre</title>
+    <meta name="description" content="Conheça o Gym Paquera: treino, conexões e paquera em academias parceiras."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/site-ui.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Poppins", "system-ui", "sans-serif"]
+                    }
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --primary: #ff4d6d;
-            --primary-dark: #c9184a;
-            --bg-light: #f8f9fa;
-            --text-dark: #2d3436;
-            --gray: #636e72;
-            --white: #ffffff;
-            --border: #eeeeee;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
-            --success: #27ae60;
-        }
-
-        /* Reset & Base */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background-color: var(--bg-light); 
-            color: var(--text-dark); 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6; 
-        }
-
-        /* Header */
-        header {
-            background: var(--white);
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .logo { 
-            font-size: 1.5rem; 
-            font-weight: 800; 
-            color: var(--primary); 
-            text-decoration: none; 
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        nav { display: flex; gap: 20px; align-items: center; }
-        nav a { 
-            text-decoration: none; 
-            color: var(--gray); 
-            font-weight: 600; 
-            transition: color 0.3s ease; 
-            font-size: 0.95rem;
-        }
-        nav a:hover { color: var(--primary); }
-        nav .btn-nav { color: var(--primary); border: 1px solid var(--primary); padding: 5px 15px; border-radius: 20px; }
-        nav .btn-nav:hover { background: var(--primary); color: white; }
-
-        /* Main Content */
-        .main-container {
-            max-width: 850px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .card {
-            background: var(--white);
-            padding: 35px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-        }
-
-        h2 { 
-            color: var(--primary); 
-            margin-bottom: 25px; 
-            font-size: 1.6rem; 
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h3 { margin: 20px 0 10px 0; color: var(--primary-dark); }
-
-        /* Form & Grid System */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .form-group { display: flex; flex-direction: column; gap: 8px; }
-        .full-width { grid-column: span 2; }
-
-        label { 
-            font-weight: 600; 
-            font-size: 0.85rem; 
-            color: var(--gray); 
-            margin-left: 4px;
-        }
-
-        input, select, textarea {
+        html { width: 100%; min-height: 100%; }
+        body { font-family: var(--gp-font); min-height: 100dvh; width: 100%; margin: 0; display: flex; flex-direction: column; }
+        :root { --nav-bar-h: var(--gp-header-h); }
+        #site-top-nav {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            max-width: 100vw;
+            z-index: 99999;
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.06);
         }
-
-        input:focus, select:focus { 
-            border-color: var(--primary); 
-            outline: none; 
-            box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1);
+        #home-nav-panel {
+            transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
         }
-
-        /* Alert/Privacy Area */
-        .alert {
-            background: #fff0f3;
-            border-left: 5px solid var(--primary);
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            border-radius: 8px;
-        }
-        .alert strong { color: var(--primary-dark); display: block; margin-bottom: 5px; }
-        .alert ul { margin-left: 20px; font-size: 0.9rem; color: #a04255; }
-
-        /* Photo Upload UI */
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .photo-box {
-            aspect-ratio: 1/1;
-            border: 2px dashed #ccd1d1;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #fafafa;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .photo-box:hover { border-color: var(--primary); background: #fff5f7; }
-        .photo-box span { font-size: 2rem; color: #abb2b9; }
-        .photo-box img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            display: none; 
-        }
-        .photo-box img.active { display: block; }
-
-        /* Buttons & Footer */
-        .btn-submit {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 18px;
-            width: 100%;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
-        }
-
-        .btn-submit:hover { 
-            background: var(--primary-dark); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: var(--gray);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border);
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            header { flex-direction: column; gap: 15px; padding: 1.5rem; }
-            nav { font-size: 0.8rem; flex-wrap: wrap; justify-content: center; }
-            .form-grid { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-            .photo-grid { grid-template-columns: 1fr 1fr; }
-        }
+        /* Rosa da marca (theme.css: --gp-brand-rose) — só nesta página */
+        body.page-sobre .gp-tail-nav.is-active { color: var(--gp-brand-rose) !important; font-weight: 600; }
     </style>
-
 </head>
-<body>
+<body class="page-sobre bg-gray-50 pt-[var(--nav-bar-h)] text-gray-900 antialiased">
 
-    <header>
-        <a href="#" class="logo"><span>💖</span> Gym Paquera</a>
-        <nav>
-            <a href="file:///media/jo2313/3.04GB/home/proj_gym/html/index.html">Home</a>
-            <a href="file:///media/jo2313/3.04GB/home/proj_gym/html/sobre.html">Sobre</a>
-            <a href="file:///media/jo2313/3.04GB/home/proj_gym/html/login.html">Login</a>
-            <a href="file:///media/jo2313/3.04GB/home/proj_gym/html/cadastro.html" class="btn-nav">Cadastre-se</a>
-            <a href="file:///media/jo2313/3.04GB/home/proj_gym/html/gymparceiras.html">Gym Parceiras</a>
-            <a href="file:///media/jo2313/3.04GB/home/proj_gym/html/mypay.html" style="color: var(--success) !important;">Assine já R$9,90/mês</a>
-        </nav>
-    </header>
+    <div id="gp-nav-backdrop" class="gp-nav-backdrop md:hidden" aria-hidden="true"></div>
 
-    <main class="main-container">
+    <nav id="site-top-nav" aria-label="Principal">
+        <div class="max-w-[1600px] mx-auto flex items-center justify-between gap-3 px-4 sm:px-8 h-16">
+            <a href="/" class="text-xl sm:text-2xl font-bold tracking-tight shrink-0 no-underline inline-flex items-center gap-0.5 uppercase" aria-label="Gym Paquera — início">
+                <span class="text-orange-600">Gym</span><span class="text-gray-900">Paquera</span>
+            </a>
 
-        <section class="card" id="home">
-            <h2>Sua conexão fitness começa aqui! Onde o treino encontra a conexão.</h2>
-            <p>Nossa missão é unir sua rotina de saúde à facilidade de um portal de relacionamentos.</p>
-            <p>Transformamos sua jornada de bem-estar em uma experiência social. Saúde e relacionamento, de um jeito simples.</p><br>
-            <div class="alert">
-                <strong>Descubra o Gym Paquera</strong>
-                <ul>
-                    <li><b>Segurança e Exclusividade:</b> Um portal fechado, validado pela sua academia, garantindo que você interaja com pessoas reais do seu convívio.</li>
-                    <li><b>Equilíbrio Perfeito:</b> Onde o foco do treino encontra a leveza da paquera.</li>
-                    <li><b>Bons Momentos:</b> Relaxe, conecte-se e viva experiências marcantes em um ambiente focado no seu prazer.</li>
+            <ul class="hidden md:flex items-center gap-8 text-[15px] text-gray-600 font-medium">
+                <li><a href="/" data-gp-nav="home" class="gp-tail-nav hover:text-[var(--gp-brand-rose)] transition-colors">Home</a></li>
+                <li><a href="sobre.html" data-gp-nav="home" class="gp-tail-nav hover:text-[var(--gp-brand-rose)] transition-colors">Sobre</a></li>
+                <li><a href="gymparceiras.html" data-gp-nav="gym" class="gp-tail-nav hover:text-[var(--gp-brand-rose)] transition-colors">Academias parceiras</a></li>
+            </ul>
+
+            <div class="hidden md:flex items-center gap-4 shrink-0">
+                <a href="login.html" data-gp-nav="login" class="gp-tail-nav text-gray-600 hover:text-[var(--gp-brand-rose)] font-medium text-[15px] no-underline">Entrar no Portal</a>
+                <a href="cadastro.html" data-gp-nav="cadastro" class="inline-flex items-center justify-center bg-[var(--gp-brand-rose)] text-white px-5 py-2.5 rounded-full font-semibold text-[15px] hover:bg-[var(--gp-brand-rose-dark)] transition-colors shadow-md shadow-[0_4px_14px_rgba(255,77,109,0.35)] no-underline">Cadastro</a>
+            </div>
+
+            <button type="button" class="md:hidden flex items-center justify-center w-11 h-11 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 hover:bg-gray-100 transition-colors" data-nav-toggle aria-expanded="false" aria-controls="home-nav-panel" aria-label="Abrir menu">
+                <svg class="w-6 h-6 menu-icon-open" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+
+        <div id="home-nav-panel" data-nav-panel data-nav-animate-height class="md:hidden overflow-hidden border-t border-gray-100 bg-white shadow-inner">
+            <div class="max-w-[1600px] mx-auto px-4 py-4 space-y-1">
+                <a href="/" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-[color-mix(in_srgb,var(--gp-brand-rose)_12%,white)] hover:text-[var(--gp-brand-rose)] no-underline">Home</a>
+                <a href="sobre.html" data-gp-nav="home" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-[color-mix(in_srgb,var(--gp-brand-rose)_12%,white)] hover:text-[var(--gp-brand-rose)] no-underline">Sobre</a>
+                <a href="gymparceiras.html" data-gp-nav="gym" class="block py-3 px-3 rounded-xl text-gray-700 font-medium hover:bg-[color-mix(in_srgb,var(--gp-brand-rose)_12%,white)] hover:text-[var(--gp-brand-rose)] no-underline">Academias parceiras</a>
+                <div class="pt-3 mt-3 border-t border-gray-100 flex flex-col gap-2">
+                    <a href="login.html" data-gp-nav="login" class="text-center py-3 rounded-xl border border-gray-200 font-semibold text-gray-700 hover:bg-gray-50 no-underline">Entrar no Portal</a>
+                    <a href="cadastro.html" data-gp-nav="cadastro" class="text-center py-3 rounded-xl bg-[var(--gp-brand-rose)] text-white font-semibold hover:bg-[var(--gp-brand-rose-dark)] no-underline">Cadastro</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 w-full max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-14">
+        <article class="rounded-2xl bg-white border border-gray-100 shadow-sm p-6 sm:p-8 mb-6">
+            <h1 class="text-2xl sm:text-3xl font-bold text-[var(--gp-brand-rose)] mb-4">Sua conexão fitness começa aqui</h1>
+            <p class="text-gray-600 text-[15px] sm:text-base leading-relaxed mb-4">Nossa missão é unir sua rotina de saúde à facilidade de um portal de relacionamentos.</p>
+            <p class="text-gray-600 text-[15px] sm:text-base leading-relaxed mb-6">Transformamos sua jornada de bem-estar em uma experiência social. Saúde e relacionamento, de um jeito simples.</p>
+            <div class="rounded-xl border-l-4 border-[var(--gp-brand-rose)] bg-[color-mix(in_srgb,var(--gp-brand-rose)_12%,white)] p-5 text-left">
+                <strong class="text-[var(--gp-brand-rose-dark)] block mb-2">Descubra o Gym Paquera</strong>
+                <ul class="list-disc pl-5 text-[15px] text-gray-700 space-y-2">
+                    <li><strong class="text-[var(--gp-brand-rose)]">Segurança:</strong> Um portal validado pela sua academia, para você interagir com pessoas reais do seu convívio.</li>
+                    <li><strong class="text-[var(--gp-brand-rose)]">Equilíbrio:</strong> Onde o foco do treino encontra a leveza da paquera.</li>
+                    <li><strong class="text-[var(--gp-brand-rose)]">Bons momentos:</strong> Relaxe, conecte-se e viva experiências marcantes em um ambiente focado no seu prazer.</li>
                 </ul>
             </div>
-        </section>
+        </article>
 
-        
-        <section class="card" id="about">
-            <h2>Sobre Gym Paquera</h2>
+        <article class="rounded-2xl bg-white border border-gray-100 shadow-sm p-6 sm:p-8">
+            <h2 class="text-xl sm:text-2xl font-bold text-[var(--gp-brand-rose)] mb-6">Sobre Gym Paquera</h2>
 
-            <h3>O lugar certo para conhecer pessoas novas</h3>
-            <p>Seu lugar ideal para encontros ou namoro. Na Gym Paquera, todos são bem-vindos: héteros, gays, bissexuais e todas as identidades.</p>
+            <h3 class="text-base font-semibold text-[var(--gp-brand-rose-dark)] mt-6 mb-2 first:mt-0">O lugar certo para conhecer pessoas novas</h3>
+            <p class="text-gray-600 text-[15px] sm:text-base leading-relaxed">Seu lugar ideal para encontros ou namoro. Na Gym Paquera, todos são bem-vindos: héteros, gays, bissexuais e todas as identidades.</p>
 
-            <h3>Amizades, Conversas, Namoros</h3>
-            <p>Junte-se à Gym Paquera, o portal online de paquera de academias. Gostaria de conversar, novas amizades ou namorar? Encontre a pessoa ideal aqui.</p>
-            <p>Exclusivo para alunos de academias parceiras. Encontre quem frequenta o mesmo clima que você!</p>
+            <h3 class="text-base font-semibold text-[var(--gp-brand-rose-dark)] mt-6 mb-2">Amizades, conversas, namoros</h3>
+            <p class="text-gray-600 text-[15px] sm:text-base leading-relaxed">Junte-se à Gym Paquera, o portal online de paquera de academias. Gostaria de conversar, novas amizades ou namorar? Encontre a pessoa ideal aqui.</p>
+            <p class="text-gray-600 text-[15px] sm:text-base leading-relaxed mt-3">Para alunos de academias parceiras. Encontre quem frequenta o mesmo clima que você.</p>
 
-            <h3>Seja você mesmo</h3>
-            <p>O Gym Paquera é para você. Se movimente, participe e mude sua vida social!</p>
-            <p>Celebre os melhores momentos. Aproveite a sua vida com emoção, aventura e prazer.</p>
-        </section>
-
+            <h3 class="text-base font-semibold text-[var(--gp-brand-rose-dark)] mt-6 mb-2">Seja você mesmo</h3>
+            <p class="text-gray-600 text-[15px] sm:text-base leading-relaxed">O Gym Paquera é para você. Se movimente, participe e mude sua vida social!</p>
+            <p class="text-gray-600 text-[15px] sm:text-base leading-relaxed mt-3">Celebre os melhores momentos. Aproveite a sua vida com emoção, aventura e prazer.</p>
+        </article>
     </main>
 
-    <footer>
-        <p>&copy; 2026 Gym Paquera - O portal de paquera das academias. Todos os direitos reservados.</p>
+    <footer class="bg-gray-900 text-gray-500 py-2 px-4 w-full text-center text-xs leading-tight mt-auto">
+        <p class="m-0">&copy; 2026 Gym Paquera - O portal de paquera das academias. Todos os direitos reservados.</p>
     </footer>
 
-    <script>
-        function triggerInput(id) {
-            document.getElementById(`input-${id}`).click();
-        }
-
-        function previewImage(input, id) {
-            const preview = document.getElementById(`preview-${id}`);
-            const plus = document.getElementById(`plus-${id}`);
-
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    preview.src = e.target.result;
-                    preview.classList.add('active');
-                    if (plus) plus.style.display = 'none';
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        document.getElementById('profileForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            alert('Perfil criado com sucesso! Bem-vindo(a) ao Gym Paquera.');
-        });
-    </script>
+    <script src="js/toast.js"></script>
+    <script src="js/site-nav.js" defer></script>
+    <script src="js/nav-active.js" defer></script>
 </body>
 </html>

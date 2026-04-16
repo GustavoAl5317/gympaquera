@@ -1156,6 +1156,7 @@
                 esc(priceLabel) +
                 '. O pagamento é feito via checkout oficial do Mercado Pago (Pix, cartão de crédito, etc.).</p>' +
                 '<form method="POST" action="/api/payments/pix/checkout" class="chat-paywall-form">' +
+                '<input type="hidden" name="plan" value="30d">' +
                 '<button type="submit" class="btn btn-primary btn-sm">Efetuar pagamento e liberar acesso</button></form>';
             var payForm = wall.querySelector('form.chat-paywall-form');
             if (payForm) {

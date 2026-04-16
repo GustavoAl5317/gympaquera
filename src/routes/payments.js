@@ -29,12 +29,72 @@ function premiumDays() {
     return Number.isFinite(d) && d > 0 ? d : 30;
 }
 
+function priceTwoMonthsBrl() {
+    var n = parseFloat(process.env.PREMIUM_2M_PRICE_BRL || '29.7', 10);
+    return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : 29.7;
+}
+
+function premiumDaysTwoMonths() {
+    var d = parseInt(process.env.PREMIUM_2M_DAYS || '60', 10);
+    return Number.isFinite(d) && d > 0 ? d : 60;
+}
+
+function resolvePlanFromBody(body) {
+    var id = body && body.plan != null ? String(body.plan).trim().toLowerCase() : '30d';
+    if (id === '60d' || id === '60' || id === '2m') {
+        var d60 = premiumDaysTwoMonths();
+        return {
+            id: '60d',
+            priceBrl: priceTwoMonthsBrl(),
+            days: d60,
+            itemTitle: 'Gym Paquera — Plano 2 meses (chat)',
+            itemDesc: 'Uso do chat na plataforma por ' + d60 + ' dias.'
+        };
+    }
+    var d30 = premiumDays();
+    return {
+        id: '30d',
+        priceBrl: monthlyPriceBrl(),
+        days: d30,
+        itemTitle: 'Gym Paquera — Plano mensal (chat)',
+        itemDesc: 'Uso do chat na plataforma por ' + d30 + ' dias.'
+    };
+}
+
+function getPremiumDaysForGrant(payment) {
+    if (payment.metadata && payment.metadata.premium_days != null) {
+        var md = parseInt(String(payment.metadata.premium_days), 10);
+        if (Number.isFinite(md) && md > 0) return md;
+    }
+    var amt = Number(payment.transaction_amount);
+    if (Number.isFinite(amt)) {
+        var p60 = priceTwoMonthsBrl();
+        var p30 = monthlyPriceBrl();
+        if (Math.abs(amt - p60) < 0.05) return premiumDaysTwoMonths();
+        if (Math.abs(amt - p30) < 0.05) return premiumDays();
+    }
+    return premiumDays();
+}
+
 /** Valor exibido na página de planos (sem credencial). */
 router.get('/info', function paymentInfo(_req, res) {
-    res.json({
+    var p30 = {
+        id: '30d',
         priceBrl: monthlyPriceBrl(),
+        days: premiumDays(),
+        label: '1 mês'
+    };
+    var p60 = {
+        id: '60d',
+        priceBrl: priceTwoMonthsBrl(),
+        days: premiumDaysTwoMonths(),
+        label: '2 meses'
+    };
+    res.json({
+        plans: [p30, p60],
+        priceBrl: p30.priceBrl,
+        premiumDays: p30.days,
         currency: 'BRL',
-        premiumDays: premiumDays(),
         method: 'checkout_pro',
         provider: 'mercado_pago'
     });
@@ -88,8 +148,9 @@ function upsertPaymentAndGrant(db, payment) {
     var amount = Number(payment.transaction_amount);
     if (!Number.isFinite(amount)) amount = monthlyPriceBrl();
     var ext = payment.external_reference != null ? String(payment.external_reference) : null;
+    var grantDays = getPremiumDaysForGrant(payment);
 
-    var row = db.prepare('SELECT user_id, status FROM pix_charges WHERE mp_payment_id = ?').get(idStr);
+    var row = db.prepare('SELECT user_id, status, premium_days FROM pix_charges WHERE mp_payment_id = ?').get(idStr);
 
     if (!row) {
         var userId = parseUserIdFromPayment(payment);
@@ -99,22 +160,26 @@ function upsertPaymentAndGrant(db, payment) {
         }
         try {
             db.prepare(
-                `INSERT INTO pix_charges (user_id, mp_payment_id, status, amount, external_reference, created_at)
-                 VALUES (?, ?, ?, ?, ?, ?)`
-            ).run(userId, idStr, st, amount, ext, new Date().toISOString());
-            if (st === 'approved') addPremiumDays(db, userId, premiumDays());
+                `INSERT INTO pix_charges (user_id, mp_payment_id, status, amount, external_reference, created_at, premium_days)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`
+            ).run(userId, idStr, st, amount, ext, new Date().toISOString(), grantDays);
+            if (st === 'approved') addPremiumDays(db, userId, grantDays);
             return payment;
         } catch (e) {
             if (!e || e.code !== 'SQLITE_CONSTRAINT_UNIQUE') throw e;
-            row = db.prepare('SELECT user_id, status FROM pix_charges WHERE mp_payment_id = ?').get(idStr);
+            row = db.prepare('SELECT user_id, status, premium_days FROM pix_charges WHERE mp_payment_id = ?').get(idStr);
             if (!row) return payment;
         }
     }
 
     var was = row.status;
+    var daysToAdd =
+        row.premium_days != null && parseInt(String(row.premium_days), 10) > 0
+            ? parseInt(String(row.premium_days), 10)
+            : grantDays;
     if (st === 'approved' && was !== 'approved') {
         db.prepare('UPDATE pix_charges SET status = ? WHERE mp_payment_id = ?').run('approved', idStr);
-        addPremiumDays(db, row.user_id, premiumDays());
+        addPremiumDays(db, row.user_id, daysToAdd);
     } else if (was !== st) {
         db.prepare('UPDATE pix_charges SET status = ? WHERE mp_payment_id = ?').run(st, idStr);
     }
@@ -165,7 +230,8 @@ async function createCheckoutProForSessionUser(req) {
         throw err1;
     }
 
-    var amount = monthlyPriceBrl();
+    var plan = resolvePlanFromBody(req.body);
+    var amount = plan.priceBrl;
     var externalRef = 'gympaquera:' + userId + ':' + Date.now();
     var origin = publicOrigin(req);
     var wh = process.env.MERCADOPAGO_WEBHOOK_URL;
@@ -173,8 +239,8 @@ async function createCheckoutProForSessionUser(req) {
     var payload = {
         items: [
             {
-                title: 'Gym Paquera — Plano mensal (chat)',
-                description: 'Uso do chat na plataforma por ' + premiumDays() + ' dias.',
+                title: plan.itemTitle,
+                description: plan.itemDesc,
                 quantity: 1,
                 unit_price: amount,
                 currency_id: 'BRL'
@@ -188,7 +254,7 @@ async function createCheckoutProForSessionUser(req) {
         },
         auto_return: 'approved',
         external_reference: externalRef,
-        metadata: { user_id: String(userId) }
+        metadata: { user_id: String(userId), premium_days: String(plan.days) }
     };
     if (wh && String(wh).trim()) payload.notification_url = String(wh).trim();
 
@@ -256,16 +322,18 @@ async function createPixChargeForSessionUser(req) {
         throw err1;
     }
 
-    var amount = monthlyPriceBrl();
+    var plan = resolvePlanFromBody(req.body);
+    var amount = plan.priceBrl;
     var idempotency = crypto.randomUUID();
     var externalRef = 'gympaquera:' + userId + ':' + Date.now();
 
     var payload = {
         transaction_amount: amount,
-        description: 'Gym Paquera — Premium mensal',
+        description: plan.itemTitle,
         payment_method_id: 'pix',
         payer: { email: user.email },
-        external_reference: externalRef
+        external_reference: externalRef,
+        metadata: { user_id: String(userId), premium_days: String(plan.days) }
     };
     var wh = process.env.MERCADOPAGO_WEBHOOK_URL;
     if (wh && String(wh).trim()) payload.notification_url = String(wh).trim();
@@ -291,15 +359,16 @@ async function createPixChargeForSessionUser(req) {
     var pres = pixPresentationFromPayment(payment);
 
     db.prepare(
-        `INSERT INTO pix_charges (user_id, mp_payment_id, status, amount, external_reference, created_at)
-         VALUES (?, ?, ?, ?, ?, ?)`
+        `INSERT INTO pix_charges (user_id, mp_payment_id, status, amount, external_reference, created_at, premium_days)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
     ).run(
         userId,
         String(payment.id),
         String(payment.status || 'pending'),
         amount,
         externalRef,
-        new Date().toISOString()
+        new Date().toISOString(),
+        plan.days
     );
 
     return {
